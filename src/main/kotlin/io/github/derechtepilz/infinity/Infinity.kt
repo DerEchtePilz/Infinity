@@ -9,12 +9,9 @@ import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.util.BlockTracer
 import io.github.derechtepilz.infinity.util.Rarity
 import io.github.derechtepilz.infinity.world.WorldManager
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
-import net.kyori.adventure.translation.GlobalTranslator
-import net.kyori.adventure.translation.TranslationRegistry
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -22,8 +19,6 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
-import java.text.MessageFormat
-import java.util.*
 
 /*
  * Current required setup:
