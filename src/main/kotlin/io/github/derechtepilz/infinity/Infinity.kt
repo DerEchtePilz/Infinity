@@ -95,7 +95,6 @@ class Infinity : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(blockScanner, this)
         Bukkit.getPluginManager().registerEvents(PlayerListener(this), this)
 
-
         CommandAPI.onEnable()
     }
 
