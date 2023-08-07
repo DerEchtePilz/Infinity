@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.events.BlockScanner
+import io.github.derechtepilz.infinity.inventory.ChooseGamemodeInventory
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.util.Rarity
@@ -45,6 +46,7 @@ class Infinity : JavaPlugin() {
     var isScannerActive = false
 
     private val devCommand = DevCommand(this)
+    private val gamemodeInventory: ChooseGamemodeInventory = ChooseGamemodeInventory(this)
 
     override fun onLoad() {
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
@@ -78,6 +80,7 @@ class Infinity : JavaPlugin() {
 
         Bukkit.getPluginManager().registerEvents(BlockScanner(this), this)
 
+
         CommandAPI.onEnable()
     }
 
@@ -103,6 +106,10 @@ class Infinity : JavaPlugin() {
 
     fun getDevCommand(): DevCommand {
         return devCommand
+    }
+
+    fun getGamemodeInventory(): ChooseGamemodeInventory {
+        return gamemodeInventory
     }
 
 }
