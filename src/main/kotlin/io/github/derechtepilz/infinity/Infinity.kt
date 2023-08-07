@@ -5,6 +5,7 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.events.BlockScanner
+import io.github.derechtepilz.infinity.events.PlayerListener
 import io.github.derechtepilz.infinity.inventory.ChooseGamemodeInventory
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
@@ -79,7 +80,7 @@ class Infinity : JavaPlugin() {
         )
 
         Bukkit.getPluginManager().registerEvents(BlockScanner(this), this)
-
+        Bukkit.getPluginManager().registerEvents(PlayerListener(this), this)
 
         CommandAPI.onEnable()
     }
