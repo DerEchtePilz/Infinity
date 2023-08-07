@@ -5,6 +5,8 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.events.BlockScanner
+import io.github.derechtepilz.infinity.events.PlayerListener
+import io.github.derechtepilz.infinity.inventory.ChooseGamemodeInventory
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.util.Rarity
@@ -14,6 +16,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 
 /*
  * Current required setup:
@@ -45,9 +48,23 @@ class Infinity : JavaPlugin() {
     var isScannerActive = false
 
     private val devCommand = DevCommand(this)
+    private val blockScanner = BlockScanner(this)
+
+    private val gamemodeInventory: ChooseGamemodeInventory = ChooseGamemodeInventory(this)
 
     override fun onLoad() {
-        CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
+        val dispatcherFileDirectory = File("./infinity/config")
+        if (!dispatcherFileDirectory.exists()) {
+            dispatcherFileDirectory.mkdirs()
+        }
+        val dispatcherFile = File(dispatcherFileDirectory, "dispatcher.json")
+        if (!dispatcherFile.exists()) {
+            dispatcherFile.createNewFile()
+        }
+        CommandAPI.onLoad(CommandAPIBukkitConfig(this)
+            .missingExecutorImplementationMessage("You cannot execute this command!")
+            .dispatcherFile(dispatcherFile)
+        )
 
         InfinityCommand.register()
         devCommand.register()
@@ -76,7 +93,8 @@ class Infinity : JavaPlugin() {
             .seed(0L)
         )
 
-        Bukkit.getPluginManager().registerEvents(BlockScanner(this), this)
+        Bukkit.getPluginManager().registerEvents(blockScanner, this)
+        Bukkit.getPluginManager().registerEvents(PlayerListener(this), this)
 
         CommandAPI.onEnable()
     }
@@ -103,6 +121,14 @@ class Infinity : JavaPlugin() {
 
     fun getDevCommand(): DevCommand {
         return devCommand
+    }
+
+    fun getBlockScanner(): BlockScanner {
+        return blockScanner
+    }
+
+    fun getGamemodeInventory(): ChooseGamemodeInventory {
+        return gamemodeInventory
     }
 
 }
