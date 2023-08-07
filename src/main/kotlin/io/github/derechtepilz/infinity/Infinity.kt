@@ -49,10 +49,6 @@ class Infinity : JavaPlugin() {
 
     private val devCommand = DevCommand(this)
     private val blockScanner = BlockScanner(this)
-<<<<<<< HEAD
-
-=======
->>>>>>> fbf593b (Finish structure system)
     private val gamemodeInventory: ChooseGamemodeInventory = ChooseGamemodeInventory(this)
 
     override fun onLoad() {
@@ -99,6 +95,7 @@ class Infinity : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(blockScanner, this)
         Bukkit.getPluginManager().registerEvents(PlayerListener(this), this)
 
+
         CommandAPI.onEnable()
     }
 
@@ -132,6 +129,10 @@ class Infinity : JavaPlugin() {
 
     fun getBlockScanner(): BlockScanner {
         return blockScanner
+    }
+
+    fun getGamemodeInventory(): ChooseGamemodeInventory {
+        return gamemodeInventory
     }
 
     fun getGamemodeInventory(): ChooseGamemodeInventory {
