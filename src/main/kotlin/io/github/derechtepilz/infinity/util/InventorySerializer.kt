@@ -38,7 +38,7 @@ object InventorySerializer {
 
         // Save every element in the list
         for (i in 0 until inventory.size) {
-            dataOutput.writeObject(inventory.getItem(i))
+            dataOutput.writeObject(inventory.getItem(i)?.serializeAsBytes())
         }
 
         // Serialize that array
@@ -61,25 +61,5 @@ object InventorySerializer {
         dataInput.close()
         return items
     }
-
-    private fun serializePlayerInventory(items: Array<ItemStack?>): String {
-        return try {
-            val outputStream = ByteArrayOutputStream()
-            val dataOutput = BukkitObjectOutputStream(outputStream)
-            dataOutput.writeInt(items.size)
-            for (item in items) {
-                if (item != null) {
-                    dataOutput.writeObject(item.serializeAsBytes())
-                } else {
-                    dataOutput.writeObject(null)
-                }
-            }
-            dataOutput.close()
-            Base64Coder.encodeLines(outputStream.toByteArray())
-        } catch (e: java.lang.Exception) {
-            throw java.lang.IllegalStateException("Unable to save item stacks.", e)
-        }
-    }
-
 
 }

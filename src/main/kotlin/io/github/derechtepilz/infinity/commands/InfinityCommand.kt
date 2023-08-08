@@ -157,38 +157,12 @@ object InfinityCommand {
                 }
             }
             literalArgument("gamemode") {
-                multiLiteralArgument(nodeName = "gamemode", "infinity", "minecraft", "test", "recover") {
+                multiLiteralArgument(nodeName = "gamemode", "infinity", "minecraft") {
                     playerExecutor { player, args ->
                         val blockY = Bukkit.getWorld("world")!!.getHighestBlockYAt(0, 0) + 1
                         when (args["gamemode"] as String) {
-                            "infinity" -> player.teleport(Location(Bukkit.getWorld(plugin.getLobbyKey())!!, 0.5, 101.0, 0.5), PlayerTeleportEvent.TeleportCause.PLUGIN)
-                            "minecraft" -> player.teleport(Location(Bukkit.getWorld("world")!!, 0.5, blockY.toDouble(), 0.5), PlayerTeleportEvent.TeleportCause.PLUGIN)
-                            "test" -> {
-                                // Serialize player inventory
-                                val playerInventory = InventorySerializer.serializePlayerInventory(player.inventory)
-                                println("PlayerInventory: $playerInventory")
-
-                                // Serialize player enderchest
-                                val playerEnderChest = InventorySerializer.serializeInventory(player.enderChest)
-                                println("PlayerEnderChest: $playerEnderChest")
-
-                                // Save inventory
-                                plugin.getInfinityInventories()[player.uniqueId] = mutableListOf(playerInventory, playerEnderChest)
-                                player.inventory.clear()
-                                player.enderChest.clear()
-                            }
-                            "recover" -> {
-                                val playerItemInformation = plugin.getInfinityInventories()[player.uniqueId]!!
-
-                                val playerInventoryData = playerItemInformation[0] as String
-                                val playerEnderChestData = playerItemInformation[1] as String
-
-                                val playerInventoryContents = InventorySerializer.deserializeToInventory(playerInventoryData)
-                                val playerEnderChest = InventorySerializer.deserializeToInventory(playerEnderChestData)
-
-                                player.inventory.contents = playerInventoryContents
-                                player.enderChest.contents = playerEnderChest
-                            }
+                            "infinity" -> player.teleport(Location(Bukkit.getWorld(plugin.getLobbyKey())!!, 0.5, 101.0, 0.5), PlayerTeleportEvent.TeleportCause.COMMAND)
+                            "minecraft" -> player.teleport(Location(Bukkit.getWorld("world")!!, 0.5, blockY.toDouble(), 0.5), PlayerTeleportEvent.TeleportCause.COMMAND)
                         }
                     }
                 }
