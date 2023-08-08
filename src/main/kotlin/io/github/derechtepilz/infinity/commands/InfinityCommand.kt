@@ -1,22 +1,26 @@
 package io.github.derechtepilz.infinity.commands
 
 import dev.jorel.commandapi.kotlindsl.*
+import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.items.InfinityItem
 import io.github.derechtepilz.infinity.util.Rarity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.command.CommandSender
+import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
 object InfinityCommand {
 
-    fun register() {
-        commandTree("infinity", { commandSender: CommandSender -> commandSender.isOp }) {
+    fun register(plugin: Infinity) {
+        commandTree("infinity") {
             literalArgument("give") {
+                withRequirement { sender: CommandSender -> sender.isOp }
                 literalArgument("*") {
                     playerExecutor { player, _ ->
                         player.inventory.addItem(*Registry.Item.getAllItems())
@@ -42,6 +46,7 @@ object InfinityCommand {
                 }
             }
             literalArgument("changerarity") {
+                withRequirement { sender: CommandSender -> sender.isOp }
                 multiLiteralArgument(nodeName = "rarity", *Rarity.values().map { rarity -> rarity.name.lowercase() }.toTypedArray()) {
                     playerExecutor { player, args ->
                         val rarity = Rarity.valueOf((args["rarity"] as String).uppercase())
@@ -63,6 +68,7 @@ object InfinityCommand {
                 }
             }
             literalArgument("upgrade") {
+                withRequirement { sender: CommandSender -> sender.isOp }
                 playerExecutor { player, _ ->
                     // Check if there's an InfinityItem in the main hand
                     val heldItem = player.inventory.itemInMainHand
@@ -97,6 +103,7 @@ object InfinityCommand {
                 }
             }
             literalArgument("downgrade") {
+                withRequirement { sender: CommandSender -> sender.isOp }
                 playerExecutor { player, _ ->
                     // Check if there's an InfinityItem in the main hand
                     val heldItem = player.inventory.itemInMainHand
@@ -131,6 +138,7 @@ object InfinityCommand {
                 }
             }
             literalArgument("teleport") {
+                withRequirement { sender: CommandSender -> sender.isOp }
                 worldArgument("world") {
                     playerExecutor { player, args ->
                         val targetWorld = args["world"] as World
@@ -141,6 +149,17 @@ object InfinityCommand {
                             val targetWorld = args["world"] as World
                             val targetLocation = args["location"] as Location
                             player.teleport(Location(targetWorld, targetLocation.x, targetLocation.y, targetLocation.z))
+                        }
+                    }
+                }
+            }
+            literalArgument("gamemode") {
+                multiLiteralArgument(nodeName = "gamemode", "infinity", "minecraft") {
+                    playerExecutor { player, args ->
+                        val blockY = Bukkit.getWorld("world")!!.getHighestBlockYAt(0, 0) + 1
+                        when (args["gamemode"] as String) {
+                            "infinity" -> player.teleport(Location(Bukkit.getWorld(plugin.getLobbyKey())!!, 0.5, 101.0, 0.5), PlayerTeleportEvent.TeleportCause.PLUGIN)
+                            "minecraft" -> player.teleport(Location(Bukkit.getWorld("world")!!, 0.5, blockY.toDouble(), 0.5), PlayerTeleportEvent.TeleportCause.PLUGIN)
                         }
                     }
                 }
