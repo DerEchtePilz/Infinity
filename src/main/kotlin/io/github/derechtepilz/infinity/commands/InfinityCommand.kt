@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
-@Suppress("UNCHECKED_CAST")
 object InfinityCommand {
 
     fun register(plugin: Infinity) {
@@ -170,7 +169,7 @@ object InfinityCommand {
             literalArgument("defaultgamemode") {
                 multiLiteralArgument(nodeName = "gamemode", "infinity", "minecraft") {
                     playerExecutor { player, args ->
-                        TODO("Store the chosen option in the player and use that option when the player joins the server to make them join the correct gamemode")
+                        // TODO "Store the chosen option in the player and use that option when the player joins the server to make them join the correct gamemode"
                     }
                 }
             }
