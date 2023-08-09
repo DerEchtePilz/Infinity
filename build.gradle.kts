@@ -38,7 +38,7 @@ dependencies {
 }
 
 group = "io.github.derechtepilz"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 description = "Infinity"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -48,6 +48,18 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<Javadoc> {
     options.encoding = "UTF-8"
+}
+
+tasks.withType<ProcessResources> {
+    val properties = mapOf(
+        "version" to project.version
+    )
+
+    filteringCharset = "UTF-8"
+
+    filesMatching("paper-plugin.yml") {
+        expand(properties)
+    }
 }
 
 tasks.withType<KotlinCompile> {
