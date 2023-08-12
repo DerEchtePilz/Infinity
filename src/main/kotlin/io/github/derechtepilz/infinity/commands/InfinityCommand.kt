@@ -4,10 +4,10 @@ import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.items.InfinityItem
-import io.github.derechtepilz.infinity.util.InventorySerializer
-import io.github.derechtepilz.infinity.util.Rarity
+import io.github.derechtepilz.infinity.util.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
@@ -32,12 +32,13 @@ object InfinityCommand {
                     integerArgument("variation", 0, 100, true) {
                         playerExecutor { player, args ->
                             val itemId = args.getUnchecked<String>("itemId")!!
-                            val variationId = args.getUnchecked<Int>("variation")!!
-                            val item = Registry.Item.getItem(itemId, args.getOrDefault("variation", -1) as Int)
+                            val variationId = args.getOrDefaultUnchecked("variation", -1)!!
+                            val item = Registry.Item.getItem(itemId, variationId)
                             if (item == null) {
+                                val backup = Registry.Item.getItem(itemId, 0)!!
                                 player.sendMessage(Component.text("The ")
                                     .color(NamedTextColor.RED)
-                                    .append(Component.translatable("infinity.$itemId").color(NamedTextColor.RED).hoverEvent(Registry.Item.getItem(itemId, 0)!!))
+                                    .append(backup.displayName().color(NamedTextColor.RED).hoverEvent(Registry.Item.getItem(itemId, 0)!!))
                                     .append(Component.text(" does not have a variation id $variationId"))
                                 )
                                 return@playerExecutor
@@ -160,8 +161,26 @@ object InfinityCommand {
                     playerExecutor { player, args ->
                         val blockY = Bukkit.getWorld("world")!!.getHighestBlockYAt(0, 0) + 1
                         when (args["gamemode"] as String) {
-                            "infinity" -> player.teleport(Location(Bukkit.getWorld(plugin.getLobbyKey())!!, 0.5, 101.0, 0.5), PlayerTeleportEvent.TeleportCause.COMMAND)
-                            "minecraft" -> player.teleport(Location(Bukkit.getWorld("world")!!, 0.5, blockY.toDouble(), 0.5), PlayerTeleportEvent.TeleportCause.COMMAND)
+                            "infinity" -> {
+                                if (player.getGamemode() != Gamemode.INFINITY) {
+                                    player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND)
+                                } else {
+                                    player.sendMessage(Component.text("You cannot execute this command right now as you are already playing ")
+                                        .color(NamedTextColor.RED)
+                                        .append(MiniMessage.miniMessage().deserialize("<gradient:#18e1f0:#de18f0>Minecraft Infinity</gradient>"))
+                                    )
+                                }
+                            }
+                            "minecraft" -> {
+                                if (player.getGamemode() != Gamemode.MINECRAFT) {
+                                    player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND)
+                                } else {
+                                    player.sendMessage(Component.text("You cannot execute this command right now as you are already playing ")
+                                        .color(NamedTextColor.RED)
+                                        .append(Component.text("Minecraft").color(NamedTextColor.GREEN))
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -169,7 +188,28 @@ object InfinityCommand {
             literalArgument("defaultgamemode") {
                 multiLiteralArgument(nodeName = "gamemode", "infinity", "minecraft") {
                     playerExecutor { player, args ->
-                        // TODO "Store the chosen option in the player and use that option when the player joins the server to make them join the correct gamemode"
+                        val chosenGamemode = args["gamemode"] as String
+                        when (chosenGamemode) {
+                            "infinity" -> player.persistentDataContainer.set(plugin.getDefaultGamemode(), PersistentDataType.STRING, chosenGamemode)
+                            "minecraft" -> player.persistentDataContainer.set(plugin.getDefaultGamemode(), PersistentDataType.STRING, chosenGamemode)
+                        }
+                        player.sendMessage(Component.text("Set default gamemode to ")
+                            .color(NamedTextColor.GRAY)
+                            .append(Component.text(chosenGamemode.capitalize())
+                                .color(when (chosenGamemode) {
+                                    "infinity" -> NamedTextColor.LIGHT_PURPLE
+                                    "minecraft" -> NamedTextColor.GREEN
+                                    else -> NamedTextColor.GRAY
+                                })
+                            )
+                            .append(Component.text("!").color(NamedTextColor.GRAY))
+                        )
+                    }
+                }
+                literalArgument("reset") {
+                    playerExecutor { player, _ ->
+                        player.persistentDataContainer.remove(plugin.getDefaultGamemode())
+                        player.sendMessage(Component.text("Reset default gamemode!").color(NamedTextColor.RED))
                     }
                 }
             }
