@@ -8,14 +8,12 @@ import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.CustomArgument
 import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException
 import dev.jorel.commandapi.arguments.GreedyStringArgument
-import dev.jorel.commandapi.arguments.LocationType
 import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.events.BlockScanner
-import io.github.derechtepilz.infinity.events.getAsJson
+import io.github.derechtepilz.infinity.structure.BlockScanner
 import io.github.derechtepilz.infinity.util.BlockTracer
-import io.github.derechtepilz.infinity.world.StructureEditor
-import io.github.derechtepilz.infinity.world.StructureLoader
+import io.github.derechtepilz.infinity.structure.StructureEditor
+import io.github.derechtepilz.infinity.structure.StructureLoader
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
@@ -33,7 +31,6 @@ import org.bukkit.entity.Player
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import javax.inject.Named
 
 class DevCommand(private val infinity: Infinity) {
 
