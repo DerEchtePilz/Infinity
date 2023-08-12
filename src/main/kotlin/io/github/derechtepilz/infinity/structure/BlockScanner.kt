@@ -36,6 +36,7 @@ class BlockScanner(private val infinity: Infinity) : Listener {
     }
 
 }
+
 fun Block.getAsJson(): JsonObject {
     val blockLocation = JsonObject()
     blockLocation.addProperty("locX", this.x)
