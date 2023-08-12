@@ -30,12 +30,18 @@ fun Player.getGamemode(): Gamemode {
     }
 }
 
-private val lastWorldKey = NamespacedKey(Infinity.NAME, "lastworld")
-private val lastPosX = NamespacedKey(Infinity.NAME, "lastposx")
-private val lastPosY = NamespacedKey(Infinity.NAME, "lastposy")
-private val lastPosZ = NamespacedKey(Infinity.NAME, "lastposz")
-private val lastYaw = NamespacedKey(Infinity.NAME, "lastyaw")
-private val lastPitch = NamespacedKey(Infinity.NAME, "lastpitch")
+private val lastMinecraftWorldKey = NamespacedKey(Infinity.NAME, "lastminecraftworld")
+private val lastInfinityWorldKey = NamespacedKey(Infinity.NAME, "lastinfinityworld")
+private val lastMinecraftPosX = NamespacedKey(Infinity.NAME, "lastminecraftposx")
+private val lastMinecraftPosY = NamespacedKey(Infinity.NAME, "lastminecraftposy")
+private val lastMinecraftPosZ = NamespacedKey(Infinity.NAME, "lastminecraftposz")
+private val lastInfinityPosX = NamespacedKey(Infinity.NAME, "lastinfinityposx")
+private val lastInfinityPosY = NamespacedKey(Infinity.NAME, "lastinfinityposy")
+private val lastInfinityPosZ = NamespacedKey(Infinity.NAME, "lastinfinityposz")
+private val lastMinecraftYaw = NamespacedKey(Infinity.NAME, "lastminecraftyaw")
+private val lastMinecraftPitch = NamespacedKey(Infinity.NAME, "lastminecraftpitch")
+private val lastInfinityYaw = NamespacedKey(Infinity.NAME, "lastinfinityyaw")
+private val lastInfinityPitch = NamespacedKey(Infinity.NAME, "lastinfinitypitch")
 
 fun Player.switchGamemode(cause: TeleportCause): Boolean {
     val currentLocationX = this.location.x
@@ -45,41 +51,57 @@ fun Player.switchGamemode(cause: TeleportCause): Boolean {
     val currentPitch = this.location.pitch
     val worldKey = this.world.key
 
-    val newPosX = if (this.persistentDataContainer.has(lastPosX, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastPosX, PersistentDataType.DOUBLE)!! else 0.5
-    val newPosY = if (this.persistentDataContainer.has(lastPosY, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastPosY, PersistentDataType.DOUBLE)!! else 101.0
-    val newPosZ = if (this.persistentDataContainer.has(lastPosZ, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastPosZ, PersistentDataType.DOUBLE)!! else 0.5
-    val newYaw = if (this.persistentDataContainer.has(lastYaw, PersistentDataType.FLOAT)) this.persistentDataContainer.get(lastYaw, PersistentDataType.FLOAT)!! else 0.0F
-    val newPitch = if (this.persistentDataContainer.has(lastPitch, PersistentDataType.FLOAT)) this.persistentDataContainer.get(lastPitch, PersistentDataType.FLOAT)!! else 0.0F
-
     val newLocation = when (this.getGamemode()) {
         Gamemode.MINECRAFT -> {
             val newWorldKey = NamespacedKey.fromString(
-                if (this.persistentDataContainer.has(lastWorldKey, PersistentDataType.STRING))
-                    this.persistentDataContainer.get(lastWorldKey, PersistentDataType.STRING)!!
+                if (this.persistentDataContainer.has(lastInfinityWorldKey, PersistentDataType.STRING))
+                    this.persistentDataContainer.get(lastInfinityWorldKey, PersistentDataType.STRING)!!
                 else "${Infinity.NAME}:lobby", null
             )!!
+
+            val newPosX = if (this.persistentDataContainer.has(lastInfinityPosX, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastInfinityPosX, PersistentDataType.DOUBLE)!! else 0.5
+            val newPosY = if (this.persistentDataContainer.has(lastInfinityPosY, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastInfinityPosY, PersistentDataType.DOUBLE)!! else 101.0
+            val newPosZ = if (this.persistentDataContainer.has(lastInfinityPosZ, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastInfinityPosZ, PersistentDataType.DOUBLE)!! else 0.5
+            val newYaw = if (this.persistentDataContainer.has(lastInfinityYaw, PersistentDataType.FLOAT)) this.persistentDataContainer.get(lastInfinityYaw, PersistentDataType.FLOAT)!! else 0.0F
+            val newPitch = if (this.persistentDataContainer.has(lastInfinityPitch, PersistentDataType.FLOAT)) this.persistentDataContainer.get(lastInfinityPitch, PersistentDataType.FLOAT)!! else 0.0F
+
+            // Update the persistent data container
+            this.persistentDataContainer.set(lastMinecraftWorldKey, PersistentDataType.STRING, worldKey.asString())
+            this.persistentDataContainer.set(lastMinecraftPosX, PersistentDataType.DOUBLE, currentLocationX)
+            this.persistentDataContainer.set(lastMinecraftPosY, PersistentDataType.DOUBLE, currentLocationY)
+            this.persistentDataContainer.set(lastMinecraftPosZ, PersistentDataType.DOUBLE, currentLocationZ)
+            this.persistentDataContainer.set(lastMinecraftYaw, PersistentDataType.FLOAT, currentYaw)
+            this.persistentDataContainer.set(lastMinecraftPitch, PersistentDataType.FLOAT, currentPitch)
+
             Location(Bukkit.getWorld(newWorldKey)!!, newPosX, newPosY, newPosZ, newYaw, newPitch)
         }
         Gamemode.INFINITY -> {
             val newWorldKey = NamespacedKey.fromString(
-                if (this.persistentDataContainer.has(lastWorldKey, PersistentDataType.STRING))
-                    this.persistentDataContainer.get(lastWorldKey, PersistentDataType.STRING)!!
+                if (this.persistentDataContainer.has(lastMinecraftWorldKey, PersistentDataType.STRING))
+                    this.persistentDataContainer.get(lastMinecraftWorldKey, PersistentDataType.STRING)!!
                 else "minecraft:overworld", null
             )!!
+
+            val newPosX = if (this.persistentDataContainer.has(lastMinecraftPosX, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastMinecraftPosX, PersistentDataType.DOUBLE)!! else 0.5
+            val newPosY = if (this.persistentDataContainer.has(lastMinecraftPosY, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastMinecraftPosY, PersistentDataType.DOUBLE)!! else 101.0
+            val newPosZ = if (this.persistentDataContainer.has(lastMinecraftPosZ, PersistentDataType.DOUBLE)) this.persistentDataContainer.get(lastMinecraftPosZ, PersistentDataType.DOUBLE)!! else 0.5
+            val newYaw = if (this.persistentDataContainer.has(lastMinecraftYaw, PersistentDataType.FLOAT)) this.persistentDataContainer.get(lastMinecraftYaw, PersistentDataType.FLOAT)!! else 0.0F
+            val newPitch = if (this.persistentDataContainer.has(lastMinecraftPitch, PersistentDataType.FLOAT)) this.persistentDataContainer.get(lastMinecraftPitch, PersistentDataType.FLOAT)!! else 0.0F
+
+            // Update the persistent data container
+            this.persistentDataContainer.set(lastInfinityWorldKey, PersistentDataType.STRING, worldKey.asString())
+            this.persistentDataContainer.set(lastInfinityPosX, PersistentDataType.DOUBLE, currentLocationX)
+            this.persistentDataContainer.set(lastInfinityPosY, PersistentDataType.DOUBLE, currentLocationY)
+            this.persistentDataContainer.set(lastInfinityPosZ, PersistentDataType.DOUBLE, currentLocationZ)
+            this.persistentDataContainer.set(lastInfinityYaw, PersistentDataType.FLOAT, currentYaw)
+            this.persistentDataContainer.set(lastInfinityPitch, PersistentDataType.FLOAT, currentPitch)
+
             Location(Bukkit.getWorld(newWorldKey)!!, newPosX, newPosY, newPosZ, newYaw, newPitch)
         }
         Gamemode.UNKNOWN -> {
             null
         }
     } ?: return false
-
-    // Update the persistent data container
-    this.persistentDataContainer.set(lastWorldKey, PersistentDataType.STRING, worldKey.asString())
-    this.persistentDataContainer.set(lastPosX, PersistentDataType.DOUBLE, currentLocationX)
-    this.persistentDataContainer.set(lastPosY, PersistentDataType.DOUBLE, currentLocationY)
-    this.persistentDataContainer.set(lastPosZ, PersistentDataType.DOUBLE, currentLocationZ)
-    this.persistentDataContainer.set(lastYaw, PersistentDataType.FLOAT, currentYaw)
-    this.persistentDataContainer.set(lastPitch, PersistentDataType.FLOAT, currentPitch)
 
     // Teleport the player to the newLocation
     return this.teleport(newLocation, cause)
