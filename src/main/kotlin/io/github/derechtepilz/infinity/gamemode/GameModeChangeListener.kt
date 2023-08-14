@@ -1,6 +1,7 @@
 package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.event.GameModeChangeEvent
 import io.github.derechtepilz.infinity.util.AdvancementSerializer
 import io.github.derechtepilz.infinity.util.InventorySerializer
 import org.bukkit.Bukkit
@@ -21,9 +22,14 @@ class GameModeChangeListener(plugin: Infinity) : Listener {
     }
 
     @EventHandler
-    fun onGamemodeChange(event: PlayerChangedWorldEvent) {
-        val previousGamemode = event.from.key.namespace
-        val currentGamemode = event.player.world.key.namespace
+    fun onWorldChange(event: PlayerChangedWorldEvent) {
+        Bukkit.getPluginManager().callEvent(GameModeChangeEvent(event.player, Gamemode.getFromKey(event.from.key), Gamemode.getFromKey(event.player.world.key)))
+    }
+
+    @EventHandler
+    fun onGamemodeChange(event: GameModeChangeEvent) {
+        val previousGamemode = event.previousGamemode
+        val currentGamemode = event.newGamemode
         if (previousGamemode == currentGamemode) {
             // Do nothing, the player was changing worlds in the same gamemode
             return
@@ -31,15 +37,15 @@ class GameModeChangeListener(plugin: Infinity) : Listener {
         val player = event.player
         updatePlayerInventory(
             player,
-            if (currentGamemode == "infinity") plugin.getMinecraftInventories() else plugin.getInfinityInventories(),
-            if (currentGamemode == "infinity") plugin.getInfinityInventories() else plugin.getMinecraftInventories()
+            if (currentGamemode == Gamemode.INFINITY) plugin.getMinecraftInventories() else plugin.getInfinityInventories(),
+            if (currentGamemode == Gamemode.INFINITY) plugin.getInfinityInventories() else plugin.getMinecraftInventories()
         )
         val world = player.world
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
         updatePlayerAdvancements(
             player,
-            if (currentGamemode == "infinity") plugin.getMinecraftAdvancements() else plugin.getInfinityAdvancements(),
-            if (currentGamemode == "infinity") plugin.getInfinityAdvancements() else plugin.getMinecraftAdvancements()
+            if (currentGamemode == Gamemode.INFINITY) plugin.getMinecraftAdvancements() else plugin.getInfinityAdvancements(),
+            if (currentGamemode == Gamemode.INFINITY) plugin.getInfinityAdvancements() else plugin.getMinecraftAdvancements()
         )
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, true)
         sendTabListFooter(player, player.getGamemode())
