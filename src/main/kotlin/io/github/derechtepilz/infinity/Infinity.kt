@@ -36,6 +36,7 @@ class Infinity : JavaPlugin() {
 
     companion object {
         const val NAME = "infinity"
+        lateinit var INSTANCE: Infinity
     }
 
     private val lobbyKey = NamespacedKey(NAME, "lobby")
@@ -56,6 +57,7 @@ class Infinity : JavaPlugin() {
     private val minecraftAdvancements: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 
     override fun onLoad() {
+        INSTANCE = this
         val configReader = getConfigReader()
         if (configReader != null) {
             val jsonBuilder = StringBuilder()
