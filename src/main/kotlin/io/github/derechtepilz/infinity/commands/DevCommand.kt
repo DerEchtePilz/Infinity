@@ -109,7 +109,7 @@ class DevCommand(private val infinity: Infinity) {
                                 jsonArray.add(location.world.getBlockAt(location).getAsJson())
                             }
                             BlockScanner.PLACED_LOCATIONS.clear()
-                            val gson = GsonBuilder().setPrettyPrinting().create()
+                            val gson = GsonBuilder().create()
                             val jsonArrayString = gson.toJson(jsonArray)
 
                             bufferedWriter.write(jsonArrayString)

@@ -6,6 +6,7 @@ import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.block.data.Bisected
 import org.bukkit.block.data.Directional
+import org.bukkit.block.data.type.Leaves
 import org.bukkit.block.data.type.Slab
 import org.bukkit.block.data.type.Stairs
 import org.bukkit.event.EventHandler
@@ -43,27 +44,22 @@ fun Block.getAsJson(): JsonObject {
     blockLocation.addProperty("locY", this.y)
     blockLocation.addProperty("locZ", this.z)
     blockLocation.addProperty("materialType", this.type.name)
-    blockLocation.addProperty("directional", false)
-    blockLocation.addProperty("shape", false)
-    blockLocation.addProperty("bisected", false)
-    blockLocation.addProperty("slab", false)
     // Add block metadata
     val blockData = this.blockData
     if (blockData is Directional) {
-        blockLocation.addProperty("directional", true)
         blockLocation.addProperty("direction", blockData.facing.name)
     }
     if (blockData is Stairs) {
-        blockLocation.addProperty("shape", true)
         blockLocation.addProperty("shapeType", blockData.shape.name)
     }
     if (blockData is Bisected) {
-        blockLocation.addProperty("bisected", true)
         blockLocation.addProperty("bisectedHalf", blockData.half.name)
     }
     if (blockData is Slab) {
-        blockLocation.addProperty("slab", true)
         blockLocation.addProperty("slabHalf", blockData.type.name)
+    }
+    if (blockData is Leaves) {
+        blockLocation.addProperty("persistent", blockData.isPersistent)
     }
     return blockLocation
 }
