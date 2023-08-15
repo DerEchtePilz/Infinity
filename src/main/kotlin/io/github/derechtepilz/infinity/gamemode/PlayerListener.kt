@@ -1,12 +1,12 @@
 package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.util.sendTabListFooter
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -121,67 +121,4 @@ class PlayerListener(private val plugin: Infinity) : Listener {
         )
     }
 
-}
-
-fun World.isEqualToAny(vararg worlds: World): Boolean {
-    for (world in worlds) {
-        if (world == this) {
-            return true
-        }
-    }
-    return false
-}
-
-fun sendTabListFooter(player: Player, gamemode: Gamemode) {
-    when (gamemode) {
-        Gamemode.MINECRAFT -> player.sendPlayerListFooter(Component.text("Switch gamemodes by executing")
-            .color(NamedTextColor.GRAY)
-            .append(Component.newline())
-            .append(Component.text("/infinity gamemode infinity").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Set your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Reset your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode reset").color(NamedTextColor.YELLOW))
-        )
-        Gamemode.INFINITY -> player.sendPlayerListFooter(Component.text("Switch gamemodes by executing")
-            .color(NamedTextColor.GRAY)
-            .append(Component.newline())
-            .append(Component.text("/infinity gamemode minecraft").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Set your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Reset your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode reset").color(NamedTextColor.YELLOW))
-        )
-        Gamemode.UNKNOWN -> player.sendPlayerListFooter(Component.text("Switch gamemodes by executing")
-            .color(NamedTextColor.GRAY)
-            .append(Component.newline())
-            .append(Component.text("/infinity gamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Set your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Reset your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode reset").color(NamedTextColor.YELLOW))
-        )
-    }
-}
-
-fun Player.hasDefaultGamemode(infinity: Infinity): Boolean {
-    return this.persistentDataContainer.has(infinity.getDefaultGamemode())
 }

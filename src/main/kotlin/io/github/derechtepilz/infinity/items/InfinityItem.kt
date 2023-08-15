@@ -1,7 +1,6 @@
 package io.github.derechtepilz.infinity.items
 
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.util.Rarity
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
