@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.util
+package io.github.derechtepilz.infinity.gamemode.inventory
 
 import org.bukkit.Material
 import org.bukkit.inventory.Inventory

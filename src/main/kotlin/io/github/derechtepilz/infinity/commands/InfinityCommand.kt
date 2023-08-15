@@ -7,7 +7,7 @@ import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.github.derechtepilz.infinity.gamemode.switchGamemode
 import io.github.derechtepilz.infinity.items.InfinityItem
-import io.github.derechtepilz.infinity.util.*
+import io.github.derechtepilz.infinity.items.Rarity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.minimessage.MiniMessage

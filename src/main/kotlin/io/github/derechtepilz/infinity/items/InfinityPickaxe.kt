@@ -1,6 +1,5 @@
 package io.github.derechtepilz.infinity.items
 
-import io.github.derechtepilz.infinity.util.Rarity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -13,7 +12,7 @@ class InfinityPickaxe(rarity: Rarity) : InfinityItem(Material.matchMaterial(rari
         const val ITEM_NAME = "Infinity Pickaxe"
     }
 
-    override fun displayName(): Component = Component.translatable(ITEM_NAME).color(rarity.color()).decoration(TextDecoration.ITALIC, false)
+    override fun displayName(): Component = Component.text(ITEM_NAME).color(rarity.color()).decoration(TextDecoration.ITALIC, false)
 
     override fun applyMeta() {
         val meta = itemMeta
