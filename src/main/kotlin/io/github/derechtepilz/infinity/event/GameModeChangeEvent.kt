@@ -10,16 +10,16 @@ import org.bukkit.event.HandlerList
  */
 class GameModeChangeEvent(val player: Player, val previousGamemode: Gamemode, val newGamemode: Gamemode) : Event() {
 
-    companion object {
-        private val handlerList = HandlerList()
+	companion object {
+		private val handlerList = HandlerList()
 
-        @JvmStatic
-        fun getHandlerList(): HandlerList {
-            return handlerList
-        }
-    }
+		@JvmStatic
+		fun getHandlerList(): HandlerList {
+			return handlerList
+		}
+	}
 
-    override fun getHandlers(): HandlerList {
-        return handlerList
-    }
+	override fun getHandlers(): HandlerList {
+		return handlerList
+	}
 }
