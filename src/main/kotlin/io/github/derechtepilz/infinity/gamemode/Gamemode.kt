@@ -17,34 +17,34 @@ import java.util.*
  */
 enum class Gamemode(private val defaultWorld: World) {
 
-    /**
-     * Represents normal Minecraft.
-     *
-     * Contains the known Minecraft worlds.
-     */
-    MINECRAFT(Bukkit.getWorld("world")!!),
+	/**
+	 * Represents normal Minecraft.
+	 *
+	 * Contains the known Minecraft worlds.
+	 */
+	MINECRAFT(Bukkit.getWorld("world")!!),
 
-    /**
-     * Represents the Infinity game mode.
-     *
-     * Contains three worlds to play and a lobby that is the central point of the story.
-     */
-    INFINITY(Bukkit.getWorld(NamespacedKey(Infinity.NAME, "lobby"))!!),
+	/**
+	 * Represents the Infinity game mode.
+	 *
+	 * Contains three worlds to play and a lobby that is the central point of the story.
+	 */
+	INFINITY(Bukkit.getWorld(NamespacedKey(Infinity.NAME, "lobby"))!!),
 
-    /**
-     * A fallback value for compatibility with other custom created worlds.
-     */
-    UNKNOWN(Bukkit.getWorld("world")!!);
+	/**
+	 * A fallback value for compatibility with other custom created worlds.
+	 */
+	UNKNOWN(Bukkit.getWorld("world")!!);
 
-    fun getWorld(): World {
-        return this.defaultWorld
-    }
+	fun getWorld(): World {
+		return this.defaultWorld
+	}
 
-    companion object {
-        @JvmStatic
-        fun getFromKey(key: NamespacedKey): Gamemode {
-            return valueOf(key.namespace().uppercase())
-        }
-    }
+	companion object {
+		@JvmStatic
+		fun getFromKey(key: NamespacedKey): Gamemode {
+			return valueOf(key.namespace().uppercase())
+		}
+	}
 
 }

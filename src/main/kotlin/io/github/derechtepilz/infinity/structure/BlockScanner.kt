@@ -9,24 +9,24 @@ import org.bukkit.event.block.BlockPlaceEvent
 
 class BlockScanner(private val infinity: Infinity) : Listener {
 
-    companion object {
-        val PLACED_LOCATIONS: MutableList<Location> = mutableListOf()
-    }
+	companion object {
+		val PLACED_LOCATIONS: MutableList<Location> = mutableListOf()
+	}
 
-    @EventHandler
-    fun onPlaceStructure(event: BlockPlaceEvent) {
-        if (infinity.isScannerActive) {
-            val placedBlock = event.blockPlaced
-            PLACED_LOCATIONS.add(placedBlock.location)
-        }
-    }
+	@EventHandler
+	fun onPlaceStructure(event: BlockPlaceEvent) {
+		if (infinity.isScannerActive) {
+			val placedBlock = event.blockPlaced
+			PLACED_LOCATIONS.add(placedBlock.location)
+		}
+	}
 
-    @EventHandler
-    fun onDestroy(event: BlockBreakEvent) {
-        if (infinity.isScannerActive) {
-            val blockBroken = event.block
-            PLACED_LOCATIONS.remove(blockBroken.location)
-        }
-    }
+	@EventHandler
+	fun onDestroy(event: BlockBreakEvent) {
+		if (infinity.isScannerActive) {
+			val blockBroken = event.block
+			PLACED_LOCATIONS.remove(blockBroken.location)
+		}
+	}
 
 }
