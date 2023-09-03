@@ -2,9 +2,11 @@ package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.event.GameModeChangeEvent
+import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.sendTabListFooter
 import io.github.derechtepilz.infinity.world.WorldCarver
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
@@ -19,17 +21,19 @@ class GameModeChangeListener(plugin: Infinity) : Listener {
 
 	@EventHandler
 	fun onWorldChange(event: PlayerChangedWorldEvent) {
+		val player = event.player
 		val from = event.from.key
-		val current = event.player.world.key
+		val current = player.world.key
 		val previousGamemode = Gamemode.getFromKey(from)
 		val currentGamemode = Gamemode.getFromKey(current)
 
 		// Update sign regardless of gamemode
-		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(event.player)
+		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(player)
+		player.gameMode = if (current == Keys.WORLD_LOBBY.get()) GameMode.ADVENTURE else GameMode.SURVIVAL
 		if (previousGamemode == currentGamemode) {
 			return
 		}
-		Bukkit.getPluginManager().callEvent(GameModeChangeEvent(event.player, previousGamemode, currentGamemode))
+		Bukkit.getPluginManager().callEvent(GameModeChangeEvent(player, previousGamemode, currentGamemode))
 	}
 
 	@EventHandler
