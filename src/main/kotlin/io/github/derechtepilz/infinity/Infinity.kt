@@ -31,32 +31,50 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
 import java.util.*
+import kotlin.properties.Delegates
+import kotlin.time.measureTime
 
 class Infinity : JavaPlugin() {
 
 	init {
-		// Register items
-		Registry.Item.register(InfinityPickaxe.ITEM_ID, InfinityPickaxe(Rarity.UNCOMMON))
-		for (i in 0 until InfinityAxe.VARIATIONS) {
-			Registry.Item.register(InfinityAxe.ITEM_ID, InfinityAxe(Rarity.UNCOMMON, i))
+		try {
+			Class.forName("io.papermc.paper.event.player.AsyncChatEvent")
+		} catch (e: ClassNotFoundException) {
+			logger.severe("You do not seem to run a Paper server. This plugin heavily relies on API provided by Paper that Spigot does not have natively.")
+			logger.severe("Please upgrade to Paper here to use this plugin: https://papermc.io/downloads/paper")
+			canLoad = false
+		}
+		if (canLoad) {
+			// Register items
+			Registry.Item.register(InfinityPickaxe.ITEM_ID, InfinityPickaxe(Rarity.UNCOMMON))
+			for (i in 0 until InfinityAxe.VARIATIONS) {
+				Registry.Item.register(InfinityAxe.ITEM_ID, InfinityAxe(Rarity.UNCOMMON, i))
+			}
 		}
 	}
 
 	companion object {
 		const val NAME = "infinity"
 		lateinit var INSTANCE: Infinity
+		var canLoad = true
 	}
 
 	var isScannerActive = false
 
-	private val devCommand = DevCommand(this)
-	private val blockScanner = BlockScanner(this)
+	private lateinit var devCommand: DevCommand
+	private lateinit var blockScanner: BlockScanner
 
 	private val inventoryData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val experienceData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 
 	override fun onLoad() {
+		if (!canLoad) {
+			logger.warning("Loading sequence no called. Please upgrade to Paper")
+			return
+		}
 		INSTANCE = this
+		devCommand = DevCommand(this)
+		blockScanner = BlockScanner(this)
 
 		// Check server version
 
@@ -95,6 +113,11 @@ class Infinity : JavaPlugin() {
 	}
 
 	override fun onEnable() {
+		if (!canLoad) {
+			logger.warning("Enabling sequence not called. Please upgrade to Paper.")
+			Bukkit.getPluginManager().disablePlugin(this)
+			return
+		}
 		val lobby = Bukkit.createWorld(WorldCreator("infinity/lobby", Keys.WORLD_LOBBY.get())
 			.generator(WorldManager.ChunkGenerators.EmptyChunkGenerator())
 			.biomeProvider(WorldManager.BiomeProviders.EmptyBiomeProvider())
@@ -147,6 +170,10 @@ class Infinity : JavaPlugin() {
 	}
 
 	override fun onDisable() {
+		if (!canLoad) {
+			// Safeguard so potentially saved player data is not deleted
+			return
+		}
 		// Save player data
 		val configWriter = getConfigWriter()
 		val playerDataObject = JsonObject()
