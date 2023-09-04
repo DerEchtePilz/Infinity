@@ -1,8 +1,9 @@
 package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.gamemode.experience.ExperienceSerializer
-import io.github.derechtepilz.infinity.gamemode.inventory.InventorySerializer
+import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
+import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
+import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
 import org.bukkit.Bukkit
@@ -21,11 +22,12 @@ import java.util.*
 
 fun Player.getGamemode(): Gamemode {
 	val playerWorld = this.world
-	return when (playerWorld.key.namespace) {
+	return Gamemode.getFromKey(playerWorld.key)
+	/*return when (playerWorld.key.namespace) {
 		"infinity" -> Gamemode.INFINITY
 		"minecraft" -> Gamemode.MINECRAFT
 		else -> Gamemode.UNKNOWN
-	}
+	}*/
 }
 
 fun Player.hasDefaultGamemode(): Boolean {
@@ -101,9 +103,10 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	// Teleport the player to the newLocation
 	this.teleport(newLocation, cause)
 
-	// Update inventory and experience
+	// Update inventory, experience, health and hunger
 	this.updateInventory(Infinity.INSTANCE.getInventoryData())
 	this.updateExperience(Infinity.INSTANCE.getExperienceData())
+	this.updateHealthHunger(Infinity.INSTANCE.getHealthHungerData())
 }
 
 fun Player.updateInventory(inventories: MutableMap<UUID, MutableList<String>>) {
@@ -173,6 +176,42 @@ fun Player.updateExperience(experience: MutableMap<UUID, MutableList<String>>) {
 	// Update the player's experience
 	this.level = experienceLevel
 	this.exp = experienceProgress
+}
+
+fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>>) {
+	// Serialize the health and hunger of the player
+	val healthHungerData = HealthHungerSerializer.serialize(this)
+
+	// Load the player's health and hunger
+	val playerData = if (healthHunger.containsKey(this.uniqueId)) healthHunger[this.uniqueId] else null
+
+	if (playerData == null) {
+		// For each player, this is only reached when switching gamemodes the first time
+		// Save the player's health and hunger
+		healthHunger[this.uniqueId] = mutableListOf(healthHungerData)
+
+		// Reset the player's health and hunger
+		this.health = 20.0
+		this.foodLevel = 20
+		this.saturation = 20.0f
+		return
+	}
+
+	// Deserialize the player's health and hunger
+	val healthHungerList = HealthHungerSerializer.deserialize(playerData[0])
+
+	// Save the player's health and hunger
+	healthHunger[this.uniqueId] = mutableListOf(healthHungerData)
+
+	// Reset the player's health and hunger
+	this.health = 20.0
+	this.foodLevel = 20
+	this.saturation = 20.0f
+
+	// Update the player's health and hunger
+	this.health = healthHungerList[0] as Double
+	this.foodLevel = healthHungerList[1] as Int
+	this.saturation = healthHungerList[2] as Float
 }
 
 data class SwitchInfo(val targetWorld: NamespacedKey, val targetLocation: Location?)
