@@ -31,7 +31,7 @@ class EnderChestHandler : Listener {
 					return
 				}
 				if (event.isLeftClick) {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_SKY.get())!!, 0.0, 101.0, 0.0), TeleportCause.PLUGIN)
+					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_SKY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 				}
 			}
 			EnderChestInventory.INSTANCE.classTwoTeleport() -> {
@@ -40,7 +40,7 @@ class EnderChestHandler : Listener {
 					return
 				}
 				if (event.isLeftClick) {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_STONE.get())!!, 0.0, 101.0, 0.0), TeleportCause.PLUGIN)
+					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_STONE.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 				}
 			}
 			EnderChestInventory.INSTANCE.classThreeTeleport() -> {
@@ -49,11 +49,11 @@ class EnderChestHandler : Listener {
 					return
 				}
 				if (event.isLeftClick) {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_NETHER.get())!!, 0.0, 101.0, 0.0), TeleportCause.PLUGIN)
+					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_NETHER.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 				}
 			}
 			EnderChestInventory.INSTANCE.lobbyTeleport() -> {
-				player.teleport(Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 0.0, 101.0, 0.0), TeleportCause.PLUGIN)
+				player.teleport(Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 			}
 		}
 	}

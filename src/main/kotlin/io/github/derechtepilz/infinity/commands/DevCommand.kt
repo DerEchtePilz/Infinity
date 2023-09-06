@@ -66,11 +66,22 @@ class DevCommand(private val infinity: Infinity) {
 				literalArgument("start") {
 					playerExecutor { player, _ ->
 						infinity.isScannerActive = true
-						player.sendMessage(Component.text("You can now place blocks to define your structure. When generating the structure each block will be placed at the location you place it at now.")
+						player.sendMessage(Component.text().content("You are currently building a structure in ")
 							.color(NamedTextColor.YELLOW)
-							.append(Component.text("The first seven Bedrock blocks you place will define the locations for villagers when playing this gamemode").color(NamedTextColor.YELLOW))
-
+							.append(Component.text().content(infinity.mode).color(NamedTextColor.GREEN))
+							.append(Component.text().content(" mode!").color(NamedTextColor.YELLOW))
 						)
+					}
+					multiLiteralArgument(nodeName = "mode", "destroy", "place") {
+						playerExecutor { player, args ->
+							infinity.isScannerActive = true
+							infinity.mode = args["mode"] as String
+							player.sendMessage(Component.text().content("You are currently building a structure in ")
+								.color(NamedTextColor.YELLOW)
+								.append(Component.text().content(infinity.mode).color(NamedTextColor.GREEN))
+								.append(Component.text().content(" mode!").color(NamedTextColor.YELLOW))
+							)
+						}
 					}
 				}
 				literalArgument("confirm") {
@@ -146,22 +157,25 @@ class DevCommand(private val infinity: Infinity) {
 				literalArgument("edit") {
 					textArgument("structure") {
 						replaceSuggestions(getStructureIdentifiers())
-						playerExecutor { player, args ->
-							val input = args["structure"] as String
-							val worldName = input.split("/")[0]
-							val worldFile = File("./infinity/structures/$worldName")
-							val structureFileName = input.split("/")[1] + ".json"
-							val structureFile = File(worldFile, structureFileName)
-							val structureBlockLocations = StructureEditor(structureFile).deserializeStructureToLocations()
-							BlockScanner.PLACED_LOCATIONS.addAll(structureBlockLocations)
-							infinity.isScannerActive = true
-							player.sendMessage(Component.text("You can now edit the structure ")
-								.color(NamedTextColor.GREEN)
-								.append(Component.text(structureFile.name).color(NamedTextColor.YELLOW))
-								.append(Component.text("! Type ").color(NamedTextColor.GREEN))
-								.append(Component.text("/dev structure confirm ${structureFileName.replace(".json", "")}").color(NamedTextColor.YELLOW))
-								.append(Component.text(" when you're done!").color(NamedTextColor.GREEN))
-							)
+						multiLiteralArgument(nodeName = "mode", "place", "destroy") {
+							playerExecutor { player, args ->
+								val input = args["structure"] as String
+								val worldName = input.split("/")[0]
+								val worldFile = File("./infinity/structures/$worldName")
+								val structureFileName = input.split("/")[1] + ".json"
+								val structureFile = File(worldFile, structureFileName)
+								val structureBlockLocations = StructureEditor(structureFile).deserializeStructureToLocations()
+								BlockScanner.PLACED_LOCATIONS.addAll(structureBlockLocations)
+								infinity.isScannerActive = true
+								infinity.mode = args["mode"] as String
+								player.sendMessage(Component.text("You can now edit the structure ")
+									.color(NamedTextColor.GREEN)
+									.append(Component.text(structureFile.name).color(NamedTextColor.YELLOW))
+									.append(Component.text("! Type ").color(NamedTextColor.GREEN))
+									.append(Component.text("/dev structure confirm ${structureFileName.replace(".json", "")}").color(NamedTextColor.YELLOW))
+									.append(Component.text(" when you're done!").color(NamedTextColor.GREEN))
+								)
+							}
 						}
 					}
 				}
