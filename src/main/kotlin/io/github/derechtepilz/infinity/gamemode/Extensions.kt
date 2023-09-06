@@ -55,28 +55,28 @@ fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause) {
 		Gamemode.UNKNOWN -> Gamemode.UNKNOWN.getWorld().key
 	}
 
-	this.updateLastLocationAndSwitch(cause, SwitchInfo(newWorldKey, null))
+	this.updateLastLocationAndSwitch(cause, SwitchInfo(null, newWorldKey, null))
 }
 
-fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause, targetWorld: World, targetLocation: Location? = null) {
+fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause, targetWorld: World, targetLocation: Location? = null, force: ForceInfo? = null) {
 	val currentGamemode = this.getGamemode()
 	val targetGamemode = Gamemode.getFromKey(targetWorld.key)
-	if (currentGamemode == targetGamemode) {
+	if (currentGamemode == targetGamemode && force == null) {
 		throw IllegalArgumentException("The targetWorld can't be in the same game mode!")
 	}
 	val newWorldKey = targetWorld.key
 
-	this.updateLastLocationAndSwitch(cause, SwitchInfo(newWorldKey, targetLocation))
+	this.updateLastLocationAndSwitch(cause, SwitchInfo(force, newWorldKey, targetLocation))
 }
 
 private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.TeleportCause, switchInfo: SwitchInfo) {
 	// Save the player location and orientation
-	val currentLocationX = this.location.x
-	val currentLocationY = this.location.y
-	val currentLocationZ = this.location.z
-	val currentYaw = this.location.yaw
-	val currentPitch = this.location.pitch
-	val currentWorldKey = this.world.key
+	val currentLocationX = if (switchInfo.force != null) switchInfo.force.x else this.location.x
+	val currentLocationY = if (switchInfo.force != null) switchInfo.force.y else this.location.y
+	val currentLocationZ = if (switchInfo.force != null) switchInfo.force.z else this.location.z
+	val currentYaw = if (switchInfo.force != null) switchInfo.force.yaw else this.location.yaw
+	val currentPitch = if (switchInfo.force != null) switchInfo.force.pitch else this.location.pitch
+	val currentWorldKey = if (switchInfo.force != null) switchInfo.force.previousWorld else this.world.key
 
 	// Load the new location and orientation
 	var newPosX = if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE)!! else 0.5
@@ -223,7 +223,8 @@ fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>
 	this.saturation = healthHungerList[2] as Float
 }
 
-data class SwitchInfo(val targetWorld: NamespacedKey, val targetLocation: Location?)
+data class SwitchInfo(val force: ForceInfo?, val targetWorld: NamespacedKey, val targetLocation: Location?)
+data class ForceInfo(val previousWorld: NamespacedKey, val x: Double, val y: Double, val z: Double, val yaw: Float, val pitch: Float)
 
 /**********************************
  *      GAME CLASS AND SIGNS      *

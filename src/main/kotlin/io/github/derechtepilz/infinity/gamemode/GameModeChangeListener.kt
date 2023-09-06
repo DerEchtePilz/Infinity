@@ -10,6 +10,7 @@ import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 
 class GameModeChangeListener(plugin: Infinity) : Listener {
 
@@ -17,6 +18,21 @@ class GameModeChangeListener(plugin: Infinity) : Listener {
 
 	init {
 		this.plugin = plugin
+		INSTANCE = this
+	}
+
+	companion object {
+		lateinit var INSTANCE: GameModeChangeListener
+	}
+
+	@EventHandler
+	fun onTeleport(event: PlayerTeleportEvent) {
+		if (event.cause != PlayerTeleportEvent.TeleportCause.COMMAND) {
+			return
+		}
+		val player = event.player
+		val from = event.from
+		player.switchGamemode(PlayerTeleportEvent.TeleportCause.UNKNOWN, player.world, player.location, ForceInfo(from.world.key, from.x, from.y, from.z, from.yaw, from.pitch))
 	}
 
 	@EventHandler
