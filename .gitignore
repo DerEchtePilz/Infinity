@@ -10,6 +10,8 @@ target
 
 lobby
 sky
+nether
+stone
 
 # Ignore Gradle build output directory
 build
