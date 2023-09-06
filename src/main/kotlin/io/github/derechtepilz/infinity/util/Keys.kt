@@ -22,7 +22,15 @@ enum class Keys(private val namespace: NamespacedKey) {
 	SIGN_TAG_SWITCH_CLASS(NamespacedKey(Infinity.NAME, "st_switchclass")),
 	SIGN_STATE_HOME_DIMENSION(NamespacedKey(Infinity.NAME, "homedimension")),
 	SIGN_STATE_SELECT_CLASS(NamespacedKey(Infinity.NAME, "ss_selectclass")),
-	SIGN_STATE_SWITCH_CLASS(NamespacedKey(Infinity.NAME, "ss_switchclass"));
+	SIGN_STATE_SWITCH_CLASS(NamespacedKey(Infinity.NAME, "ss_switchclass")),
+	DEATH_RESPAWN_MC_WORLD(NamespacedKey(Infinity.NAME, "mc_respawn_world")),
+	DEATH_RESPAWN_MC_POS_X(NamespacedKey(Infinity.NAME, "mc_respawn_pos_x")),
+	DEATH_RESPAWN_MC_POS_Y(NamespacedKey(Infinity.NAME, "mc_respawn_pos_y")),
+	DEATH_RESPAWN_MC_POS_Z(NamespacedKey(Infinity.NAME, "mc_respawn_pos_z")),
+	DEATH_RESPAWN_INFINITY_WORLD(NamespacedKey(Infinity.NAME, "infinity_respawn_world")),
+	DEATH_RESPAWN_INFINITY_POS_X(NamespacedKey(Infinity.NAME, "infinity_respawn_pos_x")),
+	DEATH_RESPAWN_INFINITY_POS_Y(NamespacedKey(Infinity.NAME, "infinity_respawn_pos_y")),
+	DEATH_RESPAWN_INFINITY_POS_Z(NamespacedKey(Infinity.NAME, "infinity_respawn_pos_z"));
 
 	fun get(): NamespacedKey {
 		return namespace
