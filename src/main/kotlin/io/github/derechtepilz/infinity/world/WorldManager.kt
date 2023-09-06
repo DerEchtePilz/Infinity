@@ -27,7 +27,7 @@ class WorldManager {
 			}
 
 			override fun generateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int, chunkData: ChunkData) {
-				for (y in chunkData.minHeight + 5..chunkData.minHeight + 64) {
+				for (y in chunkData.minHeight + 5..chunkData.minHeight + 100) {
 					for (x in 0..15) {
 						for (z in 0..15) {
 							chunkData.setBlock(x, y, z, Material.LAVA)
