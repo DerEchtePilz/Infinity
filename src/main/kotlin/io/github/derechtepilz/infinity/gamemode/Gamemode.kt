@@ -1,16 +1,10 @@
 package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.gamemode.experience.ExperienceSerializer
-import io.github.derechtepilz.infinity.gamemode.inventory.InventorySerializer
+import io.github.derechtepilz.infinity.gamemode.Gamemode.*
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
-import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause
-import org.bukkit.persistence.PersistentDataType
-import java.util.*
 
 /**
  * An enum representation of the two game modes [MINECRAFT] and [INFINITY] plus [UNKNOWN] as a fallback game mode!
