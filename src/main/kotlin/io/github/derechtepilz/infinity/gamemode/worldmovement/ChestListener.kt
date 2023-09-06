@@ -37,7 +37,7 @@ class ChestListener : Listener {
 		val clickedLocation = event.clickedBlock!!.location.toVector()
 		if (clickedLocation == northChestLocation || clickedLocation == eastChestLocation || clickedLocation == southChestLocation || clickedLocation == westChestLocation) {
 			event.isCancelled = true
-			player.openInventory(Bukkit.createInventory(null, InventoryType.ENDER_CHEST, Component.text("Ender Chest Replacement")))
+			EnderChestInventory(player)
 		}
 	}
 
