@@ -152,4 +152,44 @@ class WorldCarver {
 
 	}
 
+	class SkyCarver(val world: World) {
+		init {
+			if (world.key != Keys.WORLD_SKY.get()) {
+				throw IllegalArgumentException("World 'infinity:sky' expected but received '${world.key}'")
+			}
+			// Load structure if there's no block at 0 100 0
+			val canLoadStructure = world.getBlockAt(0, 100, 0).type == Material.AIR
+			if (canLoadStructure) {
+				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("sky/sky_spawn.json")!!)
+			}
+		}
+	}
+
+	class StoneCarver(val world: World) {
+		init {
+			if (world.key != Keys.WORLD_STONE.get()) {
+				throw IllegalArgumentException("World 'infinity:stone' expected but received '${world.key}'")
+			}
+			// Load structure if there's a block at 0 101 0
+			val canLoadStructure = world.getBlockAt(0, 101, 0).type != Material.AIR
+			if (canLoadStructure) {
+				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("stone/stone_spawn.json")!!)
+			}
+		}
+	}
+
+	class NetherCarver(val world: World) {
+		init {
+			if (world.key != Keys.WORLD_NETHER.get()) {
+				throw IllegalArgumentException("World 'infinity:nether' expected but received '${world.key}'")
+			}
+			// Load structure if there's lava at 0 100 0
+			val canLoadStructure = world.getBlockAt(0, 100, 0).type == Material.LAVA
+			if (canLoadStructure) {
+				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("nether/nether_spawn.json")!!)
+			}
+		}
+	}
+
+
 }
