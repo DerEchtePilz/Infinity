@@ -59,14 +59,14 @@ class DeathHandler : Listener {
 				when (player.getGamemode()) {
 					Gamemode.INFINITY -> {
 						if (!infinityRespawns.containsKey(player.uniqueId) || infinityRespawns[player.uniqueId] != event.location!!) {
-							event.notification = Component.text().content("Set spawn in ").append(MiniMessage.miniMessage().deserialize("<gradient:#18e1f0:#de18f0>Minecraft Infinity</gradient>")).build()
+							event.notification = Component.text().content("Set spawn for ").append(MiniMessage.miniMessage().deserialize("<gradient:#18e1f0:#de18f0>Minecraft Infinity</gradient>")).build()
 						}
 						infinityRespawns[player.uniqueId] = event.location!!
 					}
 
 					Gamemode.MINECRAFT -> {
 						if (!minecraftRespawns.containsKey(player.uniqueId) || minecraftRespawns[player.uniqueId] != event.location!!) {
-							event.notification = Component.text().content("Set spawn in ").append(Component.text().content("Minecraft").color(NamedTextColor.GREEN)).build()
+							event.notification = Component.text().content("Set spawn for ").append(Component.text().content("Minecraft").color(NamedTextColor.GREEN)).build()
 						}
 						minecraftRespawns[player.uniqueId] = event.location!!
 					}
