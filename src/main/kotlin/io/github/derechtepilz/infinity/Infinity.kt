@@ -1,13 +1,11 @@
 package io.github.derechtepilz.infinity
 
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.chat.ChatHandler
-import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.gamemode.DeathHandler
 import io.github.derechtepilz.infinity.gamemode.GameModeChangeListener
@@ -19,7 +17,6 @@ import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.items.Rarity
-import io.github.derechtepilz.infinity.structure.BlockScanner
 import io.github.derechtepilz.infinity.util.JsonUtil
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
@@ -59,9 +56,6 @@ class Infinity : JavaPlugin() {
 	var isScannerActive = false
 	var mode = "place"
 
-	private lateinit var devCommand: DevCommand
-	private lateinit var blockScanner: BlockScanner
-
 	private val inventoryData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val experienceData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val healthHungerData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
@@ -73,8 +67,6 @@ class Infinity : JavaPlugin() {
 		// Check server version, disable on 1.19.4 and lower
 
 		INSTANCE = this
-		devCommand = DevCommand(this)
-		blockScanner = BlockScanner(this)
 
 		// Load the plugin
 		val configReader = getConfigReader()
@@ -96,7 +88,6 @@ class Infinity : JavaPlugin() {
 		CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
 
 		InfinityCommand.register()
-		devCommand.register()
 	}
 
 	override fun onEnable() {
@@ -150,7 +141,6 @@ class Infinity : JavaPlugin() {
 		WorldCarver.StoneCarver(stone)
 		WorldCarver.NetherCarver(nether)
 
-		Bukkit.getPluginManager().registerEvents(blockScanner, this)
 		Bukkit.getPluginManager().registerEvents(PlayerListener(), this)
 		Bukkit.getPluginManager().registerEvents(GameModeChangeListener(this), this)
 		Bukkit.getPluginManager().registerEvents(AdvancementListener(), this)
