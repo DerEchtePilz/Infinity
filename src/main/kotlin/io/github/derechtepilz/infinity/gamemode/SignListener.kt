@@ -64,7 +64,7 @@ class SignListener : Listener {
 				val testClass = if (classSelection.containsKey(player.uniqueId)) {
 					classSelection[player.uniqueId]!!.getNext()
 				} else {
-					SignState.ClassSelectionState.CLASS_1
+					SignState.ClassSelectionState.AIRBORN
 				}
 				testClass.loadFor(player)
 				classSelection[player.uniqueId] = SignState.ClassSelectionState.valueOf(testClass.asString().content().uppercase().replace(" ", "_"))
@@ -83,7 +83,7 @@ class SignListener : Listener {
 				val testClass = if (switchClassSelection.containsKey(player.uniqueId)) {
 					switchClassSelection[player.uniqueId]!!.getNext()
 				} else {
-					SignState.ClassSwitchingState.CLASS_1
+					SignState.ClassSwitchingState.AIRBORN
 				}
 				testClass.loadFor(player)
 				switchClassSelection[player.uniqueId] = SignState.ClassSwitchingState.valueOf(testClass.asString().content().uppercase().replace(" ", "_"))
