@@ -7,10 +7,7 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.chat.ChatHandler
 import io.github.derechtepilz.infinity.commands.InfinityCommand
-import io.github.derechtepilz.infinity.gamemode.DeathHandler
-import io.github.derechtepilz.infinity.gamemode.GameModeChangeListener
-import io.github.derechtepilz.infinity.gamemode.PlayerListener
-import io.github.derechtepilz.infinity.gamemode.SignListener
+import io.github.derechtepilz.infinity.gamemode.*
 import io.github.derechtepilz.infinity.gamemode.advancement.AdvancementListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
@@ -23,6 +20,10 @@ import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
 import io.github.derechtepilz.infinity.world.WorldManager
 import org.bukkit.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityPortalEnterEvent
+import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
 import java.util.*
@@ -149,6 +150,7 @@ class Infinity : JavaPlugin() {
 		Bukkit.getPluginManager().registerEvents(ChestListener(), this)
 		Bukkit.getPluginManager().registerEvents(DeathHandler(), this)
 		Bukkit.getPluginManager().registerEvents(EnderChestHandler(), this)
+		Bukkit.getPluginManager().registerEvents(PortalDisableHandler(), this)
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand") { channel, player, message ->
 			logger.info("${player.name} just logged in using ${String(message).substring(1).capitalize()}")
