@@ -8,10 +8,14 @@ target
 *.iml
 *.bat
 
+# Structure resource directories
 lobby
 sky
 nether
 stone
+
+# Server directory
+run
 
 # Ignore Gradle build output directory
 build

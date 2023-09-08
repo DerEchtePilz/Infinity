@@ -2,11 +2,13 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     java
     kotlin("jvm") version "1.9.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+	id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 repositories {
@@ -80,4 +82,8 @@ tasks.withType<ShadowJar> {
     }
     relocate("dev.jorel.commandapi", "io.github.derechtepilz.commandapi")
     minimize()
+}
+
+tasks.withType<RunServer> {
+	minecraftVersion("1.20.1")
 }
