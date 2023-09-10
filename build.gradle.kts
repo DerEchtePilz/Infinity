@@ -42,7 +42,7 @@ dependencies {
     compileOnly("dev.jorel:commandapi-bukkit-kotlin:$commandAPIVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     compileOnly("com.google.code.gson:gson:2.10.1")
-	paperweight.paperDevBundle(paperVersion)
+	paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
 group = "io.github.derechtepilz"
