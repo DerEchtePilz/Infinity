@@ -37,12 +37,15 @@ class BlockScanner(private val infinity: Infinity) : Listener {
     }
 
 }
+var placedVillagerLocations = 0
+
 fun Block.getAsJson(): JsonObject {
     val blockLocation = JsonObject()
     blockLocation.addProperty("locX", this.x)
     blockLocation.addProperty("locY", this.y)
     blockLocation.addProperty("locZ", this.z)
     blockLocation.addProperty("materialType", this.type.name)
+    blockLocation.addProperty("villagerLocation", false) // Figure out when and how to access this
     blockLocation.addProperty("directional", false)
     blockLocation.addProperty("shape", false)
     blockLocation.addProperty("bisected", false)
@@ -64,6 +67,12 @@ fun Block.getAsJson(): JsonObject {
     if (blockData is Slab) {
         blockLocation.addProperty("slab", true)
         blockLocation.addProperty("slabHalf", blockData.type.name)
+    }
+    if (this.type == Material.BEDROCK && placedVillagerLocations < Infinity.MAX_VILLAGERS) {
+        // TODO: Villager locations are not handled yet
+        placedVillagerLocations++
+        blockLocation.addProperty("villagerLocation", true)
+        blockLocation.addProperty("villager", placedVillagerLocations)
     }
     return blockLocation
 }
