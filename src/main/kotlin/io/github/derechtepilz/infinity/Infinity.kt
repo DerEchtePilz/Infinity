@@ -39,7 +39,6 @@ class Infinity : JavaPlugin() {
 	init {
 		try {
 			Class.forName("io.papermc.paper.event.player.AsyncChatEvent")
-			Class.forName("net.kyori.adventure.text.Component")
 		} catch (e: ClassNotFoundException) {
 			logger.severe("You do not seem to run a Paper server. This plugin heavily relies on API provided by Paper that Spigot does not have natively.")
 			logger.severe("Please upgrade to Paper here to use this plugin: https://papermc.io/downloads/paper")
