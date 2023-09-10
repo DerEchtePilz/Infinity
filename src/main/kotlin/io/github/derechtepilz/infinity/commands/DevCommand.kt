@@ -14,7 +14,6 @@ import io.github.derechtepilz.infinity.structure.BlockScanner
 import io.github.derechtepilz.infinity.util.BlockTracer
 import io.github.derechtepilz.infinity.structure.StructureEditor
 import io.github.derechtepilz.infinity.structure.StructureLoader
-import io.github.derechtepilz.infinity.structure.getAsJson
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
@@ -210,6 +209,44 @@ class DevCommand(private val infinity: Infinity) {
             infinity.getStoneKey() -> "stone"
             else -> "nether"
         }
+    }
+
+    private fun Block.getAsJson(): JsonObject {
+        val blockLocation = JsonObject()
+        blockLocation.addProperty("locX", this.x)
+        blockLocation.addProperty("locY", this.y)
+        blockLocation.addProperty("locZ", this.z)
+        blockLocation.addProperty("materialType", this.type.name)
+        blockLocation.addProperty("villagerLocation", false) // Figure out when and how to access this
+        blockLocation.addProperty("directional", false)
+        blockLocation.addProperty("shape", false)
+        blockLocation.addProperty("bisected", false)
+        blockLocation.addProperty("slab", false)
+        // Add block metadata
+        val blockData = this.blockData
+        if (blockData is Directional) {
+            blockLocation.addProperty("directional", true)
+            blockLocation.addProperty("direction", blockData.facing.name)
+        }
+        if (blockData is Stairs) {
+            blockLocation.addProperty("shape", true)
+            blockLocation.addProperty("shapeType", blockData.shape.name)
+        }
+        if (blockData is Bisected) {
+            blockLocation.addProperty("bisected", true)
+            blockLocation.addProperty("bisectedHalf", blockData.half.name)
+        }
+        if (blockData is Slab) {
+            blockLocation.addProperty("slab", true)
+            blockLocation.addProperty("slabHalf", blockData.type.name)
+        }
+        if (this.type == Material.BEDROCK && infinity.getBlockScanner().placedVillagerLocations < Infinity.MAX_VILLAGERS) {
+            // TODO: Villager locations are not handled yet
+            infinity.getBlockScanner().placedVillagerLocations++
+            blockLocation.addProperty("villagerLocation", true)
+            blockLocation.addProperty("villager", infinity.getBlockScanner().placedVillagerLocations)
+        }
+        return blockLocation
     }
 
 }
