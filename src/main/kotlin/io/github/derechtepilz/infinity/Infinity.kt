@@ -183,7 +183,6 @@ class Infinity : JavaPlugin() {
 		// If PaperMC/Paper #9679 gets merged, this is redundant
 		for (player in Bukkit.getOnlinePlayers()) {
 			SignListener.INSTANCE.saveSignStatesFor(player)
-			DeathHandler.INSTANCE.saveSpawnPointsFor(player)
 		}
 	}
 

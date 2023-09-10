@@ -187,6 +187,7 @@ object InfinityCommand {
 									)
 								}
 							}
+
 							"minecraft" -> {
 								if (player.getGamemode() != Gamemode.MINECRAFT) {
 									player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND)
