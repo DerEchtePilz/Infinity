@@ -6,7 +6,6 @@ import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerialize
 import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
-import net.kyori.adventure.text.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
@@ -233,8 +232,8 @@ data class ForceInfo(val previousWorld: NamespacedKey, val x: Double, val y: Dou
 
 private val gameClassKey = NamespacedKey(Infinity.NAME, "gameclass")
 
-fun Player.getClass(): TextComponent {
-	return GameClass.valueOf(this.persistentDataContainer.get(gameClassKey, PersistentDataType.STRING)!!.uppercase()).get()
+fun Player.getClass(): String {
+	return GameClass.valueOf(this.persistentDataContainer.get(gameClassKey, PersistentDataType.STRING)!!.uppercase()).name.lowercase().capitalize()
 }
 
 fun Player.setClass(gameClass: GameClass) {

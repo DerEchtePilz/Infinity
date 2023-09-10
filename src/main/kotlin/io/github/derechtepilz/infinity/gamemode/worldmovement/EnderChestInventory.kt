@@ -1,6 +1,5 @@
 package io.github.derechtepilz.infinity.gamemode.worldmovement
 
-import io.github.derechtepilz.infinity.gamemode.GameClass
 import io.github.derechtepilz.infinity.items.minecraft.ItemBuilder
 import io.github.derechtepilz.infinity.util.Keys
 import net.kyori.adventure.text.Component
@@ -26,7 +25,10 @@ class EnderChestInventory(private val player: Player) {
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
-		.append(GameClass.Dimension.LOBBY.get())
+		.append(Component.text().content("Lobby")
+			.color(NamedTextColor.GOLD)
+			.decoration(TextDecoration.ITALIC, false)
+		)
 		.build()
 	).build()
 
@@ -34,7 +36,10 @@ class EnderChestInventory(private val player: Player) {
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
-		.append(GameClass.Dimension.SKY.get())
+		.append(Component.text().content("Class 1")
+			.color(NamedTextColor.AQUA)
+			.decoration(TextDecoration.ITALIC, false)
+		)
 		.build()
 	).setLore(listOf(
 		Component.text().content("Left-click  to teleport").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false).build(),
@@ -45,7 +50,10 @@ class EnderChestInventory(private val player: Player) {
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
-		.append(GameClass.Dimension.STONE.get())
+		.append(Component.text().content("Class 2")
+			.color(NamedTextColor.DARK_GRAY)
+			.decoration(TextDecoration.ITALIC, false)
+		)
 		.build()
 	).setLore(listOf(
 		Component.text().content("Left-click  to teleport").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false).build(),
@@ -56,7 +64,10 @@ class EnderChestInventory(private val player: Player) {
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
-		.append(GameClass.Dimension.NETHER.get())
+		.append(Component.text().content("Class 3")
+			.color(NamedTextColor.DARK_RED)
+			.decoration(TextDecoration.ITALIC, false)
+		)
 		.build()
 	).setLore(listOf(
 		Component.text().content("Left-click  to teleport").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false).build(),
