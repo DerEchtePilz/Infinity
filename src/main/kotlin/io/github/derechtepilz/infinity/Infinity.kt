@@ -75,7 +75,6 @@ class Infinity : JavaPlugin() {
 	private val inventoryData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val experienceData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val healthHungerData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-	private val potionEffectData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 
 	override fun onLoad() {
 		if (!canLoad) {
@@ -97,12 +96,10 @@ class Infinity : JavaPlugin() {
 			val inventoryDataArray = JsonUtil.getArray("inventoryData", jsonObject)
 			val experienceDataArray = JsonUtil.getArray("experienceData", jsonObject)
 			val healthHungerDataArray = JsonUtil.getArray("healthHungerData", jsonObject)
-			val potionEffectDataArray = JsonUtil.getArray("potionEffectData", jsonObject)
 
 			JsonUtil.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData)
 			JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData)
 			JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData)
-			JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData)
 		}
 		CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
 
@@ -189,7 +186,6 @@ class Infinity : JavaPlugin() {
 		JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData)
 		JsonUtil.saveMap(playerDataObject, "experienceData", experienceData)
 		JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData)
-		JsonUtil.saveMap(playerDataObject, "potionEffectData", potionEffectData)
 
 		val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject)
 		configWriter.write(jsonString)
@@ -214,10 +210,6 @@ class Infinity : JavaPlugin() {
 
 	fun getHealthHungerData(): MutableMap<UUID, MutableList<String>> {
 		return healthHungerData
-	}
-
-	fun getPotionEffectData(): MutableMap<UUID, MutableList<String>> {
-		return potionEffectData
 	}
 
 	private fun getConfigReader(): BufferedReader? {
