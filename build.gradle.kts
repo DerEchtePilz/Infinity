@@ -5,15 +5,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
-    `java-library`
+    java
     kotlin("jvm") version "1.9.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 	id("xyz.jpenilla.run-paper") version "2.1.0"
-	id("io.papermc.paperweight.userdev") version "1.5.5"
 }
 
 repositories {
-	gradlePluginPortal()
     maven {
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
@@ -42,7 +40,7 @@ dependencies {
     compileOnly("dev.jorel:commandapi-bukkit-kotlin:$commandAPIVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     compileOnly("com.google.code.gson:gson:2.10.1")
-	paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:$paperVersion")
 }
 
 group = "io.github.derechtepilz"
@@ -84,4 +82,8 @@ tasks.withType<ShadowJar> {
     }
     relocate("dev.jorel.commandapi", "io.github.derechtepilz.commandapi")
     minimize()
+}
+
+tasks.withType<RunServer> {
+	minecraftVersion("1.20.1")
 }
