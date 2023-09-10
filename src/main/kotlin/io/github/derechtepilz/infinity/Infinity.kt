@@ -5,7 +5,6 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.events.BlockScanner
-import io.github.derechtepilz.infinity.events.GameModeChangeListener
 import io.github.derechtepilz.infinity.events.PlayerListener
 import io.github.derechtepilz.infinity.inventory.ChooseGamemodeInventory
 import io.github.derechtepilz.infinity.items.InfinityAxe
@@ -18,7 +17,6 @@ import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.UUID
 
 /*
  * Current required setup:
@@ -53,9 +51,6 @@ class Infinity : JavaPlugin() {
     private val blockScanner = BlockScanner(this)
     private val gamemodeInventory: ChooseGamemodeInventory = ChooseGamemodeInventory(this)
 
-    private val infinityInventories: MutableMap<UUID, MutableList<Any>> = mutableMapOf()
-    private val minecraftInventories: MutableMap<UUID, MutableList<Any>> = mutableMapOf()
-
     override fun onLoad() {
         val dispatcherFileDirectory = File("./infinity/config")
         if (!dispatcherFileDirectory.exists()) {
@@ -70,7 +65,7 @@ class Infinity : JavaPlugin() {
             .dispatcherFile(dispatcherFile)
         )
 
-        InfinityCommand.register(this)
+        InfinityCommand.register()
         devCommand.register()
     }
 
@@ -99,7 +94,6 @@ class Infinity : JavaPlugin() {
 
         Bukkit.getPluginManager().registerEvents(blockScanner, this)
         Bukkit.getPluginManager().registerEvents(PlayerListener(this), this)
-        Bukkit.getPluginManager().registerEvents(GameModeChangeListener(this), this)
 
         CommandAPI.onEnable()
     }
@@ -142,14 +136,6 @@ class Infinity : JavaPlugin() {
 
     fun getGamemodeInventory(): ChooseGamemodeInventory {
         return gamemodeInventory
-    }
-
-    fun getInfinityInventories(): MutableMap<UUID, MutableList<Any>> {
-        return infinityInventories
-    }
-
-    fun getMinecraftInventories(): MutableMap<UUID, MutableList<Any>> {
-        return minecraftInventories
     }
 
 }
