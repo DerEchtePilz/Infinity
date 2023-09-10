@@ -1,14 +1,17 @@
 package io.github.derechtepilz.infinity.commands
 
 import dev.jorel.commandapi.kotlindsl.*
+import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.items.InfinityItem
+import io.github.derechtepilz.infinity.util.BlockTracer
 import io.github.derechtepilz.infinity.util.Rarity
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Location
-import org.bukkit.World
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 
@@ -128,21 +131,6 @@ object InfinityCommand {
                         )
                         .append(Component.text("!").color(NamedTextColor.RED))
                     )
-                }
-            }
-            literalArgument("teleport") {
-                worldArgument("world") {
-                    playerExecutor { player, args ->
-                        val targetWorld = args["world"] as World
-                        player.teleport(Location(targetWorld, player.location.x, player.location.y, player.location.z))
-                    }
-                    locationArgument("location") {
-                        playerExecutor { player, args ->
-                            val targetWorld = args["world"] as World
-                            val targetLocation = args["location"] as Location
-                            player.teleport(Location(targetWorld, targetLocation.x, targetLocation.y, targetLocation.z))
-                        }
-                    }
                 }
             }
         }

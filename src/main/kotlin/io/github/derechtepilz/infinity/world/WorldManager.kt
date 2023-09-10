@@ -58,18 +58,6 @@ class WorldManager {
                 }
             }
 
-            override fun generateNoise(worldInfo: WorldInfo, random: Random, chunkX: Int, chunkZ: Int, chunkData: ChunkData) {
-                val minY = chunkData.minHeight + 5
-                val maxY = chunkData.maxHeight - 5
-                for (y in minY .. maxY) {
-                    for (x in 0 .. 15) {
-                        for (z in 0 .. 15) {
-                            chunkData.setBlock(x, y, z, Material.STONE)
-                        }
-                    }
-                }
-            }
-
         }
 
     }
