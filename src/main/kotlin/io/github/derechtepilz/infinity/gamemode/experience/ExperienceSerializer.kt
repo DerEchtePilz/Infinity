@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.gamemode.serializer
+package io.github.derechtepilz.infinity.gamemode.experience
 
 import com.google.common.base.Preconditions
 import org.bukkit.entity.Player
