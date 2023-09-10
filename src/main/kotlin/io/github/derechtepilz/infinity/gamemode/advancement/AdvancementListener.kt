@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.gamemode.advancement
 
 import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent
 import io.github.derechtepilz.infinity.gamemode.Gamemode

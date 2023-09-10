@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.gamemode.gameclass
+package io.github.derechtepilz.infinity.gamemode
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent

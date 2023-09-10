@@ -1,8 +1,6 @@
-package io.github.derechtepilz.infinity.gamemode.gameclass
+package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.gamemode.getClass
-import io.github.derechtepilz.infinity.gamemode.normalize
 import io.github.derechtepilz.infinity.util.Keys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent

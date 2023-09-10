@@ -1,5 +1,6 @@
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.chat
 
+import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.papermc.paper.event.player.AsyncChatEvent
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler

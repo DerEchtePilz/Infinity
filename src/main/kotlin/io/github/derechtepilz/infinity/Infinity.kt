@@ -5,11 +5,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
-import io.github.derechtepilz.infinity.gamemode.ChatHandler
+import io.github.derechtepilz.infinity.chat.ChatHandler
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.gamemode.*
-import io.github.derechtepilz.infinity.gamemode.AdvancementListener
-import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
+import io.github.derechtepilz.infinity.gamemode.advancement.AdvancementListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
 import io.github.derechtepilz.infinity.items.InfinityAxe
@@ -21,6 +20,10 @@ import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
 import io.github.derechtepilz.infinity.world.WorldManager
 import org.bukkit.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityPortalEnterEvent
+import org.bukkit.event.world.PortalCreateEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
 import java.util.*
@@ -139,7 +142,7 @@ class Infinity : JavaPlugin() {
 		WorldCarver.StoneCarver(stone)
 		WorldCarver.NetherCarver(nether)
 
-		Bukkit.getPluginManager().registerEvents(PlayerJoinGamemodeListener(), this)
+		Bukkit.getPluginManager().registerEvents(PlayerListener(), this)
 		Bukkit.getPluginManager().registerEvents(GameModeChangeListener(this), this)
 		Bukkit.getPluginManager().registerEvents(AdvancementListener(), this)
 		Bukkit.getPluginManager().registerEvents(SignListener(), this)

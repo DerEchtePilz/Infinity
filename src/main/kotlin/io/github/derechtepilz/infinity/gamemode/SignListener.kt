@@ -1,6 +1,5 @@
-package io.github.derechtepilz.infinity.gamemode.gameclass
+package io.github.derechtepilz.infinity.gamemode
 
-import io.github.derechtepilz.infinity.gamemode.switchGamemode
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.world.WorldCarver
 import net.kyori.adventure.text.Component

@@ -1,16 +1,19 @@
 package io.github.derechtepilz.infinity.gamemode.worldmovement
 
-import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
+import io.github.derechtepilz.infinity.gamemode.GameClass
 import io.github.derechtepilz.infinity.items.minecraft.ItemBuilder
+import io.github.derechtepilz.infinity.util.Keys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.util.TriState
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 
 class EnderChestInventory(private val player: Player) {
 
