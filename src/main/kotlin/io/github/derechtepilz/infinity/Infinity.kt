@@ -57,7 +57,6 @@ class Infinity : JavaPlugin() {
 	}
 
 	var isScannerActive = false
-	var mode = "place"
 
 	private lateinit var devCommand: DevCommand
 	private lateinit var blockScanner: BlockScanner
