@@ -20,6 +20,7 @@ package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
+import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer
@@ -136,6 +137,7 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	this.updateInventory(Infinity.INSTANCE.getInventoryData())
 	this.updateExperience(Infinity.INSTANCE.getExperienceData())
 	this.updateHealthHunger(Infinity.INSTANCE.getHealthHungerData())
+	this.updatePotionEffects(Infinity.INSTANCE.getPotionEffectData())
 }
 
 fun Player.updateInventory(inventories: MutableMap<UUID, MutableList<String>>) {
@@ -241,6 +243,36 @@ fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>
 	this.health = healthHungerList[0] as Double
 	this.foodLevel = healthHungerList[1] as Int
 	this.saturation = healthHungerList[2] as Float
+}
+
+fun Player.updatePotionEffects(potionEffects: MutableMap<UUID, MutableList<String>>) {
+	// Serialize the potion effects of the player
+	val potionEffectData = EffectSerializer.serialize(this)
+
+	// Load the player's potion effects
+	val playerData = if (potionEffects.containsKey(this.uniqueId)) potionEffects[this.uniqueId] else null
+
+	if (playerData == null) {
+		// For each player, this is only reached when switching gamemodes the first time
+		// Save the player's potion effects
+		potionEffects[this.uniqueId] = mutableListOf(potionEffectData)
+
+		// Reset the player's potion effects
+		this.clearActivePotionEffects()
+		return
+	}
+
+	// Deserialize the player's potion effects
+	val potionEffectList = EffectSerializer.deserialize(playerData[0])
+
+	// Save the player's potion effects
+	potionEffects[this.uniqueId] = mutableListOf(potionEffectData)
+
+	// Reset the player's potion effects
+	this.clearActivePotionEffects()
+
+	// Update the player's potion effects
+	this.addPotionEffects(potionEffectList)
 }
 
 data class SwitchInfo(val force: ForceInfo?, val targetWorld: NamespacedKey, val targetLocation: Location?)
