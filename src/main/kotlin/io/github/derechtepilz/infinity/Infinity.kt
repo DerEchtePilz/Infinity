@@ -26,7 +26,6 @@ import org.bukkit.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
@@ -181,11 +180,6 @@ class Infinity : JavaPlugin() {
 		configWriter.close()
 
 		CommandAPI.onDisable()
-
-		// If PaperMC/Paper #9679 gets merged, this is redundant
-		for (player in Bukkit.getOnlinePlayers()) {
-			player.kick(server.shutdownMessage(), PlayerKickEvent.Cause.UNKNOWN)
-		}
 	}
 
 	fun getInventoryData(): MutableMap<UUID, MutableList<String>> {

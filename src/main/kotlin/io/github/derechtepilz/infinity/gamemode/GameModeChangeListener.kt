@@ -23,12 +23,10 @@ class GameModeChangeListener(plugin: Infinity) : Listener {
 		val current = event.player.world.key
 		val previousGamemode = Gamemode.getFromKey(from)
 		val currentGamemode = Gamemode.getFromKey(current)
-
-		// Update sign regardless of gamemode
-		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(event.player)
 		if (previousGamemode == currentGamemode) {
 			return
 		}
+		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(event.player)
 		Bukkit.getPluginManager().callEvent(GameModeChangeEvent(event.player, previousGamemode, currentGamemode))
 	}
 

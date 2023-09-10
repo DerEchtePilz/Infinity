@@ -3,8 +3,9 @@ package io.github.derechtepilz.infinity.gamemode
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.world.WorldCarver
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.block.Sign
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.persistence.PersistentDataType
+import java.lang.IllegalArgumentException
 import java.util.*
 
 class SignListener : Listener {
@@ -97,7 +99,7 @@ class SignListener : Listener {
 		val player = event.player
 		// Load sign states from player
 		val homeDimensionState = SignState.HomeDimensionState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_HOME_DIMENSION.get(), PersistentDataType.STRING, "01"))
-		val classSelectionState = SignState.ClassSelectionState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_SELECT_CLASS.get(), PersistentDataType.STRING, "01"))
+		val classSelectionState = SignState.ClassSelectionState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_SWITCH_CLASS.get(), PersistentDataType.STRING, "01"))
 		val classSwitchingState = SignState.ClassSwitchingState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_SWITCH_CLASS.get(), PersistentDataType.STRING, "01"))
 
 		// Remove keys from player

@@ -1,5 +1,5 @@
 registry.json
-
+lobby
 target
 .idea
 # Ignore Gradle project-specific cache directory
@@ -7,9 +7,6 @@ target
 
 *.iml
 *.bat
-
-lobby
-sky
 
 # Ignore Gradle build output directory
 build
