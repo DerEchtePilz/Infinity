@@ -146,9 +146,6 @@ class Infinity : JavaPlugin() {
 		nether.viewDistance = 16
 
 		WorldCarver.LobbyCarver(lobby)
-		WorldCarver.SkyCarver(sky)
-		WorldCarver.StoneCarver(stone)
-		WorldCarver.NetherCarver(nether)
 
 		Bukkit.getPluginManager().registerEvents(blockScanner, this)
 		Bukkit.getPluginManager().registerEvents(PlayerListener(), this)
