@@ -45,7 +45,7 @@ class DeathHandler : Listener {
 			player.bedSpawnLocation = minecraftRespawns[player.uniqueId]
 			val spawnLocation = player.bedSpawnLocation
 			if (spawnLocation == null || Gamemode.getFromKey(spawnLocation.world.key) != Gamemode.MINECRAFT) {
-				player.setBedSpawnLocation(Location(Gamemode.MINECRAFT.getWorld(), 0.0, Gamemode.MINECRAFT.getWorld().getHighestBlockYAt(0, 0).toDouble() + 1.0, 0.0), true)
+				player.setBedSpawnLocation(Location(Gamemode.MINECRAFT.getWorld(), 0.0, Gamemode.MINECRAFT.getWorld().getHighestBlockYAt(0, 0).toDouble(), 0.0), true)
 			}
 			return
 		}
@@ -114,8 +114,8 @@ class DeathHandler : Listener {
 	}
 
 	fun saveSpawnPointsFor(player: Player) {
-		val minecraftSpawnLocation = minecraftRespawns[player.uniqueId]!!
-		val infinitySpawnLocation = infinityRespawns[player.uniqueId]!!
+		val minecraftSpawnLocation = minecraftRespawns.getOrDefault(player.uniqueId, Location(Gamemode.MINECRAFT.getWorld(), 0.0, Gamemode.MINECRAFT.getWorld().getHighestBlockYAt(0, 0).toDouble(), 0.0))
+		val infinitySpawnLocation = infinityRespawns.getOrDefault(player.uniqueId, Location(Gamemode.INFINITY.getWorld(), 0.0, 101.0, 0.0))
 
 		player.persistentDataContainer.set(Keys.DEATH_RESPAWN_MC_WORLD.get(), PersistentDataType.STRING, minecraftSpawnLocation.world.name)
 		player.persistentDataContainer.set(Keys.DEATH_RESPAWN_MC_POS_X.get(), PersistentDataType.DOUBLE, minecraftSpawnLocation.x)
@@ -126,9 +126,6 @@ class DeathHandler : Listener {
 		player.persistentDataContainer.set(Keys.DEATH_RESPAWN_INFINITY_POS_X.get(), PersistentDataType.DOUBLE, infinitySpawnLocation.x)
 		player.persistentDataContainer.set(Keys.DEATH_RESPAWN_INFINITY_POS_Y.get(), PersistentDataType.DOUBLE, infinitySpawnLocation.y)
 		player.persistentDataContainer.set(Keys.DEATH_RESPAWN_INFINITY_POS_Z.get(), PersistentDataType.DOUBLE, infinitySpawnLocation.z)
-
-		minecraftRespawns.remove(player.uniqueId)
-		infinityRespawns.remove(player.uniqueId)
 	}
 
 }
