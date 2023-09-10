@@ -1,6 +1,5 @@
 package io.github.derechtepilz.infinity.gamemode
 
-import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.sendTabListFooter
 import net.kyori.adventure.text.Component
@@ -15,7 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.persistence.PersistentDataType
 
-class PlayerListener : Listener {
+class PlayerJoinGamemodeListener : Listener {
 
 	private val mm: MiniMessage = MiniMessage.miniMessage()
 	private val infinityComponent = mm.deserialize("<gradient:#18e1f0:#de18f0>Minecraft Infinity</gradient>")
