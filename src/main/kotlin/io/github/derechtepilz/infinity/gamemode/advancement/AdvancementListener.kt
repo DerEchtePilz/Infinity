@@ -8,12 +8,12 @@ import org.bukkit.event.Listener
 
 class AdvancementListener : Listener {
 
-	@EventHandler
-	fun onGainCriterion(event: PlayerAdvancementCriterionGrantEvent) {
-		val player = event.player
-		if (player.getGamemode() == Gamemode.INFINITY) {
-			event.isCancelled = true
-		}
-	}
+    @EventHandler
+    fun onGainCriterion(event: PlayerAdvancementCriterionGrantEvent) {
+        val player = event.player
+        if (player.getGamemode() == Gamemode.INFINITY) {
+            event.isCancelled = true
+        }
+    }
 
 }

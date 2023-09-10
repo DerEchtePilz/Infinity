@@ -29,16 +29,12 @@ repositories {
     mavenCentral()
 }
 
-val commandAPIVersion: String by project
-val kotlinVersion: String by project
-val paperVersion: String by project
-
 dependencies {
-    implementation("dev.jorel:commandapi-bukkit-shade:$commandAPIVersion")
-    compileOnly("dev.jorel:commandapi-bukkit-kotlin:$commandAPIVersion")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-    compileOnly("com.google.code.gson:gson:2.10.1")
-    compileOnly("io.papermc.paper:paper-api:$paperVersion")
+    implementation("dev.jorel:commandapi-bukkit-shade:9.0.4-SNAPSHOT")
+    implementation("dev.jorel:commandapi-bukkit-kotlin:9.0.4-SNAPSHOT")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 }
 
 group = "io.github.derechtepilz"
@@ -73,8 +69,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<ShadowJar> {
     dependencies {
-        include(dependency("dev.jorel:commandapi-bukkit-shade:$commandAPIVersion"))
-        include(dependency("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"))
+        include(dependency("dev.jorel:commandapi-bukkit-shade:9.0.4-SNAPSHOT"))
+        include(dependency("org.jetbrains.kotlin:kotlin-stdlib:1.9.0"))
     }
     relocate("dev.jorel.commandapi", "io.github.derechtepilz.commandapi")
     minimize()

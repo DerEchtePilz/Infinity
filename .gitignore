@@ -1,12 +1,10 @@
 registry.json
-lobby
+minecraft-project.iml
+dependency-reduced-pom.xml
 target
 .idea
 # Ignore Gradle project-specific cache directory
 .gradle
-
-*.iml
-*.bat
 
 # Ignore Gradle build output directory
 build
