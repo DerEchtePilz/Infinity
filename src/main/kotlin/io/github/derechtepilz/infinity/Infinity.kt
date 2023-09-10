@@ -6,7 +6,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
-import io.github.derechtepilz.infinity.chat.ChatHandler
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.gamemode.GameModeChangeListener
@@ -136,11 +135,13 @@ class Infinity : JavaPlugin() {
 		Bukkit.getPluginManager().registerEvents(GameModeChangeListener(this), this)
 		Bukkit.getPluginManager().registerEvents(AdvancementListener(), this)
 		Bukkit.getPluginManager().registerEvents(SignListener(), this)
-		Bukkit.getPluginManager().registerEvents(ChatHandler(), this)
+
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand") { channel, player, message ->
 			logger.info("${player.name} just logged in using ${String(message).substring(1).capitalize()}")
 		}
+
+		logger.info("${SignState.HomeDimensionState.STONE.value}${SignState.ClassSelectionState.NO_CLASS_SELECTED.value}${SignState.ClassSwitchingState.NO_CLASS_SELECTED.value}")
 
 		CommandAPI.onEnable()
 	}
