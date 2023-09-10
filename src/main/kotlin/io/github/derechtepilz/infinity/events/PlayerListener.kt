@@ -1,22 +1,18 @@
 package io.github.derechtepilz.infinity.events
 
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.util.Gamemode
-import io.github.derechtepilz.infinity.util.getGamemode
-import io.github.derechtepilz.infinity.util.switchGamemode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.Location
+import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerTeleportEvent
-import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.Plugin
 
 class PlayerListener(private val plugin: Infinity) : Listener {
 
@@ -26,103 +22,84 @@ class PlayerListener(private val plugin: Infinity) : Listener {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         val player: Player = event.player
-        if (!player.persistentDataContainer.has(plugin.getDefaultGamemode(), PersistentDataType.STRING)) {
-            if (event.player.getGamemode() == Gamemode.MINECRAFT) {
-                sendInfinitySuggestion(player)
-            }
-            sendDefaultGamemodeMessage(player)
-        } else {
-            sendResetDefaultGamemode(player)
+        if (event.player.world.isEqualToAny(Bukkit.getWorld("world")!!, Bukkit.getWorld("world_nether")!!, Bukkit.getWorld("world_the_end")!!)) {
+            player.sendMessage(Component.text("Want to play ")
+                .color(NamedTextColor.YELLOW)
+                .append(infinityComponent)
+                .append(Component.text("? Click ").color(NamedTextColor.YELLOW))
+                .append(Component.text("[here]")
+                    .color(NamedTextColor.GREEN)
+                    .clickEvent(ClickEvent.runCommand("/infinity gamemode infinity"))
+                    .hoverEvent(Component.text("Click to play ")
+                        .color(NamedTextColor.YELLOW)
+                        .append(infinityComponent)
+                    )
+                )
+                .append(Component.text(" to play!").color(NamedTextColor.YELLOW))
+            )
+            player.sendMessage(Component.text("Set default gamemode: ")
+                .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .color(NamedTextColor.GRAY)
+                .append(Component.text("[").color(NamedTextColor.WHITE))
+                .append(Component.text("Minecraft")
+                    .color(NamedTextColor.GREEN)
+                    .clickEvent(ClickEvent.runCommand("/infinity defaultgamemode minecraft"))
+                    .hoverEvent(Component.text("Set your default gamemode to ")
+                        .color(NamedTextColor.GRAY)
+                        .append(Component.text("Minecraft").color(NamedTextColor.GREEN))
+                        .append(Component.newline())
+                        .append(Component.newline())
+                        .append(Component.text("This will make you join one of the default Minecraft worlds:").color(NamedTextColor.GRAY))
+                        .append(Component.newline())
+                        .append(Component.text("minecraft:overworld").color(NamedTextColor.GREEN))
+                        .append(Component.text(", ").color(NamedTextColor.GRAY))
+                        .append(Component.text("minecraft:the_nether").color(NamedTextColor.RED))
+                        .append(Component.text(", ").color(NamedTextColor.GRAY))
+                        .append(Component.text("minecraft:the_end").color(NamedTextColor.YELLOW))
+                        .append(Component.newline())
+                        .append(Component.newline())
+                        .append(Component.text("This makes you join ").color(NamedTextColor.GRAY))
+                        .append(Component.text("minecraft:overworld").color(NamedTextColor.GREEN))
+                        .append(Component.text(" if you joined").color(NamedTextColor.GRAY))
+                        .append(Component.newline())
+                        .append(infinityComponent)
+                        .append(Component.text(" in a previous session."))
+                    )
+                )
+                .append(Component.text("]").color(NamedTextColor.WHITE))
+                .append(Component.text(" [").color(NamedTextColor.WHITE))
+                .append(Component.text("Infinity")
+                    .color(NamedTextColor.LIGHT_PURPLE)
+                    .clickEvent(ClickEvent.runCommand("/infinity defaultgamemode infinity"))
+                    .hoverEvent(Component.text("Set your default gamemode to ")
+                        .color(NamedTextColor.GRAY)
+                        .append(Component.text("Infinity").color(NamedTextColor.LIGHT_PURPLE))
+                        .append(Component.newline())
+                        .append(Component.newline())
+                        .append(Component.text("This will make you join one of the ").color(NamedTextColor.GRAY))
+                        .append(infinityComponent)
+                        .append(Component.text(" worlds: ").color(NamedTextColor.GRAY))
+                        .append(Component.newline())
+                        .append(Component.text("infinity:lobby").color(NamedTextColor.WHITE))
+                        .append(Component.text(", ").color(NamedTextColor.GRAY))
+                        .append(Component.text("infinity:sky").color(NamedTextColor.AQUA))
+                        .append(Component.text(", ").color(NamedTextColor.GRAY))
+                        .append(Component.text("infinity:stone").color(NamedTextColor.YELLOW))
+                        .append(Component.text(", ").color(NamedTextColor.GRAY))
+                        .append(Component.text("infinity:nether").color(NamedTextColor.RED))
+                        .append(Component.newline())
+                        .append(Component.newline())
+                        .append(Component.text("This makes you join ").color(NamedTextColor.GRAY))
+                        .append(Component.text("infinity:lobby").color(NamedTextColor.WHITE))
+                        .append(Component.text(" if you joined").color(NamedTextColor.GRAY))
+                        .append(Component.newline())
+                        .append(Component.text("Minecraft").color(NamedTextColor.GREEN))
+                        .append(Component.text(" in a previous session."))
+                    )
+                )
+                .append(Component.text("]").color(NamedTextColor.WHITE))
+            )
         }
-        sendTabListFooter(player, player.getGamemode())
-        if (player.hasDefaultGamemode(plugin)) {
-            val defaultGamemode = Gamemode.valueOf(player.persistentDataContainer.get(plugin.getDefaultGamemode(), PersistentDataType.STRING)!!.uppercase())
-            if (defaultGamemode == player.getGamemode()) {
-                return
-            }
-            player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN)
-        }
-    }
-
-    private fun sendInfinitySuggestion(player: Player) {
-        player.sendMessage(Component.text("Want to play ")
-            .color(NamedTextColor.YELLOW)
-            .append(infinityComponent)
-            .append(Component.text("? Click ").color(NamedTextColor.YELLOW))
-            .append(Component.text("[here]")
-                .color(NamedTextColor.GREEN)
-                .clickEvent(ClickEvent.runCommand("/infinity gamemode infinity"))
-                .hoverEvent(Component.text("Click to play ")
-                    .color(NamedTextColor.YELLOW)
-                    .append(infinityComponent)
-                )
-            )
-            .append(Component.text(" to play!").color(NamedTextColor.YELLOW))
-        )
-    }
-
-    private fun sendDefaultGamemodeMessage(player: Player) {
-        player.sendMessage(Component.text("Set default gamemode: ")
-            .decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(NamedTextColor.GRAY)
-            .append(Component.text("[").color(NamedTextColor.WHITE))
-            .append(Component.text("Minecraft")
-                .color(NamedTextColor.GREEN)
-                .clickEvent(ClickEvent.runCommand("/infinity defaultgamemode minecraft"))
-                .hoverEvent(Component.text("Set your default gamemode to ")
-                    .color(NamedTextColor.GRAY)
-                    .append(Component.text("Minecraft").color(NamedTextColor.GREEN))
-                    .append(Component.newline())
-                    .append(Component.newline())
-                    .append(Component.text("This will make ").color(NamedTextColor.GRAY))
-                    .append(Component.text("Minecraft").color(NamedTextColor.GREEN))
-                    .append(Component.text(" your default gamemode").color(NamedTextColor.GRAY))
-                    .append(Component.newline())
-                    .append(Component.text("and makes you join the last ").color(NamedTextColor.GRAY))
-                    .append(Component.text("Minecraft ").color(NamedTextColor.GREEN))
-                    .append(Component.text("world").color(NamedTextColor.GRAY))
-                    .append(Component.newline())
-                    .append(Component.text("you were in if you joined ").color(NamedTextColor.GRAY))
-                    .append(infinityComponent)
-                    .append(Component.newline())
-                    .append(Component.text("in a previous session.").color(NamedTextColor.GRAY))
-                )
-            )
-            .append(Component.text("]").color(NamedTextColor.WHITE))
-            .append(Component.text(" [").color(NamedTextColor.WHITE))
-            .append(infinityComponent
-                .clickEvent(ClickEvent.runCommand("/infinity defaultgamemode infinity"))
-                .hoverEvent(Component.text("Set your default gamemode to ")
-                    .color(NamedTextColor.GRAY)
-                    .append(infinityComponent)
-                    .append(Component.newline())
-                    .append(Component.newline())
-                    .append(Component.text("This will make ").color(NamedTextColor.GRAY))
-                    .append(infinityComponent)
-                    .append(Component.text(" your default").color(NamedTextColor.GRAY))
-                    .append(Component.newline())
-                    .append(Component.text("gamemode and makes you join the last ").color(NamedTextColor.GRAY))
-                    .append(Component.newline())
-                    .append(infinityComponent)
-                    .append(Component.text(" world you were in if you").color(NamedTextColor.GRAY))
-                    .append(Component.newline())
-                    .append(Component.text("joined ").color(NamedTextColor.GRAY))
-                    .append(Component.text("Minecraft").color(NamedTextColor.GREEN))
-                    .append(Component.text(" in a previous session.").color(NamedTextColor.GRAY))
-                )
-            )
-            .append(Component.text("]").color(NamedTextColor.WHITE))
-        )
-    }
-
-    private fun sendResetDefaultGamemode(player: Player) {
-        player.sendMessage(Component.text("Reset default gamemode ")
-            .color(NamedTextColor.GRAY)
-            .append(Component.text("[here]")
-                .color(NamedTextColor.GREEN)
-                .clickEvent(ClickEvent.runCommand("/infinity defaultgamemode reset"))
-            )
-        )
     }
 
 }
@@ -134,58 +111,4 @@ fun World.isEqualToAny(vararg worlds: World): Boolean {
         }
     }
     return false
-}
-
-fun sendTabListFooter(player: Player, gamemode: Gamemode) {
-    when (gamemode) {
-        Gamemode.MINECRAFT -> player.sendPlayerListFooter(Component.text("Switch gamemodes by executing")
-            .color(NamedTextColor.GRAY)
-            .append(Component.newline())
-            .append(Component.text("/infinity gamemode infinity").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Set your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Reset your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode reset").color(NamedTextColor.YELLOW))
-        )
-        Gamemode.INFINITY -> player.sendPlayerListFooter(Component.text("Switch gamemodes by executing")
-            .color(NamedTextColor.GRAY)
-            .append(Component.newline())
-            .append(Component.text("/infinity gamemode minecraft").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Set your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Reset your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode reset").color(NamedTextColor.YELLOW))
-        )
-        Gamemode.UNKNOWN -> player.sendPlayerListFooter(Component.text("Switch gamemodes by executing")
-            .color(NamedTextColor.GRAY)
-            .append(Component.newline())
-            .append(Component.text("/infinity gamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Set your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode <gamemode>").color(NamedTextColor.YELLOW))
-            .append(Component.newline())
-            .append(Component.newline())
-            .append(Component.text("Reset your default gamemode by executing").color(NamedTextColor.GRAY))
-            .append(Component.newline())
-            .append(Component.text("/infinity defaultgamemode reset").color(NamedTextColor.YELLOW))
-        )
-    }
-}
-
-fun Player.hasDefaultGamemode(infinity: Infinity): Boolean {
-    return this.persistentDataContainer.has(infinity.getDefaultGamemode())
 }

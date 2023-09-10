@@ -11,6 +11,7 @@ import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.events.BlockScanner
 import io.github.derechtepilz.infinity.events.GameModeChangeListener
 import io.github.derechtepilz.infinity.events.PlayerListener
+import io.github.derechtepilz.infinity.inventory.ChooseGamemodeInventory
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.util.Rarity
@@ -43,17 +44,14 @@ class Infinity : JavaPlugin() {
     private val stoneKey = NamespacedKey(NAME, "stone")
     private val netherKey = NamespacedKey(NAME, "nether")
 
-    private val defaultGamemodeKey = NamespacedKey(NAME, "defaultgamemode")
-
     var isScannerActive = false
 
     private val devCommand = DevCommand(this)
     private val blockScanner = BlockScanner(this)
+    private val gamemodeInventory: ChooseGamemodeInventory = ChooseGamemodeInventory(this)
 
     private val infinityInventories: MutableMap<UUID, MutableList<String>> = mutableMapOf()
     private val minecraftInventories: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-    private val infinityAdvancements: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-    private val minecraftAdvancements: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 
     override fun onLoad() {
         val configReader = getConfigReader()
@@ -66,8 +64,6 @@ class Infinity : JavaPlugin() {
             val jsonObject = JsonParser.parseString(jsonBuilder.toString()).asJsonObject
             val infinityInventoryArray = jsonObject["infinityInventories"].asJsonArray
             val minecraftInventoryArray = jsonObject["minecraftInventories"].asJsonArray
-            val infinityAdvancementsArray = jsonObject["infinityAdvancements"].asJsonArray
-            val minecraftAdvancementsArray = jsonObject["minecraftAdvancements"].asJsonArray
 
             for (i in 0 until infinityInventoryArray.size()) {
                 val playerDataObject = infinityInventoryArray[i].asJsonObject
@@ -85,20 +81,6 @@ class Infinity : JavaPlugin() {
                 val enderChest = playerDataObject["enderChest"].asString
                 val playerInventoryData = mutableListOf(inventory, enderChest)
                 minecraftInventories[playerUUID] = playerInventoryData
-            }
-            for (i in 0 until infinityAdvancementsArray.size()) {
-                val advancementDataObject = infinityAdvancementsArray[i].asJsonObject
-                val playerUUID = UUID.fromString(advancementDataObject["player"].asString)
-                val advancementData = advancementDataObject["advancements"].asString
-                val playerAdvancementData = mutableListOf(advancementData)
-                infinityAdvancements[playerUUID] = playerAdvancementData
-            }
-            for (i in 0 until minecraftAdvancementsArray.size()) {
-                val advancementDataObject = minecraftAdvancementsArray[i].asJsonObject
-                val playerUUID = UUID.fromString(advancementDataObject["player"].asString)
-                val advancementData = advancementDataObject["advancements"].asString
-                val playerAdvancementData = mutableListOf(advancementData)
-                minecraftAdvancements[playerUUID] = playerAdvancementData
             }
         }
         CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
@@ -142,8 +124,6 @@ class Infinity : JavaPlugin() {
         val inventoryObject = JsonObject()
         val infinityInventoryArray = JsonArray()
         val minecraftInventoryArray = JsonArray()
-        val infinityAdvancementsArray = JsonArray()
-        val minecraftAdvancementsArray = JsonArray()
         for (uuid in infinityInventories.keys) {
             val infinityInventory = JsonObject()
             val playerData = infinityInventories[uuid]!!
@@ -166,26 +146,8 @@ class Infinity : JavaPlugin() {
             minecraftInventory.addProperty("enderChest", enderChestData)
             minecraftInventoryArray.add(minecraftInventory)
         }
-        for (uuid in infinityAdvancements.keys) {
-            val infinityAdvancement = JsonObject()
-            val advancementData = infinityAdvancements[uuid]!![0]
-            val playerUUID = uuid.toString()
-            infinityAdvancement.addProperty("player", playerUUID)
-            infinityAdvancement.addProperty("advancements", advancementData)
-            infinityAdvancementsArray.add(infinityAdvancement)
-        }
-        for (uuid in minecraftAdvancements.keys) {
-            val minecraftAdvancement = JsonObject()
-            val advancementData = minecraftAdvancements[uuid]!![0]
-            val playerUUID = uuid.toString()
-            minecraftAdvancement.addProperty("player", playerUUID)
-            minecraftAdvancement.addProperty("advancements", advancementData)
-            minecraftAdvancementsArray.add(minecraftAdvancement)
-        }
         inventoryObject.add("infinityInventories", infinityInventoryArray)
         inventoryObject.add("minecraftInventories", minecraftInventoryArray)
-        inventoryObject.add("infinityAdvancements", infinityAdvancementsArray)
-        inventoryObject.add("minecraftAdvancements", minecraftAdvancementsArray)
 
         val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(inventoryObject)
         configWriter.write(jsonString)
@@ -208,10 +170,6 @@ class Infinity : JavaPlugin() {
         return netherKey
     }
 
-    fun getDefaultGamemode(): NamespacedKey {
-        return defaultGamemodeKey
-    }
-
     fun getDevCommand(): DevCommand {
         return devCommand
     }
@@ -219,21 +177,25 @@ class Infinity : JavaPlugin() {
     fun getBlockScanner(): BlockScanner {
         return blockScanner
     }
-    
+
+    fun getBlockScanner(): BlockScanner {
+        return blockScanner
+    }
+
+    fun getGamemodeInventory(): ChooseGamemodeInventory {
+        return gamemodeInventory
+    }
+
+    fun getGamemodeInventory(): ChooseGamemodeInventory {
+        return gamemodeInventory
+    }
+
     fun getInfinityInventories(): MutableMap<UUID, MutableList<String>> {
         return infinityInventories
     }
 
     fun getMinecraftInventories(): MutableMap<UUID, MutableList<String>> {
         return minecraftInventories
-    }
-
-    fun getInfinityAdvancements(): MutableMap<UUID, MutableList<String>> {
-        return infinityAdvancements
-    }
-
-    fun getMinecraftAdvancements(): MutableMap<UUID, MutableList<String>> {
-        return minecraftAdvancements
     }
 
     private fun getConfigReader(): BufferedReader? {
