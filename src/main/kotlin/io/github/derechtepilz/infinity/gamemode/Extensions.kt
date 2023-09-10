@@ -1,6 +1,7 @@
 package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer

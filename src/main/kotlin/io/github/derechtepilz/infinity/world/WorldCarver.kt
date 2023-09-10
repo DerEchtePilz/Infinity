@@ -1,17 +1,15 @@
 package io.github.derechtepilz.infinity.world
 
 import io.github.derechtepilz.infinity.Infinity
-import io.github.derechtepilz.infinity.gamemode.SignListener
-import io.github.derechtepilz.infinity.gamemode.SignState
+import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
+import io.github.derechtepilz.infinity.gamemode.gameclass.SignState
 import io.github.derechtepilz.infinity.structure.StructureLoader
 import io.github.derechtepilz.infinity.util.Keys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.block.BlockState
 import org.bukkit.block.Sign
