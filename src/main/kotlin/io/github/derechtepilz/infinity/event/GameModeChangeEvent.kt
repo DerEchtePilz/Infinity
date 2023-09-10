@@ -5,9 +5,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-/**
- * Called when a player changes the [Gamemode]
- */
 class GameModeChangeEvent(val player: Player, val previousGamemode: Gamemode, val newGamemode: Gamemode) : Event() {
 
     companion object {

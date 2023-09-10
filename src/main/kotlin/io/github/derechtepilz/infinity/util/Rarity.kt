@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.items
+package io.github.derechtepilz.infinity.util
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -101,4 +101,8 @@ enum class Rarity(private val color: NamedTextColor, private val rarity: String)
         }
     }
 
+}
+
+fun String.capitalize(): String {
+    return this.replaceFirstChar { firstChar -> if (firstChar.isLowerCase()) firstChar.titlecase(Locale.getDefault()) else firstChar.toString() }
 }

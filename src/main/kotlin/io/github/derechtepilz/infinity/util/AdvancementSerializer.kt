@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.gamemode.advancement
+package io.github.derechtepilz.infinity.util
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray

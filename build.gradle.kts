@@ -73,5 +73,4 @@ tasks.withType<ShadowJar> {
         include(dependency("org.jetbrains.kotlin:kotlin-stdlib:1.9.0"))
     }
     relocate("dev.jorel.commandapi", "io.github.derechtepilz.commandapi")
-    minimize()
 }
