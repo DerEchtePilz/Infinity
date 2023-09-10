@@ -9,7 +9,6 @@ import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Bisected
 import org.bukkit.block.data.Bisected.Half
 import org.bukkit.block.data.Directional
-import org.bukkit.block.data.type.Leaves
 import org.bukkit.block.data.type.Slab
 import org.bukkit.block.data.type.Slab.Type
 import org.bukkit.block.data.type.Stairs
@@ -45,7 +44,7 @@ class StructureLoader(private val world: String, private val structureFile: File
             val placedBlockState = placedBlock.state
             var placedBlockData = placedBlockState.blockData
 
-            val isDirectional = blockInformationJson.has("direction")
+            val isDirectional = blockInformationJson.get("directional").asBoolean
             if (isDirectional) {
                 val blockFace = BlockFace.valueOf(blockInformationJson.get("direction").asString)
                 val directional: Directional = placedBlockData as Directional
@@ -53,7 +52,7 @@ class StructureLoader(private val world: String, private val structureFile: File
                 placedBlockData = directional
             }
 
-            val isShape = blockInformationJson.has("shapeType")
+            val isShape = blockInformationJson.get("shape").asBoolean
             if (isShape) {
                 val shape = Shape.valueOf(blockInformationJson.get("shapeType").asString)
                 val shaped: Stairs = placedBlockData as Stairs
@@ -61,7 +60,7 @@ class StructureLoader(private val world: String, private val structureFile: File
                 placedBlockData = shaped
             }
 
-            val isBisected = blockInformationJson.has("bisectedHalf")
+            val isBisected = blockInformationJson.get("bisected").asBoolean
             if (isBisected) {
                 val half = Half.valueOf(blockInformationJson.get("bisectedHalf").asString)
                 val bisected: Bisected = placedBlockData as Bisected
@@ -69,19 +68,12 @@ class StructureLoader(private val world: String, private val structureFile: File
                 placedBlockData = bisected
             }
 
-            val isSlab = blockInformationJson.has("slabHalf")
+            val isSlab = blockInformationJson.get("slab").asBoolean
             if (isSlab) {
                 val half: Type = Type.valueOf(blockInformationJson.get("slabHalf").asString)
                 val slab: Slab = placedBlockData as Slab
                 slab.type = half
                 placedBlockData = slab
-            }
-            val isLeaves = blockInformationJson.has("persistent")
-            if (isLeaves) {
-                val persistent = blockInformationJson.get("persistent").asBoolean
-                val leaves: Leaves = placedBlockData as Leaves
-                leaves.isPersistent = persistent
-                placedBlockData = leaves
             }
 
             placedBlockState.blockData = placedBlockData
