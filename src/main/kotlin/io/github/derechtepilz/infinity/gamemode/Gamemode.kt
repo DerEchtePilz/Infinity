@@ -19,13 +19,6 @@ enum class Gamemode(private val defaultWorld: World) {
         return this.defaultWorld
     }
 
-    companion object {
-        @JvmStatic
-        fun getFromKey(key: NamespacedKey): Gamemode {
-            return valueOf(key.namespace().uppercase())
-        }
-    }
-
 }
 
 fun Player.getGamemode(): Gamemode {
