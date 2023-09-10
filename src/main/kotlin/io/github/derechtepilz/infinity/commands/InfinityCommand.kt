@@ -179,7 +179,7 @@ object InfinityCommand {
 						when (args["gamemode"] as String) {
 							"infinity" -> {
 								if (player.getGamemode() != Gamemode.INFINITY) {
-									player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN)
+									player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND)
 								} else {
 									player.sendMessage(Component.text("You cannot execute this command right now as you are already playing ")
 										.color(NamedTextColor.RED)
@@ -189,7 +189,7 @@ object InfinityCommand {
 							}
 							"minecraft" -> {
 								if (player.getGamemode() != Gamemode.MINECRAFT) {
-									player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN)
+									player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND)
 								} else {
 									player.sendMessage(Component.text("You cannot execute this command right now as you are already playing ")
 										.color(NamedTextColor.RED)
