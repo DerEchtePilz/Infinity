@@ -9,25 +9,30 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.chat.ChatHandler
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
-import io.github.derechtepilz.infinity.gamemode.DeathHandler
 import io.github.derechtepilz.infinity.gamemode.GameModeChangeListener
 import io.github.derechtepilz.infinity.gamemode.PlayerListener
 import io.github.derechtepilz.infinity.gamemode.SignListener
+import io.github.derechtepilz.infinity.gamemode.SignState
 import io.github.derechtepilz.infinity.gamemode.advancement.AdvancementListener
-import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.items.Rarity
 import io.github.derechtepilz.infinity.structure.BlockScanner
-import io.github.derechtepilz.infinity.util.JsonUtil
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
 import io.github.derechtepilz.infinity.world.WorldManager
 import org.bukkit.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerKickEvent
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
 import java.util.*
+import kotlin.properties.Delegates
+import kotlin.time.measureTime
 
 class Infinity : JavaPlugin() {
 
@@ -62,17 +67,17 @@ class Infinity : JavaPlugin() {
 
 	private val inventoryData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val experienceData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-	private val healthHungerData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 
 	override fun onLoad() {
 		if (!canLoad) {
+			logger.warning("Loading sequence no called. Please upgrade to Paper")
 			return
 		}
-		// Check server version, disable on 1.19.4 and lower
-
 		INSTANCE = this
 		devCommand = DevCommand(this)
 		blockScanner = BlockScanner(this)
+
+		// Check server version
 
 		// Load the plugin
 		val configReader = getConfigReader()
@@ -83,13 +88,24 @@ class Infinity : JavaPlugin() {
 				jsonBuilder.append(line)
 			}
 			val jsonObject = JsonParser.parseString(jsonBuilder.toString()).asJsonObject
-			val inventoryDataArray = JsonUtil.getArray("inventoryData", jsonObject)
-			val experienceDataArray = JsonUtil.getArray("experienceData", jsonObject)
-			val healthHungerDataArray = JsonUtil.getArray("healthHungerData", jsonObject)
+			val inventoryDataArray = jsonObject["inventoryData"].asJsonArray
+			val experienceDataArray = jsonObject["experienceData"].asJsonArray
 
-			JsonUtil.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData)
-			JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData)
-			JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData)
+			for (i in 0 until inventoryDataArray.size()) {
+				val playerDataObject = inventoryDataArray[i].asJsonObject
+				val playerUUID = UUID.fromString(playerDataObject["player"].asString)
+				val inventory = playerDataObject["inventory"].asString
+				val enderChest = playerDataObject["enderChest"].asString
+				val playerInventoryData = mutableListOf(inventory, enderChest)
+				inventoryData[playerUUID] = playerInventoryData
+			}
+			for (i in 0 until experienceDataArray.size()) {
+				val experienceDataObject = experienceDataArray[i].asJsonObject
+				val playerUUID = UUID.fromString(experienceDataObject["player"].asString)
+				val experienceLevel = experienceDataObject["level"].asString
+				val experienceProgress = experienceDataObject["progress"].asString
+				experienceData[playerUUID] = mutableListOf(experienceLevel, experienceProgress)
+			}
 		}
 		CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
 
@@ -128,12 +144,7 @@ class Infinity : JavaPlugin() {
 		lobby.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
 		lobby.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
 		lobby.setGameRule(GameRule.DO_MOB_SPAWNING, false)
-		lobby.setGameRule(GameRule.KEEP_INVENTORY, true)
 		lobby.time = 6000
-
-		sky.setGameRule(GameRule.KEEP_INVENTORY, true)
-		stone.setGameRule(GameRule.KEEP_INVENTORY, true)
-		nether.setGameRule(GameRule.KEEP_INVENTORY, true)
 
 		sky.difficulty = Difficulty.HARD
 		stone.difficulty = Difficulty.HARD
@@ -151,8 +162,6 @@ class Infinity : JavaPlugin() {
 		Bukkit.getPluginManager().registerEvents(AdvancementListener(), this)
 		Bukkit.getPluginManager().registerEvents(SignListener(), this)
 		Bukkit.getPluginManager().registerEvents(ChatHandler(), this)
-		Bukkit.getPluginManager().registerEvents(ChestListener(), this)
-		Bukkit.getPluginManager().registerEvents(DeathHandler(), this)
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand") { channel, player, message ->
 			logger.info("${player.name} just logged in using ${String(message).substring(1).capitalize()}")
@@ -169,10 +178,31 @@ class Infinity : JavaPlugin() {
 		// Save player data
 		val configWriter = getConfigWriter()
 		val playerDataObject = JsonObject()
+		val inventoryDataArray = JsonArray()
+		val experienceDataArray = JsonArray()
+		for (uuid in inventoryData.keys) {
+			val inventoryData = JsonObject()
+			val playerData = this.inventoryData[uuid]!!
+			val playerUUID = uuid.toString()
+			val playerInventoryData = playerData[0]
+			val enderChestData = playerData[1]
+			inventoryData.addProperty("player", playerUUID)
+			inventoryData.addProperty("inventory", playerInventoryData)
+			inventoryData.addProperty("enderChest", enderChestData)
+			inventoryDataArray.add(inventoryData)
+		}
+		for (uuid in experienceData.keys) {
+			val experienceData = JsonObject()
+			val playerExperienceData = this.experienceData[uuid]!!
+			val playerUuid = uuid.toString()
+			experienceData.addProperty("player", playerUuid)
+			experienceData.addProperty("level", playerExperienceData[0])
+			experienceData.addProperty("progress", playerExperienceData[1])
+			experienceDataArray.add(experienceData)
+		}
 
-		JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData)
-		JsonUtil.saveMap(playerDataObject, "experienceData", experienceData)
-		JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData)
+		playerDataObject.add("inventoryData", inventoryDataArray)
+		playerDataObject.add("experienceData", experienceDataArray)
 
 		val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject)
 		configWriter.write(jsonString)
@@ -182,7 +212,7 @@ class Infinity : JavaPlugin() {
 
 		// If PaperMC/Paper #9679 gets merged, this is redundant
 		for (player in Bukkit.getOnlinePlayers()) {
-			SignListener.INSTANCE.saveSignStatesFor(player)
+			player.kick(server.shutdownMessage(), PlayerKickEvent.Cause.UNKNOWN)
 		}
 	}
 
@@ -192,10 +222,6 @@ class Infinity : JavaPlugin() {
 
 	fun getExperienceData(): MutableMap<UUID, MutableList<String>> {
 		return experienceData
-	}
-
-	fun getHealthHungerData(): MutableMap<UUID, MutableList<String>> {
-		return healthHungerData
 	}
 
 	private fun getConfigReader(): BufferedReader? {
