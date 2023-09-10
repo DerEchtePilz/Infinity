@@ -49,10 +49,7 @@ class Infinity : JavaPlugin() {
 
     private val devCommand = DevCommand(this)
     private val blockScanner = BlockScanner(this)
-<<<<<<< HEAD
 
-=======
->>>>>>> fbf593b (Finish structure system)
     private val gamemodeInventory: ChooseGamemodeInventory = ChooseGamemodeInventory(this)
 
     override fun onLoad() {
@@ -124,10 +121,6 @@ class Infinity : JavaPlugin() {
 
     fun getDevCommand(): DevCommand {
         return devCommand
-    }
-    
-    fun getBlockScanner(): BlockScanner {
-        return blockScanner
     }
 
     fun getBlockScanner(): BlockScanner {
