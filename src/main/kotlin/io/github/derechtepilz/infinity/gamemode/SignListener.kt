@@ -117,10 +117,6 @@ class SignListener : Listener {
 	fun onQuit(event: PlayerQuitEvent) {
 		val player = event.player
 		// Load sign states for the player
-		saveSignStatesFor(player)
-	}
-
-	fun saveSignStatesFor(player: Player) {
 		val homeDimensionState = homeDimension[player.uniqueId]!!
 		val classSelectionState = classSelection[player.uniqueId]!!
 		val classSwitchingState = switchClassSelection[player.uniqueId]!!
