@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.util
 
 import io.github.derechtepilz.infinity.Infinity
 import org.bukkit.Bukkit

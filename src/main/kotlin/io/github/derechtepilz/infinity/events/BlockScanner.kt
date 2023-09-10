@@ -1,8 +1,9 @@
-package io.github.derechtepilz.infinity.structure
+package io.github.derechtepilz.infinity.events
 
 import com.google.gson.JsonObject
 import io.github.derechtepilz.infinity.Infinity
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.data.Bisected
 import org.bukkit.block.data.Directional

@@ -1,11 +1,15 @@
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.events
 
 import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.util.Gamemode
+import io.github.derechtepilz.infinity.util.getGamemode
+import io.github.derechtepilz.infinity.util.switchGamemode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

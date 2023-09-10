@@ -1,15 +1,19 @@
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.events
 
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.util.AdvancementSerializer
+import io.github.derechtepilz.infinity.util.Gamemode
 import io.github.derechtepilz.infinity.util.InventorySerializer
+import io.github.derechtepilz.infinity.util.getGamemode
 import org.bukkit.Bukkit
 import org.bukkit.GameRule
+import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 class GameModeChangeListener(plugin: Infinity) : Listener {

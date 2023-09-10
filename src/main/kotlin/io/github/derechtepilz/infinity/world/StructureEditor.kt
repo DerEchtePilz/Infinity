@@ -1,4 +1,4 @@
-package io.github.derechtepilz.infinity.structure
+package io.github.derechtepilz.infinity.world
 
 import com.google.gson.JsonParser
 import io.github.derechtepilz.infinity.Infinity

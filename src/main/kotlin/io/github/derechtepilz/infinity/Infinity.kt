@@ -8,9 +8,9 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.commands.DevCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
-import io.github.derechtepilz.infinity.structure.BlockScanner
-import io.github.derechtepilz.infinity.gamemode.GameModeChangeListener
-import io.github.derechtepilz.infinity.gamemode.PlayerListener
+import io.github.derechtepilz.infinity.events.BlockScanner
+import io.github.derechtepilz.infinity.events.GameModeChangeListener
+import io.github.derechtepilz.infinity.events.PlayerListener
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.util.Rarity

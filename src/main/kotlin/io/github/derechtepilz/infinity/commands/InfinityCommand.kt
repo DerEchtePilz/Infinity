@@ -3,9 +3,6 @@ package io.github.derechtepilz.infinity.commands
 import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.Registry
-import io.github.derechtepilz.infinity.gamemode.Gamemode
-import io.github.derechtepilz.infinity.gamemode.getGamemode
-import io.github.derechtepilz.infinity.gamemode.switchGamemode
 import io.github.derechtepilz.infinity.items.InfinityItem
 import io.github.derechtepilz.infinity.util.*
 import net.kyori.adventure.text.Component
@@ -15,6 +12,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
