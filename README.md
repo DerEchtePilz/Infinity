@@ -13,12 +13,12 @@ When installing this plugin, you have two options:
 - You can also play Infinity and use the worlds this gamemode provides
 
 You always have the option to switch which gamemode you want to play. Minecraft and Infinity will be handled separately and you will have
-- a different inventory and ender chest
-- a different level
-- a different spawn point
-- a separate chat (although this may change depending on feedback)
-- different health and hunger points
-- different potion effects
+- separate inventories and ender chests
+- separate levels
+- separate spawn points
+- separate chats (although this may change depending on feedback)
+- separate health and hunger points
+- separate potion effects
 
 This effectively allows you to play Infinity while still being able to play vanilla Minecraft which stays untouched.
 
