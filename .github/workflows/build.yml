@@ -1,0 +1,52 @@
+# Automatically build the project and run any configured tests for every push
+# and submitted pull request. This can help catch issues that only occur on
+# certain platforms or Java versions, and provides a first line of defence
+# against bad commits.
+
+# Copied from https://github.com/JorelAli/CommandAPI/blob/master/.github/workflows/build.yml and edited for own needs
+
+name: build
+on:
+  push:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # Use these Java versions
+        java: [
+          17,    # Current Java LTS & minimum supported by Minecraft
+        ]
+        # and run on both Linux and Windows
+        # os: [ubuntu-20.04, windows-2022]
+        os: [ windows-2022 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      ### Set up ###
+
+      - name: Checkout the Infinity repository
+        uses: actions/checkout@v3
+
+      - name: Setup JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: gradle
+
+      ### Compilation ###
+
+      - name: Build Infinity using Gradle
+        run: ./gradlew.bat :shadow
+
+      ### Upload .jar artifacts ###
+
+      - name: Upload Infinity plugin artifact
+        if: ${{ runner.os == 'Windows' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
+        uses: actions/upload-artifact@v3
+        with:
+          name: Infinity
+          path: build/libs/infinity*.jar
