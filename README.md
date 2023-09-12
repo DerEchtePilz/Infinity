@@ -20,7 +20,16 @@ You always have the option to switch which gamemode you want to play. Minecraft 
 - separate health and hunger points
 - separate potion effects
 
-This effectively allows you to play Infinity while still being able to play vanilla Minecraft which stays untouched.
+This allows you to play Infinity without having to worry that your progress in Minecraft will be lost. Similarly, you can also play Minecraft without your Infinity progress being lost.
+
+This feature is the most dangerous feature this plugin offers because it relies on saving player progress for two game modes in one map. The one that is currently loaded represents the game mode the player currently plays.
+The one that is currently saved is the one that the player does not play currently.
+
+In order to ensure that players do not lose their progress on either game mode, a system will soon get implemented that backups progress on both game modes at a configurable rate. I suggest keeping the default though.
+
+Nevertheless, this plugin his highly vulnerable and may not support the `/reload confirm` command added by Bukkit/Spigot/Paper. If you run into problems, please load a backup and restart the server.
+
+To keep your player's progress safe, also <u>never</u> crash your server. This **will** destroy the progress of all players for the game mode they are not playing at that time.
 
 **Due to a few technical problems, you will not be able to gain advancements while playing Infinity. If you find a solution, please open an [issue](https://github.com/DerEchtePilz/Infinity/issues/new) or a [PR](https://github.com/DerEchtePilz/Infinity/compare).**
 
