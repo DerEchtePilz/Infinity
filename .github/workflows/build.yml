@@ -21,7 +21,7 @@ jobs:
         ]
         # and run on both Linux and Windows
         # os: [ubuntu-20.04, windows-2022]
-        os: [ windows-2022 ]
+        os: [ ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -40,13 +40,19 @@ jobs:
       ### Compilation ###
 
       - name: Build Infinity using Gradle
-        run: ./gradlew.bat :shadow
+        run: |
+          chmod +x gradlew
+          ./gradlew :reobfJar --no-daemon
 
       ### Upload .jar artifacts ###
 
+      - name: Query project version
+        id: version_query
+        run: echo "version=$(./gradlew properties --no-daemon --console=plain -q | grep '^version:' | awk '{print $2}')" >> $GITHUB_OUTPUT
+
       - name: Upload Infinity plugin artifact
-        if: ${{ runner.os == 'Windows' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
+        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v3
         with:
           name: Infinity
-          path: build/libs/infinity*.jar
+          path: build/libs/Infinity-${{ steps.version_query.outputs.version }}.jar
