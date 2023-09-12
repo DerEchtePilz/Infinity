@@ -69,9 +69,6 @@ class Infinity : JavaPlugin() {
 		var canLoad = true
 	}
 
-	var isScannerActive = false
-	var mode = "place"
-
 	private val inventoryData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val experienceData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 	private val healthHungerData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
@@ -84,6 +81,7 @@ class Infinity : JavaPlugin() {
 		// Check server version, disable on 1.19.4 and lower
 
 		INSTANCE = this
+		ConfigHandler.loadConfig(this)
 
 		// Load the plugin
 		val configReader = getConfigReader()
@@ -182,6 +180,7 @@ class Infinity : JavaPlugin() {
 			// Safeguard so potentially saved player data is not deleted
 			return
 		}
+		ConfigHandler.saveConfig(this)
 		// Save player data
 		val configWriter = getConfigWriter()
 		val playerDataObject = JsonObject()
