@@ -8,12 +8,6 @@ target
 *.iml
 *.bat
 
-# Structure resource directories
-lobby
-sky
-nether
-stone
-
 # Server directory
 run
 
