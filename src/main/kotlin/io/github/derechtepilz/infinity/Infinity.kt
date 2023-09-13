@@ -28,6 +28,7 @@ import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.gamemode.*
 import io.github.derechtepilz.infinity.gamemode.AdvancementListener
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
+import io.github.derechtepilz.infinity.gamemode.world.MobSpawnPreventionHandler
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
 import io.github.derechtepilz.infinity.items.InfinityAxe
@@ -167,6 +168,7 @@ class Infinity : JavaPlugin() {
 		Bukkit.getPluginManager().registerEvents(DeathHandler(), this)
 		Bukkit.getPluginManager().registerEvents(EnderChestHandler(), this)
 		Bukkit.getPluginManager().registerEvents(PortalDisableHandler(), this)
+		Bukkit.getPluginManager().registerEvents(MobSpawnPreventionHandler(), this)
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand") { channel, player, message ->
 			logger.info("${player.name} just logged in using ${String(message).substring(1).capitalize()}")
