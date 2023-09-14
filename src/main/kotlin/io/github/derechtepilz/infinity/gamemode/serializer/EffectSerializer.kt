@@ -63,7 +63,7 @@ object EffectSerializer {
 		val jsonArray = JsonParser.parseString(jsonString).asJsonArray
 		val potionEffects: MutableList<PotionEffect> = mutableListOf()
 		for (i in 0 until jsonArray.size()) {
-			val jsonObject = jsonArray[0].asJsonObject
+			val jsonObject = jsonArray[i].asJsonObject
 			val type = PotionEffectType.getByName(jsonObject["name"].asString)!!
 			val duration = jsonObject["duration"].asInt
 			val amplifier = jsonObject["amplifier"].asInt
