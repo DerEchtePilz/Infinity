@@ -45,40 +45,34 @@ object JsonUtil {
 	}
 
 	@JvmStatic
-	fun saveMap(parent: JsonObject, key: String, map: MutableMap<UUID, MutableList<String>>) {
+	fun saveMap(parent: JsonObject, key: String, map: MutableMap<UUID, String>) {
 		val dataArray = JsonArray()
 		for (uuid in map.keys) {
 			val jsonObject = JsonObject()
-			var savedProperties = 0
 			jsonObject.addProperty("0", uuid.toString())
-			savedProperties += 1
-			val dataList = map[uuid]!!
-			for (s in dataList) {
-				jsonObject.addProperty(savedProperties.toString(), s)
-				savedProperties += 1
-			}
+			jsonObject.addProperty("1", map[uuid]!!)
 			dataArray.add(jsonObject)
 		}
 		parent.add(key, dataArray)
 	}
 
 	@JvmStatic
-	fun <T> loadMap(jsonArray: JsonArray, firstObjectValueType: (String) -> T): SaveUtil<T, MutableList<String>> {
-		val loadedMap: MutableMap<T, MutableList<String>> = mutableMapOf()
+	fun <T> loadMap(jsonArray: JsonArray, firstObjectValueType: (String) -> T): SaveUtil<T, String> {
+		val loadedMap: MutableMap<T, String> = mutableMapOf()
 		for (i in 0 until jsonArray.size()) {
 			val dataObject = getObject(i, jsonArray)
 			var readValues = 0
 			var mapKey: T? = null
-			val mapValues: MutableList<String> = mutableListOf()
+			var mapValues: String? = null
 			for (key in dataObject.keySet()) {
 				if (readValues == 0) {
 					mapKey = firstObjectValueType.invoke(dataObject[key].asString)
 					readValues += 1
 					continue
 				}
-				mapValues.add(dataObject[key].asString)
+				mapValues = dataObject[key].asString
 			}
-			loadedMap[mapKey!!] = mapValues
+			loadedMap[mapKey!!] = mapValues!!
 		}
 		return SaveUtil(loadedMap)
 	}

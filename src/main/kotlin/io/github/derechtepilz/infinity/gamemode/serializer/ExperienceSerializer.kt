@@ -18,44 +18,33 @@
 
 package io.github.derechtepilz.infinity.gamemode.serializer
 
-import com.google.common.base.Preconditions
 import org.bukkit.entity.Player
 import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
-import java.util.Base64
-import kotlin.jvm.internal.Intrinsics
+import java.util.*
 
 object ExperienceSerializer {
 
 	@JvmStatic
-	fun serializeLevel(level: Int): String {
+	fun serialize(player: Player): String {
 		val outputStream = ByteArrayOutputStream()
 		val bukkitOutputStream = BukkitObjectOutputStream(outputStream)
-		bukkitOutputStream.writeInt(level)
+		bukkitOutputStream.writeInt(player.level)
+		bukkitOutputStream.writeFloat(player.exp)
 		bukkitOutputStream.close()
 		return Base64.getEncoder().encodeToString(outputStream.toByteArray())
 	}
 
 	@JvmStatic
-	fun serializeProgress(progress: Float): String {
-		val outputStream = ByteArrayOutputStream()
-		val bukkitOutputStream = BukkitObjectOutputStream(outputStream)
-		bukkitOutputStream.writeFloat(progress)
-		bukkitOutputStream.close()
-		return Base64.getEncoder().encodeToString(outputStream.toByteArray())
-	}
-
-	@JvmStatic
-	fun deserialize(data: String, dataClass: Class<*>): Any {
-		Preconditions.checkArgument(dataClass.simpleName == "int" || dataClass.simpleName == "float")
+	fun deserialize(data: String): MutableList<Any> {
 		val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(data))
 		val bukkitInputStream = BukkitObjectInputStream(inputStream)
-		val experienceData = if (dataClass.simpleName == "int") bukkitInputStream.readInt() else bukkitInputStream.readFloat()
+		val level = bukkitInputStream.readInt()
+		val progress = bukkitInputStream.readFloat()
 		bukkitInputStream.close()
-		return experienceData
+		return mutableListOf(level, progress)
 	}
 
 }
