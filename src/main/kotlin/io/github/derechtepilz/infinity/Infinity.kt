@@ -57,10 +57,7 @@ class Infinity : JavaPlugin() {
 		}
 		if (canLoad) {
 			// Register items
-			Registry.Item.register(InfinityPickaxe.ITEM_ID, InfinityPickaxe(Rarity.UNCOMMON))
-			for (i in 0 until InfinityAxe.VARIATIONS) {
-				Registry.Item.register(InfinityAxe.ITEM_ID, InfinityAxe(Rarity.UNCOMMON, i))
-			}
+			loadItems()
 		}
 	}
 
@@ -68,6 +65,14 @@ class Infinity : JavaPlugin() {
 		const val NAME = "infinity"
 		lateinit var INSTANCE: Infinity
 		var canLoad = true
+
+		fun loadItems() {
+			// Dummy method for tests so Infinity items can be used in tests
+			Registry.Item.register(InfinityPickaxe.ITEM_ID, InfinityPickaxe(Rarity.UNCOMMON))
+			for (i in 0 until InfinityAxe.VARIATIONS) {
+				Registry.Item.register(InfinityAxe.ITEM_ID, InfinityAxe(Rarity.UNCOMMON, i))
+			}
+		}
 	}
 
 	private val inventoryData: MutableMap<UUID, String> = mutableMapOf()

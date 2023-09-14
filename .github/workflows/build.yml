@@ -44,6 +44,10 @@ jobs:
           chmod +x gradlew
           ./gradlew :reobfJar --no-daemon
 
+      - name: Run tests
+        run: |
+          ./gradlew check
+
       ### Upload .jar artifacts ###
 
       - name: Query project version
