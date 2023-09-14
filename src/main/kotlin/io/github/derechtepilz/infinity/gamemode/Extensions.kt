@@ -20,6 +20,7 @@ package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
+import io.github.derechtepilz.infinity.gamemode.separation.InventorySeparator
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
@@ -140,17 +141,16 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	this.updatePotionEffects(Infinity.INSTANCE.getPotionEffectData())
 }
 
-fun Player.updateInventory(inventories: MutableMap<UUID, MutableList<String>>) {
+fun Player.updateInventory(inventories: MutableMap<UUID, String>) {
 	// Serialize the enderchest and inventory of the player
-	val inventoryData = InventorySerializer.serializePlayerInventory(this.inventory)
-	val enderChestData = InventorySerializer.serializeInventory(this.enderChest)
+	val inventoryData = InventorySeparator.serialize(this.uniqueId)
 
 	// Load the player inventory and enderchest
 	val playerData = if (inventories.containsKey(this.uniqueId)) inventories[this.uniqueId] else null
 
 	if (playerData == null) {
 		// Save the player inventory and enderchest
-		inventories[this.uniqueId] = mutableListOf(inventoryData, enderChestData)
+		inventories[this.uniqueId] = inventoryData
 
 		// Clear the enderchest and inventory of the player
 		this.inventory.clear()
@@ -159,11 +159,12 @@ fun Player.updateInventory(inventories: MutableMap<UUID, MutableList<String>>) {
 	}
 
 	// Deserialize the enderchest and inventory of the player
-	val inventoryContents = InventorySerializer.deserializeToInventory(playerData[0])
-	val enderChestContents = InventorySerializer.deserializeToInventory(playerData[1])
+	val playerInventoryData = InventorySeparator.deserialize(playerData)
+	val inventoryContents = playerInventoryData[0]
+	val enderChestContents = playerInventoryData[1]
 
 	// Save the player inventory and enderchest
-	inventories[this.uniqueId] = mutableListOf(inventoryData, enderChestData)
+	inventories[this.uniqueId] = inventoryData
 
 	// Clear the enderchest and inventory of the player
 	this.inventory.clear()
@@ -174,10 +175,9 @@ fun Player.updateInventory(inventories: MutableMap<UUID, MutableList<String>>) {
 	this.enderChest.contents = enderChestContents
 }
 
-fun Player.updateExperience(experience: MutableMap<UUID, MutableList<String>>) {
+fun Player.updateExperience(experience: MutableMap<UUID, String>) {
 	// Serialize the experience of the player
-	val experienceLevelData = ExperienceSerializer.serializeLevel(this.level)
-	val experienceProgressData = ExperienceSerializer.serializeProgress(this.exp)
+	val experienceData = ExperienceSerializer.serialize(this)
 
 	// Load the player's experience
 	val playerData = if (experience.containsKey(this.uniqueId)) experience[this.uniqueId] else null
@@ -185,7 +185,7 @@ fun Player.updateExperience(experience: MutableMap<UUID, MutableList<String>>) {
 	if (playerData == null) {
 		// For each player, this is only reached when switching gamemodes the first time
 		// Save the player's experience
-		experience[this.uniqueId] = mutableListOf(experienceLevelData, experienceProgressData)
+		experience[this.uniqueId] = experienceData
 
 		// Reset the player's experience
 		this.level = 0
@@ -194,22 +194,21 @@ fun Player.updateExperience(experience: MutableMap<UUID, MutableList<String>>) {
 	}
 
 	// Deserialize the player's experience
-	val experienceLevel = ExperienceSerializer.deserialize(playerData[0], Int::class.java) as Int
-	val experienceProgress = ExperienceSerializer.deserialize(playerData[1], Float::class.java) as Float
+	val playerExperienceData = ExperienceSerializer.deserialize(playerData)
 
 	// Save the player's experience
-	experience[this.uniqueId] = mutableListOf(experienceLevelData, experienceProgressData)
+	experience[this.uniqueId] = experienceData
 
 	// Reset the player's experience
 	this.level = 0
 	this.exp = 0.0f
 
 	// Update the player's experience
-	this.level = experienceLevel
-	this.exp = experienceProgress
+	this.level = playerExperienceData[0] as Int
+	this.exp = playerExperienceData[1] as Float
 }
 
-fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>>) {
+fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, String>) {
 	// Serialize the health and hunger of the player
 	val healthHungerData = HealthHungerSerializer.serialize(this)
 
@@ -219,7 +218,7 @@ fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>
 	if (playerData == null) {
 		// For each player, this is only reached when switching gamemodes the first time
 		// Save the player's health and hunger
-		healthHunger[this.uniqueId] = mutableListOf(healthHungerData)
+		healthHunger[this.uniqueId] = healthHungerData
 
 		// Reset the player's health and hunger
 		this.health = 20.0
@@ -229,10 +228,10 @@ fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>
 	}
 
 	// Deserialize the player's health and hunger
-	val healthHungerList = HealthHungerSerializer.deserialize(playerData[0])
+	val healthHungerList = HealthHungerSerializer.deserialize(playerData)
 
 	// Save the player's health and hunger
-	healthHunger[this.uniqueId] = mutableListOf(healthHungerData)
+	healthHunger[this.uniqueId] = healthHungerData
 
 	// Reset the player's health and hunger
 	this.health = 20.0
@@ -245,7 +244,7 @@ fun Player.updateHealthHunger(healthHunger: MutableMap<UUID, MutableList<String>
 	this.saturation = healthHungerList[2] as Float
 }
 
-fun Player.updatePotionEffects(potionEffects: MutableMap<UUID, MutableList<String>>) {
+fun Player.updatePotionEffects(potionEffects: MutableMap<UUID, String>) {
 	// Serialize the potion effects of the player
 	val potionEffectData = EffectSerializer.serialize(this)
 
@@ -255,7 +254,7 @@ fun Player.updatePotionEffects(potionEffects: MutableMap<UUID, MutableList<Strin
 	if (playerData == null) {
 		// For each player, this is only reached when switching gamemodes the first time
 		// Save the player's potion effects
-		potionEffects[this.uniqueId] = mutableListOf(potionEffectData)
+		potionEffects[this.uniqueId] = potionEffectData
 
 		// Reset the player's potion effects
 		this.clearActivePotionEffects()
@@ -263,10 +262,10 @@ fun Player.updatePotionEffects(potionEffects: MutableMap<UUID, MutableList<Strin
 	}
 
 	// Deserialize the player's potion effects
-	val potionEffectList = EffectSerializer.deserialize(playerData[0])
+	val potionEffectList = EffectSerializer.deserialize(playerData)
 
 	// Save the player's potion effects
-	potionEffects[this.uniqueId] = mutableListOf(potionEffectData)
+	potionEffects[this.uniqueId] = potionEffectData
 
 	// Reset the player's potion effects
 	this.clearActivePotionEffects()

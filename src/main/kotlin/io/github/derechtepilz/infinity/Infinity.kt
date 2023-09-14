@@ -70,10 +70,10 @@ class Infinity : JavaPlugin() {
 		var canLoad = true
 	}
 
-	private val inventoryData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-	private val experienceData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-	private val healthHungerData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
-	private val potionEffectData: MutableMap<UUID, MutableList<String>> = mutableMapOf()
+	private val inventoryData: MutableMap<UUID, String> = mutableMapOf()
+	private val experienceData: MutableMap<UUID, String> = mutableMapOf()
+	private val healthHungerData: MutableMap<UUID, String> = mutableMapOf()
+	private val potionEffectData: MutableMap<UUID, String> = mutableMapOf()
 
 	override fun onLoad() {
 		if (!canLoad) {
@@ -205,19 +205,19 @@ class Infinity : JavaPlugin() {
 		}
 	}
 
-	fun getInventoryData(): MutableMap<UUID, MutableList<String>> {
+	fun getInventoryData(): MutableMap<UUID, String> {
 		return inventoryData
 	}
 
-	fun getExperienceData(): MutableMap<UUID, MutableList<String>> {
+	fun getExperienceData(): MutableMap<UUID, String> {
 		return experienceData
 	}
 
-	fun getHealthHungerData(): MutableMap<UUID, MutableList<String>> {
+	fun getHealthHungerData(): MutableMap<UUID, String> {
 		return healthHungerData
 	}
 
-	fun getPotionEffectData(): MutableMap<UUID, MutableList<String>> {
+	fun getPotionEffectData(): MutableMap<UUID, String> {
 		return potionEffectData
 	}
 

@@ -18,19 +18,49 @@
 
 package io.github.derechtepilz.infinity.gamemode.serializer
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import net.minecraft.SharedConstants
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtIo
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack
+import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
 import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.util.*
 
 object InventorySerializer {
 
-	fun serializePlayerInventory(playerInventory: PlayerInventory): String {
+	@JvmStatic
+	fun serialize(player: Player): String {
+		val playerInventory = player.inventory
+		val playerEnderChest = player.enderChest
+
+		// Serialize player inventory and ender chest
+		val playerInventoryData = serializeInventory(playerInventory)
+		val playerEnderChestData = serializeInventory(playerEnderChest)
+
+		// Convert data into a Json string
+		val jsonObject = JsonObject()
+		jsonObject.addProperty("inventory", playerInventoryData)
+		jsonObject.addProperty("enderChest", playerEnderChestData)
+		val jsonString = Gson().toJson(jsonObject)
+
+		val outputStream = ByteArrayOutputStream()
+		val bukkitOutputStream = BukkitObjectOutputStream(outputStream)
+		bukkitOutputStream.write(jsonString.toByteArray())
+		bukkitOutputStream.close()
+
+		return Base64.getEncoder().encodeToString(outputStream.toByteArray())
+		/*
 		// This contains contents, armor and offhand (contents are indexes 0 - 35, armor 36 - 39, offhand - 40)
 		val items = playerInventory.contents
 		val outputStream = ByteArrayOutputStream()
@@ -44,10 +74,32 @@ object InventorySerializer {
 			}
 		}
 		dataOutput.close()
-		return Base64Coder.encodeLines(outputStream.toByteArray())
+		return Base64Coder.encodeLines(outputStream.toByteArray())*/
 	}
 
-	fun serializeInventory(inventory: Inventory): String {
+	@JvmStatic
+	fun deserialize(data: String): List<Array<ItemStack?>> {
+		val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(data))
+		val dataInput = BukkitObjectInputStream(inputStream)
+		val jsonObject = JsonParser.parseString(String(dataInput.readAllBytes())).asJsonObject
+		val inventoryData = deserializeInventory(jsonObject["inventory"].asString)
+		val enderChest = deserializeInventory(jsonObject["enderChest"].asString)
+		return listOf(inventoryData, enderChest)
+		/*
+		val items = arrayOfNulls<ItemStack>(dataInput.readInt())
+		for (i in items.indices) {
+			val stack = dataInput.readObject() as ByteArray?
+			if (stack != null) {
+				items[i] = ItemStack.deserializeBytes(stack)
+			} else {
+				items[i] = ItemStack(Material.AIR)
+			}
+		}
+		dataInput.close()
+		return items*/
+	}
+
+	private fun serializeInventory(inventory: Inventory): String {
 		val outputStream = ByteArrayOutputStream()
 		val dataOutput = BukkitObjectOutputStream(outputStream)
 
@@ -64,8 +116,8 @@ object InventorySerializer {
 		return Base64Coder.encodeLines(outputStream.toByteArray())
 	}
 
-	fun deserializeToInventory(data: String): Array<ItemStack?> {
-		val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(data))
+	private fun deserializeInventory(data: String): Array<ItemStack?> {
+		val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(data))
 		val dataInput = BukkitObjectInputStream(inputStream)
 		val items = arrayOfNulls<ItemStack>(dataInput.readInt())
 		for (i in items.indices) {
