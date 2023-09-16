@@ -82,6 +82,7 @@ object InventorySerializer {
 		val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(data))
 		val dataInput = BukkitObjectInputStream(inputStream)
 		val jsonObject = JsonParser.parseString(String(dataInput.readAllBytes())).asJsonObject
+		dataInput.close()
 		val inventoryData = deserializeInventory(jsonObject["inventory"].asString)
 		val enderChest = deserializeInventory(jsonObject["enderChest"].asString)
 		return listOf(inventoryData, enderChest)
@@ -113,7 +114,7 @@ object InventorySerializer {
 
 		// Serialize that array
 		dataOutput.close()
-		return Base64Coder.encodeLines(outputStream.toByteArray())
+		return Base64.getEncoder().encodeToString(outputStream.toByteArray())
 	}
 
 	private fun deserializeInventory(data: String): Array<ItemStack?> {

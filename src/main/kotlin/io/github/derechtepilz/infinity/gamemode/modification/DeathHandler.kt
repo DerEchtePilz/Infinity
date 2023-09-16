@@ -16,9 +16,11 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.gamemode.modification
 
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent
+import io.github.derechtepilz.infinity.gamemode.Gamemode
+import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.github.derechtepilz.infinity.util.Keys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor

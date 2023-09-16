@@ -9,7 +9,7 @@ import kotlin.collections.List
 /**
  * Keeps track of which inventories to load.
  */
-object InventorySeparator : Separator<UUID, List<Array<ItemStack?>>> {
+object InventorySeparator : Serializer<UUID, List<Array<ItemStack?>>> {
 
 	override fun serialize(origin: UUID): String {
 		return InventorySerializer.serialize(Bukkit.getPlayer(origin)!!)

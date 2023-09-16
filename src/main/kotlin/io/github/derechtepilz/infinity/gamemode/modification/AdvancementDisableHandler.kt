@@ -16,27 +16,21 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.derechtepilz.infinity.gamemode
+package io.github.derechtepilz.infinity.gamemode.modification
 
-import io.papermc.paper.event.player.AsyncChatEvent
-import org.bukkit.Bukkit
+import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent
+import io.github.derechtepilz.infinity.gamemode.Gamemode
+import io.github.derechtepilz.infinity.gamemode.getGamemode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-@Suppress("OverrideOnly")
-class ChatHandler : Listener {
+class AdvancementDisableHandler : Listener {
 
 	@EventHandler
-	fun onChat(event: AsyncChatEvent) {
+	fun onGainCriterion(event: PlayerAdvancementCriterionGrantEvent) {
 		val player = event.player
-		event.isCancelled = true
-		val playerGamemode = player.getGamemode()
-		for (p in Bukkit.getOnlinePlayers()) {
-			if (p.getGamemode() != playerGamemode) {
-				continue
-			}
-			val message = event.renderer().render(player, player.displayName(), event.message(), p)
-			p.sendMessage(message)
+		if (player.getGamemode() == Gamemode.INFINITY) {
+			event.isCancelled = true
 		}
 	}
 

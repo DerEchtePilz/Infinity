@@ -23,12 +23,15 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
-import io.github.derechtepilz.infinity.gamemode.ChatHandler
 import io.github.derechtepilz.infinity.commands.InfinityCommand
-import io.github.derechtepilz.infinity.gamemode.*
-import io.github.derechtepilz.infinity.gamemode.AdvancementListener
+import io.github.derechtepilz.infinity.gamemode.PlayerJoinGamemodeListener
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
-import io.github.derechtepilz.infinity.gamemode.world.MobSpawnPreventionHandler
+import io.github.derechtepilz.infinity.gamemode.modification.AdvancementDisableHandler
+import io.github.derechtepilz.infinity.gamemode.modification.ChatHandler
+import io.github.derechtepilz.infinity.gamemode.modification.DeathHandler
+import io.github.derechtepilz.infinity.gamemode.modification.MobSpawnPreventionHandler
+import io.github.derechtepilz.infinity.gamemode.modification.PortalDisableHandler
+import io.github.derechtepilz.infinity.gamemode.switching.GamemodeSwitchHandler
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
 import io.github.derechtepilz.infinity.items.InfinityAxe
@@ -39,9 +42,17 @@ import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
 import io.github.derechtepilz.infinity.world.WorldManager
-import org.bukkit.*
+import org.bukkit.Bukkit
+import org.bukkit.Difficulty
+import org.bukkit.GameRule
+import org.bukkit.World
+import org.bukkit.WorldCreator
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
 import java.util.*
 
 class Infinity : JavaPlugin() {
@@ -165,8 +176,8 @@ class Infinity : JavaPlugin() {
 		WorldCarver.NetherCarver(nether)
 
 		Bukkit.getPluginManager().registerEvents(PlayerJoinGamemodeListener(), this)
-		Bukkit.getPluginManager().registerEvents(GameModeChangeListener(this), this)
-		Bukkit.getPluginManager().registerEvents(AdvancementListener(), this)
+		Bukkit.getPluginManager().registerEvents(GamemodeSwitchHandler(), this)
+		Bukkit.getPluginManager().registerEvents(AdvancementDisableHandler(), this)
 		Bukkit.getPluginManager().registerEvents(SignListener(), this)
 		Bukkit.getPluginManager().registerEvents(ChatHandler(), this)
 		Bukkit.getPluginManager().registerEvents(ChestListener(), this)

@@ -171,7 +171,7 @@ object InfinityCommand {
 						if (currentGamemode == targetGamemode) {
 							player.teleport(Location(targetWorld, player.location.x, player.location.y, player.location.z))
 						} else {
-							player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND, targetWorld, Location(targetWorld, player.location.x, player.location.y, player.location.z))
+							player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN, targetWorld, Location(targetWorld, player.location.x, player.location.y, player.location.z))
 						}
 					}
 					locationArgument("location") {
@@ -183,7 +183,7 @@ object InfinityCommand {
 							if (currentGamemode == targetGamemode) {
 								player.teleport(Location(targetWorld, targetLocation.x, targetLocation.y, targetLocation.z))
 							} else {
-								player.switchGamemode(PlayerTeleportEvent.TeleportCause.COMMAND, targetWorld, targetLocation)
+								player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN, targetWorld, targetLocation)
 							}
 						}
 					}

@@ -1,10 +1,9 @@
-package io.github.derechtepilz.infinity.gamemode.world
+package io.github.derechtepilz.infinity.gamemode.modification
 
 import com.google.gson.JsonParser
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.util.Keys
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.NamespacedKey

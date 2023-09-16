@@ -20,7 +20,6 @@ package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
-import io.github.derechtepilz.infinity.gamemode.separation.InventorySeparator
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
@@ -143,7 +142,7 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 
 fun Player.updateInventory(inventories: MutableMap<UUID, String>) {
 	// Serialize the enderchest and inventory of the player
-	val inventoryData = InventorySeparator.serialize(this.uniqueId)
+	val inventoryData = InventorySerializer.serialize(this)
 
 	// Load the player inventory and enderchest
 	val playerData = if (inventories.containsKey(this.uniqueId)) inventories[this.uniqueId] else null
@@ -159,7 +158,7 @@ fun Player.updateInventory(inventories: MutableMap<UUID, String>) {
 	}
 
 	// Deserialize the enderchest and inventory of the player
-	val playerInventoryData = InventorySeparator.deserialize(playerData)
+	val playerInventoryData = InventorySerializer.deserialize(playerData)
 	val inventoryContents = playerInventoryData[0]
 	val enderChestContents = playerInventoryData[1]
 
