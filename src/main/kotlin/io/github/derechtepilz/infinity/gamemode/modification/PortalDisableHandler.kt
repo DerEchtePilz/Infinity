@@ -16,28 +16,20 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.derechtepilz.infinity.event
+package io.github.derechtepilz.infinity.gamemode.modification
 
 import io.github.derechtepilz.infinity.gamemode.Gamemode
-import org.bukkit.entity.Player
-import org.bukkit.event.Event
-import org.bukkit.event.HandlerList
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.world.PortalCreateEvent
 
-/**
- * Called when a player changes the [Gamemode]
- */
-class GameModeChangeEvent(val player: Player, val previousGamemode: Gamemode, val newGamemode: Gamemode) : Event() {
+class PortalDisableHandler : Listener {
 
-	companion object {
-		private val handlerList = HandlerList()
-
-		@JvmStatic
-		fun getHandlerList(): HandlerList {
-			return handlerList
+	@EventHandler
+	fun onCreatePortal(event: PortalCreateEvent) {
+		if (Gamemode.getFromKey(event.world.key) == Gamemode.INFINITY) {
+			event.isCancelled = true
 		}
 	}
 
-	override fun getHandlers(): HandlerList {
-		return handlerList
-	}
 }

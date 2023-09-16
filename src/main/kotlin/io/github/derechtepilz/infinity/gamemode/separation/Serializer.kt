@@ -6,7 +6,7 @@ import java.util.UUID
  * @param MinecraftObject The object that is used to serialize the data. Using a [UUID] is recommended
  * @param DeserializedType The object that should be returned after using the deserializer
  */
-interface Separator<MinecraftObject, DeserializedType> {
+interface Serializer<MinecraftObject, DeserializedType> {
 
 	fun serialize(origin: MinecraftObject): String
 
