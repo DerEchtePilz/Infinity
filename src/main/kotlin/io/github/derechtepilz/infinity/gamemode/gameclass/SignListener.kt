@@ -18,7 +18,7 @@
 
 package io.github.derechtepilz.infinity.gamemode.gameclass
 
-import io.github.derechtepilz.infinity.gamemode.switchGamemode
+import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.world.WorldCarver
 import net.kyori.adventure.text.Component

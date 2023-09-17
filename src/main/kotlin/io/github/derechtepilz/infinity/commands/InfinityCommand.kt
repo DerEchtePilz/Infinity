@@ -22,7 +22,7 @@ import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
-import io.github.derechtepilz.infinity.gamemode.switchGamemode
+import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
 import io.github.derechtepilz.infinity.items.InfinityItem
 import io.github.derechtepilz.infinity.items.Rarity
 import io.github.derechtepilz.infinity.util.Keys

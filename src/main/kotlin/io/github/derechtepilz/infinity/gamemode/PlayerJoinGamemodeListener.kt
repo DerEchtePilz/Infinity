@@ -18,6 +18,7 @@
 
 package io.github.derechtepilz.infinity.gamemode
 
+import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.sendTabListFooter
 import net.kyori.adventure.text.Component
