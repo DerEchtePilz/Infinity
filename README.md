@@ -2,7 +2,11 @@
 
 ## Disclaimer
 
-Infinity is still under heavy development. It is not ready to be played. If you still choose to build Infinity yourself, please be warned that the worlds you generate will be empty, and you may get an error upon loading the server.
+Infinity is still under heavy development. It is not ready to be played. If you choose to build it yourself, please be aware of the fact that any version that does not have a major version of at least `1` may receive changes that you are not informed about thus breaking stuff you've done so far.
+
+Upon Infinity reaching its first official release, every change that affects the story **directly** is announced before and at release.
+
+That may include certain requirements being added which always will be retroactive among other changes. This is nothing I am deciding now and I am putting a lot of thought into the first official release to make sure the story is solid and nothing needs to happen retrocactively.
 
 ## Introduction
 
