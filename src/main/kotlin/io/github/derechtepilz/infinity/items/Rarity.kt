@@ -18,11 +18,11 @@
 
 package io.github.derechtepilz.infinity.items
 
+import io.github.derechtepilz.infinity.util.capitalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.format.TextDecoration.State
-import java.util.*
 
 enum class Rarity(private val color: NamedTextColor, private val rarity: String) {
 
