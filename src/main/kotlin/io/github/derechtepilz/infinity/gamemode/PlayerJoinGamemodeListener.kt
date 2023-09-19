@@ -41,6 +41,7 @@ class PlayerJoinGamemodeListener : Listener {
 	@EventHandler
 	fun onJoin(event: PlayerJoinEvent) {
 		val player: Player = event.player
+		// TODO: Change messages sent to the player upon login
 		if (!player.persistentDataContainer.has(Keys.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING)) {
 			if (event.player.getGamemode() == Gamemode.MINECRAFT) {
 				sendInfinitySuggestion(player)

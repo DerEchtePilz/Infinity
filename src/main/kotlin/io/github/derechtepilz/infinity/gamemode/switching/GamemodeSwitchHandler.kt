@@ -26,6 +26,11 @@ import java.lang.IllegalArgumentException
 
 class GamemodeSwitchHandler : Listener {
 
+	/**
+	 * The `PlayerTeleportEvent` is called **before** the player is actually teleported.
+	 *
+	 * `event.player.world` will be equal to `event.from.world`
+	 */
 	@EventHandler
 	fun onTeleport(event: PlayerTeleportEvent) {
 		val player = event.player
@@ -34,7 +39,10 @@ class GamemodeSwitchHandler : Listener {
 		val previousGamemode = Gamemode.getFromKey(from.world.key)
 		val currentGamemode = Gamemode.getFromKey(event.to.world.key)
 
-		// Update sign regardless of gamemode
+		// Update sign regardless of gamemode but only if worlds have changed
+		if (from.world.key == event.to.world.key) {
+			return
+		}
 		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(player)
 		if (previousGamemode == currentGamemode) {
 			return
@@ -57,18 +65,8 @@ class GamemodeSwitchHandler : Listener {
 
 fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause) {
 	val newWorldKey = when (this.getGamemode()) {
-		Gamemode.MINECRAFT -> NamespacedKey.fromString(
-			if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING))
-				this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING)!!
-			else "${Infinity.NAME}:lobby", null
-		)!!
-
-		Gamemode.INFINITY -> NamespacedKey.fromString(
-			if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING))
-				this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING)!!
-			else "minecraft:overworld", null
-		)!!
-
+		Gamemode.MINECRAFT -> NamespacedKey.fromString(getLastWorldKey(Gamemode.INFINITY))!!
+		Gamemode.INFINITY -> NamespacedKey.fromString(getLastWorldKey(Gamemode.MINECRAFT))!!
 		Gamemode.UNKNOWN -> Gamemode.UNKNOWN.getWorld().key
 	}
 
@@ -134,4 +132,8 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	this.updateExperience(Infinity.INSTANCE.getExperienceData())
 	this.updateHealthHunger(Infinity.INSTANCE.getHealthHungerData())
 	this.updatePotionEffects(Infinity.INSTANCE.getPotionEffectData())
+}
+
+private fun Player.getLastWorldKey(gamemode: Gamemode): String {
+	return this.persistentDataContainer.getOrDefault(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING, gamemode.getWorld().key.asString())
 }
