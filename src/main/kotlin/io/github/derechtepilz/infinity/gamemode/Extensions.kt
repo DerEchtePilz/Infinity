@@ -27,14 +27,10 @@ import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
 import net.kyori.adventure.text.TextComponent
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
-import org.bukkit.World
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.persistence.PersistentDataType
-import java.lang.IllegalArgumentException
 import java.util.*
 
 /***********************
