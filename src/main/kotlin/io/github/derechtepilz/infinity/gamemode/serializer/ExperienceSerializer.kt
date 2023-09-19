@@ -38,7 +38,7 @@ object ExperienceSerializer {
 	}
 
 	@JvmStatic
-	fun deserialize(data: String): MutableList<Any> {
+	fun deserialize(data: String): MutableList<Number> {
 		val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(data))
 		val bukkitInputStream = BukkitObjectInputStream(inputStream)
 		val level = bukkitInputStream.readInt()
