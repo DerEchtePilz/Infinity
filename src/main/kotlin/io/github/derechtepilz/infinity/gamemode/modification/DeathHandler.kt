@@ -18,20 +18,26 @@
 
 package io.github.derechtepilz.infinity.gamemode.modification
 
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent
 import io.github.derechtepilz.infinity.gamemode.Gamemode
+import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
+import io.github.derechtepilz.infinity.gamemode.gameclass.SignState
 import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.world.WorldCarver
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
@@ -69,6 +75,12 @@ class DeathHandler : Listener {
 			}
 			return
 		}
+	}
+
+	@EventHandler
+	fun onRespawn(event: PlayerPostRespawnEvent) {
+		val player = event.player
+		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(player)
 	}
 
 	@EventHandler
@@ -131,6 +143,12 @@ class DeathHandler : Listener {
 
 		minecraftRespawns[player.uniqueId] = minecraftSpawnLocation
 		infinityRespawns[player.uniqueId] = infinitySpawnLocation
+	}
+
+	@EventHandler
+	fun onQuit(event: PlayerQuitEvent) {
+		val player = event.player
+		saveSpawnPointsFor(player)
 	}
 
 	fun saveSpawnPointsFor(player: Player) {
