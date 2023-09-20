@@ -147,13 +147,9 @@ class WorldCarver {
 		companion object {
 
 			fun setupPlayerSignsWithDelay(player: Player) {
-				SignState.HomeDimensionState.loadState(player, SignState.HomeDimensionState.UNSET)
-				for (uuid in SignListener.INSTANCE.classSelection.keys) {
-					SignListener.INSTANCE.classSelection[uuid]!!.loadFor(Bukkit.getPlayer(uuid)!!, true)
-				}
-				for (uuid in SignListener.INSTANCE.switchClassSelection.keys) {
-					SignListener.INSTANCE.switchClassSelection[uuid]!!.loadFor(Bukkit.getPlayer(uuid)!!, true)
-				}
+				SignListener.INSTANCE.homeDimension[player.uniqueId]!!.loadFor(player, true)
+				SignListener.INSTANCE.classSelection[player.uniqueId]!!.loadFor(player, true)
+				SignListener.INSTANCE.switchClassSelection[player.uniqueId]!!.loadFor(player, true)
 			}
 
 		}
