@@ -22,7 +22,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.persistence.PersistentDataType
-import java.lang.IllegalArgumentException
 
 class GamemodeSwitchHandler : Listener {
 
@@ -36,20 +35,20 @@ class GamemodeSwitchHandler : Listener {
 		val player = event.player
 		val from = event.from
 
-		val previousGamemode = Gamemode.getFromKey(from.world.key)
-		val currentGamemode = Gamemode.getFromKey(event.to.world.key)
+		val currentGamemode = Gamemode.getFromKey(from.world.key)
+		val nextGamemode = Gamemode.getFromKey(event.to.world.key)
 
 		// Update sign regardless of gamemode but only if worlds have changed
 		if (from.world.key == event.to.world.key) {
 			return
 		}
 		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(player)
-		if (previousGamemode == currentGamemode) {
+		if (currentGamemode == nextGamemode) {
 			return
 		}
 
 		player.gameMode = if (event.to.world.key == Keys.WORLD_LOBBY.get()) GameMode.ADVENTURE else GameMode.SURVIVAL
-		sendTabListFooter(player, player.getGamemode())
+		sendTabListFooter(player, nextGamemode)
 
 		if (event.cause != PlayerTeleportEvent.TeleportCause.COMMAND) {
 			// Safeguard, so teleporting with /execute in <dimension> run teleport x y z doesn't cause a StackOverflowError
@@ -58,22 +57,23 @@ class GamemodeSwitchHandler : Listener {
 			return
 		}
 
-		player.switchGamemode(PlayerTeleportEvent.TeleportCause.UNKNOWN, player.world, player.location, ForceInfo(from.world.key, from.x, from.y, from.z, from.yaw, from.pitch))
+		val location = player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN)
+		event.to = location
 	}
 
 }
 
-fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause) {
+fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause): Location {
 	val newWorldKey = when (this.getGamemode()) {
 		Gamemode.MINECRAFT -> NamespacedKey.fromString(getLastWorldKey(Gamemode.INFINITY))!!
 		Gamemode.INFINITY -> NamespacedKey.fromString(getLastWorldKey(Gamemode.MINECRAFT))!!
 		Gamemode.UNKNOWN -> Gamemode.UNKNOWN.getWorld().key
 	}
 
-	this.updateLastLocationAndSwitch(cause, SwitchInfo(null, newWorldKey, null))
+	return this.updateLastLocationAndSwitch(cause, SwitchInfo(null, newWorldKey, null))
 }
 
-fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause, targetWorld: World, targetLocation: Location? = null, force: ForceInfo? = null) {
+fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause, targetWorld: World, targetLocation: Location? = null, force: ForceInfo? = null): Location {
 	val currentGamemode = this.getGamemode()
 	val targetGamemode = Gamemode.getFromKey(targetWorld.key)
 	if (currentGamemode == targetGamemode && force == null) {
@@ -81,10 +81,10 @@ fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause, targetWorld:
 	}
 	val newWorldKey = targetWorld.key
 
-	this.updateLastLocationAndSwitch(cause, SwitchInfo(force, newWorldKey, targetLocation))
+	return this.updateLastLocationAndSwitch(cause, SwitchInfo(force, newWorldKey, targetLocation))
 }
 
-private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.TeleportCause, switchInfo: SwitchInfo) {
+private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.TeleportCause, switchInfo: SwitchInfo): Location {
 	// Save the player location and orientation
 	val currentLocationX = if (switchInfo.force != null) switchInfo.force.x else this.location.x
 	val currentLocationY = if (switchInfo.force != null) switchInfo.force.y else this.location.y
@@ -132,6 +132,8 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	this.updateExperience(Infinity.INSTANCE.getExperienceData())
 	this.updateHealthHunger(Infinity.INSTANCE.getHealthHungerData())
 	this.updatePotionEffects(Infinity.INSTANCE.getPotionEffectData())
+
+	return newLocation
 }
 
 private fun Player.getLastWorldKey(gamemode: Gamemode): String {
