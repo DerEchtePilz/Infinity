@@ -1,6 +1,7 @@
 package io.github.derechtepilz
 
 import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.config.ConfigHandler
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
@@ -10,10 +11,11 @@ open class Main : JavaPlugin {
 
 	override fun onEnable() {
 		Infinity.loadItems()
+		ConfigHandler.loadConfig()
 	}
 
 	override fun onDisable() {
-
+		ConfigHandler.saveConfig()
 	}
 
 
