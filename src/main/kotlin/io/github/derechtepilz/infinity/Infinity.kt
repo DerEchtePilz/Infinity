@@ -24,6 +24,7 @@ import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import io.github.derechtepilz.infinity.commands.InfinityCommand
+import io.github.derechtepilz.infinity.config.ConfigHandler
 import io.github.derechtepilz.infinity.gamemode.PlayerJoinGamemodeListener
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
 import io.github.derechtepilz.infinity.gamemode.modification.AdvancementDisableHandler
@@ -98,7 +99,7 @@ class Infinity : JavaPlugin() {
 		// Check server version, disable on 1.19.4 and lower
 
 		INSTANCE = this
-		ConfigHandler.loadConfig(this)
+		ConfigHandler.loadConfig()
 
 		// Load the plugin
 		val configReader = getConfigReader()
@@ -198,7 +199,7 @@ class Infinity : JavaPlugin() {
 			// Safeguard so potentially saved player data is not deleted
 			return
 		}
-		ConfigHandler.saveConfig(this)
+		ConfigHandler.saveConfig()
 		// Save player data
 		val configWriter = getConfigWriter()
 		val playerDataObject = JsonObject()
@@ -242,7 +243,7 @@ class Infinity : JavaPlugin() {
 		if (!configDirectory.exists()) {
 			return null
 		}
-		val configFile = File(configDirectory, "config.json")
+		val configFile = File(configDirectory, "player-data.json")
 		if (!configFile.exists()) {
 			return null
 		}
@@ -254,7 +255,7 @@ class Infinity : JavaPlugin() {
 		if (!configDirectory.exists()) {
 			configDirectory.mkdirs()
 		}
-		val configFile = File(configDirectory, "config.json")
+		val configFile = File(configDirectory, "player-data.json")
 		if (!configFile.exists()) {
 			configFile.createNewFile()
 		}
