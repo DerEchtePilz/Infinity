@@ -263,7 +263,7 @@ object InfinityCommand {
 									val currentTimeUnit = backupKey.activeTimeUnit
 									player.sendMessage(Component.text().content("Player data will now be backed up every ")
 										.color(NamedTextColor.GRAY)
-										.append(Component.text().content(intervalInput.toString() + currentTimeUnit.name.lowercase()).color(NamedTextColor.GOLD))
+										.append(Component.text().content("$intervalInput $currentTimeUnit").color(NamedTextColor.GOLD))
 										.append(Component.text().content("!"))
 									)
 
@@ -282,7 +282,7 @@ object InfinityCommand {
 									val currentInterval = backupKey.interval
 									player.sendMessage(Component.text().content("Player data will now be backed up every ")
 										.color(NamedTextColor.GRAY)
-										.append(Component.text().content(currentInterval.toString() + timeUnitInput).color(NamedTextColor.GOLD))
+										.append(Component.text().content("$currentInterval $timeUnitInput").color(NamedTextColor.GOLD))
 										.append(Component.text().content("!"))
 									)
 
