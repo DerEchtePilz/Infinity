@@ -19,26 +19,16 @@ object ConfigHandler {
 	)
 
 	private val activeConfig: MutableMap<String, JsonObject> = mutableMapOf()
-	private val configCache: MutableMap<String, List<Any>> = mutableMapOf()
 
 	@JvmStatic
 	fun loadConfig() {
-		val configDirectory = File("./infinity/config")
-		if (!configDirectory.exists()) {
+		if (!checkDirectory()) {
 			for (key in DEFAULT_MAP.keys) {
 				activeConfig[key] = DEFAULT_MAP[key]!!
 			}
 			return
 		}
-		val configFile = File(configDirectory, "config.json")
-		val reader = BufferedReader(FileReader(configFile))
-		val builder = StringBuilder()
-		var line: String?
-		while (reader.readLine().also { line = it } != null) {
-			builder.append(line)
-		}
-		reader.close()
-		val configJson = JsonParser.parseString(builder.toString()).asJsonObject
+		val configJson = readConfig()
 		for (key in configJson.keySet()) {
 			activeConfig[key] = configJson[key].asJsonObject
 		}
@@ -46,23 +36,14 @@ object ConfigHandler {
 
 	@JvmStatic
 	fun saveConfig() {
-		val configDirectory = File("./infinity/config")
-		if (!configDirectory.exists()) {
-			configDirectory.mkdirs()
-		}
-		val configFile = File(configDirectory, "config.json")
-		if (!configFile.exists()) {
-			configFile.createNewFile()
-		}
-		val configJson = JsonObject()
-		for (key in activeConfig.keys) {
-			configJson.add(key, activeConfig[key]!!)
-		}
-		val configJsonString = GsonBuilder().setPrettyPrinting().create().toJson(configJson)
+		writeConfig()
+	}
 
-		val configWriter = BufferedWriter(FileWriter(configFile))
-		configWriter.write(configJsonString)
-		configWriter.close()
+	@JvmStatic
+	fun resetConfig() {
+		for (key in DEFAULT_MAP.keys) {
+			activeConfig[key] = DEFAULT_MAP[key]!!
+		}
 	}
 
 	@JvmStatic
@@ -89,11 +70,66 @@ object ConfigHandler {
 		activeConfig[backupInterval.getBackupKey()] = backupInterval.toJson()
 	}
 
-	@JvmStatic
-	fun resetConfig() {
-		for (key in DEFAULT_MAP.keys) {
-			activeConfig[key] = DEFAULT_MAP[key]!!
+	private fun checkDirectory(): Boolean {
+		val directory = File("./infinity/config")
+		return directory.exists()
+	}
+
+	private fun checkConfig(): Boolean {
+		val directory = File("./infinity/config")
+		val config = File(directory, "config.json")
+		return config.exists()
+	}
+
+	private fun getDirectory(): File {
+		val directory = File("./infinity/config")
+		if (!checkDirectory()) {
+			directory.mkdirs()
+			return directory
 		}
+		return directory
+	}
+
+	private fun getConfig(): File {
+		val config = File(getDirectory(), "config.json")
+		if (!checkConfig()) {
+			config.createNewFile()
+			return config
+		}
+		return config
+	}
+
+	private fun getReader(): BufferedReader {
+		return BufferedReader(FileReader(getConfig()))
+	}
+
+	private fun getWriter(): BufferedWriter {
+		return BufferedWriter(FileWriter(getConfig()))
+	}
+
+	private fun readConfig(): JsonObject {
+		var line: String?
+		val builder = StringBuilder()
+		val reader = getReader()
+		while (reader.readLine().also { line = it } != null) {
+			builder.append(line)
+		}
+		reader.close()
+		return JsonParser.parseString(builder.toString()).asJsonObject
+	}
+
+	private fun writeConfig() {
+		val configWriter = getWriter()
+		configWriter.write(createJson())
+		configWriter.close()
+	}
+
+	private fun createJson(): String {
+		val configJson = JsonObject()
+		for (key in activeConfig.keys) {
+			configJson.add(key, activeConfig[key]!!)
+		}
+		return GsonBuilder().setPrettyPrinting().create().toJson(configJson)
 	}
 
 }

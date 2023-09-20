@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 class PlayerDataBackupKey(var interval: Int, timeUnit: String) : ConfigKey<PlayerDataBackupKey> {
 
 	companion object {
-		const val BACKUP_KEY = "player-data-backup-key"
+		const val BACKUP_KEY = "player-data-backup"
 	}
 
 	private val validTimeUnits = listOf(TimeUnit.SECONDS, TimeUnit.MINUTES, TimeUnit.HOURS)
