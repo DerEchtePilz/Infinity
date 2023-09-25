@@ -20,7 +20,6 @@ package io.github.derechtepilz.infinity.commands
 
 import dev.jorel.commandapi.kotlindsl.*
 import io.github.derechtepilz.infinity.Registry
-import io.github.derechtepilz.infinity.config.ConfigHandler
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
@@ -31,15 +30,12 @@ import io.github.derechtepilz.infinity.util.capitalize
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.command.CommandSender
-import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import java.util.concurrent.TimeUnit
 
 object InfinityCommand {
 
@@ -246,68 +242,6 @@ object InfinityCommand {
 					playerExecutor { player, _ ->
 						player.persistentDataContainer.remove(Keys.DEFAULT_GAMEMODE.get())
 						player.sendMessage(Component.text("Reset default gamemode!").color(NamedTextColor.RED))
-					}
-				}
-			}
-			literalArgument("config") {
-				withRequirement { sender: CommandSender -> sender.isOp }
-				literalArgument("edit") {
-					literalArgument("player-data-backup") {
-						literalArgument("interval") {
-							integerArgument("interval") {
-								playerExecutor { player, args ->
-									val intervalInput = args["interval"] as Int
-									val backupKey = ConfigHandler.getBackupInterval()
-									backupKey.interval = intervalInput
-
-									val currentTimeUnit = backupKey.activeTimeUnit
-									player.sendMessage(Component.text().content("Player data will now be backed up every ")
-										.color(NamedTextColor.GRAY)
-										.append(Component.text().content("$intervalInput $currentTimeUnit").color(NamedTextColor.GOLD))
-										.append(Component.text().content("!"))
-									)
-
-									ConfigHandler.setBackupInterval(backupKey)
-								}
-							}
-						}
-						literalArgument("timeUnit") {
-							multiLiteralArgument(nodeName = "timeUnit", "seconds", "minutes", "hours") {
-								playerExecutor { player, args ->
-									val timeUnitInput = args["timeUnit"] as String
-									val timeUnit = TimeUnit.valueOf(timeUnitInput.uppercase())
-									val backupKey = ConfigHandler.getBackupInterval()
-									backupKey.activeTimeUnit = timeUnit
-
-									val currentInterval = backupKey.interval
-									player.sendMessage(Component.text().content("Player data will now be backed up every ")
-										.color(NamedTextColor.GRAY)
-										.append(Component.text().content("$currentInterval $timeUnitInput").color(NamedTextColor.GOLD))
-										.append(Component.text().content("!"))
-									)
-
-									ConfigHandler.setBackupInterval(backupKey)
-								}
-							}
-						}
-					}
-				}
-				literalArgument("reload") {
-					playerExecutor { player, _ ->
-						ConfigHandler.loadConfig()
-						player.sendMessage(Component.text().content("The config has been reloaded!").color(NamedTextColor.GRAY).build())
-					}
-				}
-				literalArgument("save") {
-					playerExecutor { player, _ ->
-						ConfigHandler.saveConfig()
-						player.sendMessage(Component.text().content("The config has been saved!").color(NamedTextColor.GRAY).build())
-					}
-				}
-				literalArgument("reset") {
-					playerExecutor { player, _ ->
-						ConfigHandler.resetConfig()
-						player.sendMessage(Component.text().content("The config has been reset!").color(NamedTextColor.GRAY).build())
 					}
 				}
 			}
