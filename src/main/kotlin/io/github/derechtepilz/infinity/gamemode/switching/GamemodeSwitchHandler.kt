@@ -1,5 +1,6 @@
 package io.github.derechtepilz.infinity.gamemode.switching
 
+import dev.jorel.commandapi.CommandAPI
 import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.gamemode.ForceInfo
 import io.github.derechtepilz.infinity.gamemode.Gamemode
@@ -12,6 +13,14 @@ import io.github.derechtepilz.infinity.gamemode.updatePotionEffects
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.sendTabListFooter
 import io.github.derechtepilz.infinity.world.WorldCarver
+import io.papermc.paper.commands.FeedbackForwardingSender
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import net.kyori.adventure.title.Title
+import net.kyori.adventure.title.Title.Times
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -22,6 +31,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.persistence.PersistentDataType
+import java.time.Duration
+import java.util.*
 
 class GamemodeSwitchHandler : Listener {
 
@@ -42,9 +53,42 @@ class GamemodeSwitchHandler : Listener {
 		if (from.world.key == event.to.world.key) {
 			return
 		}
-		WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(player)
+		if (nextGamemode == Gamemode.INFINITY) {
+			WorldCarver.LobbyCarver.setupPlayerSignsWithDelay(player)
+		}
 		if (currentGamemode == nextGamemode) {
 			return
+		}
+
+		if (nextGamemode == Gamemode.INFINITY && !player.persistentDataContainer.has(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN)) {
+			// Initiate a sequence that requires a manual player action to actually start the story
+			Infinity.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity.INSTANCE)).setPermission("infinity.startstory", true)
+			CommandAPI.updateRequirements(player)
+			player.sendMessage(Component.text().content("Start the story!")
+				.color(NamedTextColor.GREEN)
+				.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE)
+				.hoverEvent(Component.text().content("This will start the story for you!")
+					.color(NamedTextColor.GREEN)
+					.appendNewline()
+					.append(Component.text().content("During the introduction sequence, you will not be able to switch your gamemode!").color(NamedTextColor.RED))
+					.appendNewline()
+					.append(Component.text().content("If you leave the server in any way possible, once you rejoin the server you will have to start the introduction sequence again!").color(NamedTextColor.RED))
+					.build()
+				)
+				.clickEvent(ClickEvent.runCommand("/infinity startstory"))
+			)
+			Infinity.INSTANCE.startStoryTask[player.uniqueId] = Bukkit.getScheduler().scheduleSyncRepeatingTask(Infinity.INSTANCE, {
+				player.showTitle(Title.title(Infinity.INSTANCE.infinityComponent,
+					Component.text().content("Click the message in the chat to start the story!")
+						.color(NamedTextColor.WHITE)
+						.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE)
+					.build(), Times.times(Duration.ZERO, Duration.ofMillis(300L), Duration.ZERO)))
+			}, 0, 5)
+		}
+
+		if (nextGamemode != Gamemode.INFINITY) {
+			player.terminateStoryTitleTask()
+			removeStartStoryPermission(player)
 		}
 
 		player.gameMode = if (event.to.world.key == Keys.WORLD_LOBBY.get()) GameMode.ADVENTURE else GameMode.SURVIVAL
@@ -61,9 +105,24 @@ class GamemodeSwitchHandler : Listener {
 		event.to = location
 	}
 
+	private fun removeStartStoryPermission(player: Player) {
+		Infinity.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity.INSTANCE)).setPermission("infinity.startstory", false)
+		CommandAPI.updateRequirements(player)
+	}
+
+}
+
+fun Player.terminateStoryTitleTask() {
+	Bukkit.getScheduler().cancelTask(Infinity.INSTANCE.startStoryTask.getOrDefault(this.uniqueId, -1))
+	Infinity.INSTANCE.startStoryTask.remove(this.uniqueId)
 }
 
 fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause): Location {
+	if (this.persistentDataContainer.has(Keys.GAMEMODE_SWITCH_ENABLED.get(), PersistentDataType.BOOLEAN)) {
+		Infinity.INSTANCE.logger.info("${PlainTextComponentSerializer.plainText().serialize(this.name())} tried to switch gamemodes while that is currently disabled for this player!")
+		Infinity.INSTANCE.logger.info("Logging, so server admins can give that feedback to players if needed.")
+		return this.location
+	}
 	val newWorldKey = when (this.getGamemode()) {
 		Gamemode.MINECRAFT -> NamespacedKey.fromString(getLastWorldKey(Gamemode.INFINITY))!!
 		Gamemode.INFINITY -> NamespacedKey.fromString(getLastWorldKey(Gamemode.MINECRAFT))!!

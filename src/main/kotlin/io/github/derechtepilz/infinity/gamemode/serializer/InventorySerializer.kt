@@ -21,11 +21,7 @@ package io.github.derechtepilz.infinity.gamemode.serializer
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import net.minecraft.SharedConstants
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.NbtIo
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -34,7 +30,6 @@ import org.bukkit.util.io.BukkitObjectOutputStream
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.util.*
 
 object InventorySerializer {
