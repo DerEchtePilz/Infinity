@@ -23,14 +23,17 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
+import io.github.derechtepilz.infinity.commands.DevUtilCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
-import io.github.derechtepilz.infinity.gamemode.PlayerJoinGamemodeListener
+import io.github.derechtepilz.infinity.gamemode.PlayerJoinServerListener
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
 import io.github.derechtepilz.infinity.gamemode.modification.AdvancementDisableHandler
 import io.github.derechtepilz.infinity.gamemode.modification.ChatHandler
 import io.github.derechtepilz.infinity.gamemode.modification.DeathHandler
 import io.github.derechtepilz.infinity.gamemode.modification.MobSpawnPreventionHandler
 import io.github.derechtepilz.infinity.gamemode.modification.PortalDisableHandler
+import io.github.derechtepilz.infinity.gamemode.modification.TablistHandler
+import io.github.derechtepilz.infinity.gamemode.story.introduction.PlayerQuitInStoryListener
 import io.github.derechtepilz.infinity.gamemode.switching.GamemodeSwitchHandler
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
@@ -42,11 +45,14 @@ import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
 import io.github.derechtepilz.infinity.world.WorldManager
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Difficulty
 import org.bukkit.GameRule
 import org.bukkit.World
 import org.bukkit.WorldCreator
+import org.bukkit.command.Command
+import org.bukkit.permissions.PermissionAttachment
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -86,6 +92,15 @@ class Infinity : JavaPlugin() {
 		}
 	}
 
+	private val mm: MiniMessage = MiniMessage.miniMessage()
+	val infinityComponent = mm.deserialize("<gradient:#18e1f0:#de18f0>Minecraft Infinity</gradient>")
+
+	val startStoryTask: MutableMap<UUID, Int> = mutableMapOf()
+	val playerPermissions: MutableMap<UUID, PermissionAttachment> = mutableMapOf()
+
+	val infinityPlayerList: MutableList<UUID> = mutableListOf()
+	val minecraftPlayerList: MutableList<UUID> = mutableListOf()
+
 	private val inventoryData: MutableMap<UUID, String> = mutableMapOf()
 	private val experienceData: MutableMap<UUID, String> = mutableMapOf()
 	private val healthHungerData: MutableMap<UUID, String> = mutableMapOf()
@@ -121,6 +136,7 @@ class Infinity : JavaPlugin() {
 		CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
 
 		InfinityCommand.register()
+		DevUtilCommand().register()
 	}
 
 	override fun onEnable() {
@@ -174,7 +190,7 @@ class Infinity : JavaPlugin() {
 		WorldCarver.StoneCarver(stone)
 		WorldCarver.NetherCarver(nether)
 
-		Bukkit.getPluginManager().registerEvents(PlayerJoinGamemodeListener(), this)
+		Bukkit.getPluginManager().registerEvents(PlayerJoinServerListener(), this)
 		Bukkit.getPluginManager().registerEvents(GamemodeSwitchHandler(), this)
 		Bukkit.getPluginManager().registerEvents(AdvancementDisableHandler(), this)
 		Bukkit.getPluginManager().registerEvents(SignListener(), this)
@@ -184,6 +200,8 @@ class Infinity : JavaPlugin() {
 		Bukkit.getPluginManager().registerEvents(EnderChestHandler(), this)
 		Bukkit.getPluginManager().registerEvents(PortalDisableHandler(), this)
 		Bukkit.getPluginManager().registerEvents(MobSpawnPreventionHandler(), this)
+		Bukkit.getPluginManager().registerEvents(TablistHandler(), this)
+		Bukkit.getPluginManager().registerEvents(PlayerQuitInStoryListener(), this)
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand") { channel, player, message ->
 			logger.info("${player.name} just logged in using ${String(message).substring(1).capitalize()}")
@@ -216,6 +234,7 @@ class Infinity : JavaPlugin() {
 		for (player in Bukkit.getOnlinePlayers()) {
 			SignListener.INSTANCE.saveSignStatesFor(player)
 			DeathHandler.INSTANCE.saveSpawnPointsFor(player)
+			PlayerQuitInStoryListener.INSTANCE.resetIntroduction(player)
 		}
 	}
 

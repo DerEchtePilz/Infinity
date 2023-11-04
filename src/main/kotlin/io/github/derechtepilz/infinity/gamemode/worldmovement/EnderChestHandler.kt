@@ -18,7 +18,10 @@
 
 package io.github.derechtepilz.infinity.gamemode.worldmovement
 
+import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.util.Keys
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -45,33 +48,48 @@ class EnderChestHandler : Listener {
 		when (item) {
 			EnderChestInventory.INSTANCE.classOneTeleport() -> {
 				if (event.isRightClick) {
+					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 1.0f))
 					inventory.setItem(21, EnderChestInventory.INSTANCE.classTwoTeleport())
 					return
 				}
 				if (event.isLeftClick) {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_SKY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
+					Bukkit.getScheduler().runTaskLater(Infinity.INSTANCE, Runnable {
+						player.teleport(Location(Bukkit.getWorld(Keys.WORLD_SKY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					}, 20)
 				}
 			}
 			EnderChestInventory.INSTANCE.classTwoTeleport() -> {
 				if (event.isRightClick) {
+					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 1.0f))
 					inventory.setItem(21, EnderChestInventory.INSTANCE.classThreeTeleport())
 					return
 				}
 				if (event.isLeftClick) {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_STONE.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
+					Bukkit.getScheduler().runTaskLater(Infinity.INSTANCE, Runnable {
+						player.teleport(Location(Bukkit.getWorld(Keys.WORLD_STONE.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					}, 20)
 				}
 			}
 			EnderChestInventory.INSTANCE.classThreeTeleport() -> {
 				if (event.isRightClick) {
+					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 1.0f))
 					inventory.setItem(21, EnderChestInventory.INSTANCE.classOneTeleport())
 					return
 				}
 				if (event.isLeftClick) {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_NETHER.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
+					Bukkit.getScheduler().runTaskLater(Infinity.INSTANCE, Runnable {
+						player.teleport(Location(Bukkit.getWorld(Keys.WORLD_NETHER.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					}, 20)
 				}
 			}
 			EnderChestInventory.INSTANCE.lobbyTeleport() -> {
-				player.teleport(Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+				player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
+				Bukkit.getScheduler().runTaskLater(Infinity.INSTANCE, Runnable {
+					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+				}, 20)
 			}
 		}
 	}

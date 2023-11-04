@@ -18,11 +18,15 @@
 
 package io.github.derechtepilz.infinity.commands
 
+import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.kotlindsl.*
+import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
+import io.github.derechtepilz.infinity.gamemode.story.StoryHandler
 import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
+import io.github.derechtepilz.infinity.gamemode.switching.terminateStoryTitleTask
 import io.github.derechtepilz.infinity.items.InfinityItem
 import io.github.derechtepilz.infinity.items.Rarity
 import io.github.derechtepilz.infinity.util.Keys
@@ -243,6 +247,23 @@ object InfinityCommand {
 						player.persistentDataContainer.remove(Keys.DEFAULT_GAMEMODE.get())
 						player.sendMessage(Component.text("Reset default gamemode!").color(NamedTextColor.RED))
 					}
+				}
+			}
+			literalArgument("startstory") {
+				withPermission("infinity.startstory")
+				playerExecutor { player, _ ->
+					Infinity.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity.INSTANCE)).setPermission("infinity.startstory", false)
+					CommandAPI.updateRequirements(player)
+					player.terminateStoryTitleTask()
+					player.persistentDataContainer.set(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN, true)
+					player.sendMessage(Component.text().content("Story started! Have fun!").color(NamedTextColor.LIGHT_PURPLE).build())
+
+					// Disable gamemode switching for the player executing this command
+					player.persistentDataContainer.set(Keys.GAMEMODE_SWITCH_ENABLED.get(), PersistentDataType.BOOLEAN, false) // Disable gamemode switching during introduction sequence
+					player.persistentDataContainer.set(Keys.INTRODUCTION_SEQUENCE.get(), PersistentDataType.BOOLEAN, true) // Track if the player currently sees the introduction sequence
+
+					// Initiate story start sequence
+					StoryHandler.startIntroduction(player)
 				}
 			}
 		}
