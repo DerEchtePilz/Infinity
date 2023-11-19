@@ -8,8 +8,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
 	kotlin("jvm") version "1.9.0"
-	id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-	id("xyz.jpenilla.run-paper") version "2.1.0" apply false
+	id("com.github.johnrengelman.shadow") version "8.1.1"
+	id("xyz.jpenilla.run-paper") version "2.1.0"
 	id("io.papermc.paperweight.userdev") version "1.5.5"
 }
 
@@ -44,7 +44,7 @@ val kotlinVersion: String by project
 val paperVersion: String by project
 
 dependencies {
-	project(":infinity-api")
+	implementation(project(":infinity-api"))
 	implementation("dev.jorel:commandapi-bukkit-shade:$commandAPIVersion")
 	compileOnly("dev.jorel:commandapi-bukkit-kotlin:$commandAPIVersion")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
@@ -119,6 +119,7 @@ tasks.withType<ShadowJar> {
 	dependencies {
 		include(dependency("dev.jorel:commandapi-bukkit-shade:$commandAPIVersion"))
 		include(dependency("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"))
+		include(dependency("io.github.derechtepilz:infinity-api:${project.version}"))
 	}
 	relocate("dev.jorel.commandapi", "io.github.derechtepilz.commandapi")
 	minimize()
