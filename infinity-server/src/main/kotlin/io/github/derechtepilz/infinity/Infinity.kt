@@ -23,6 +23,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
+import io.github.derechtepilz.events.WorldCreateLoadEvent
 import io.github.derechtepilz.infinity.commands.DevUtilCommand
 import io.github.derechtepilz.infinity.commands.InfinityCommand
 import io.github.derechtepilz.infinity.gamemode.PlayerJoinServerListener
@@ -51,7 +52,6 @@ import org.bukkit.Difficulty
 import org.bukkit.GameRule
 import org.bukkit.World
 import org.bukkit.WorldCreator
-import org.bukkit.command.Command
 import org.bukkit.permissions.PermissionAttachment
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.BufferedReader
@@ -145,6 +145,7 @@ class Infinity : JavaPlugin() {
 			Bukkit.getPluginManager().disablePlugin(this)
 			return
 		}
+		WorldCreateLoadEvent().callEvent()
 		val lobby = Bukkit.createWorld(WorldCreator("infinity/lobby", Keys.WORLD_LOBBY.get())
 			.generator(WorldManager.ChunkGenerators.EmptyChunkGenerator())
 			.biomeProvider(WorldManager.BiomeProviders.EmptyBiomeProvider())
