@@ -3,7 +3,7 @@ package io.github.derechtepilz.infinity.gamemode.modification
 import com.google.gson.JsonParser
 import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.Gamemode
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
@@ -17,9 +17,9 @@ import java.io.InputStreamReader
 class MobSpawnPreventionHandler : Listener {
 
 	private val loadedSpawnWorld = mutableMapOf(
-		Keys.WORLD_SKY.get() to false,
-		Keys.WORLD_STONE.get() to false,
-		Keys.WORLD_NETHER.get() to false
+		Keys0.WORLD_SKY.get() to false,
+		Keys0.WORLD_STONE.get() to false,
+		Keys0.WORLD_NETHER.get() to false
 	)
 	private val preventedSpawnLocations: MutableMap<NamespacedKey, MutableList<Location>> = mutableMapOf()
 
@@ -31,26 +31,26 @@ class MobSpawnPreventionHandler : Listener {
 		}
 		// If Infinity should spawn mobs, catch this here if possible
 		val preventedLocations = when (world.key) {
-			Keys.WORLD_SKY.get() -> {
-				if (!loadedSpawnWorld[Keys.WORLD_SKY.get()]!!) {
-					loadedSpawnWorld[Keys.WORLD_SKY.get()] = true
-					preventedSpawnLocations[Keys.WORLD_SKY.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_SKY, Infinity0.INSTANCE.getResource("sky/sky_spawn.json")!!), false)
+			Keys0.WORLD_SKY.get() -> {
+				if (!loadedSpawnWorld[Keys0.WORLD_SKY.get()]!!) {
+					loadedSpawnWorld[Keys0.WORLD_SKY.get()] = true
+					preventedSpawnLocations[Keys0.WORLD_SKY.get()] = preventLocations(deserializeStructureToLocations(Keys0.WORLD_SKY, Infinity0.INSTANCE.getResource("sky/sky_spawn.json")!!), false)
 				}
-				preventedSpawnLocations[Keys.WORLD_SKY.get()]!!
+				preventedSpawnLocations[Keys0.WORLD_SKY.get()]!!
 			}
-			Keys.WORLD_STONE.get() -> {
-				if (!loadedSpawnWorld[Keys.WORLD_STONE.get()]!!) {
-					loadedSpawnWorld[Keys.WORLD_STONE.get()] = true
-					preventedSpawnLocations[Keys.WORLD_STONE.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_STONE, Infinity0.INSTANCE.getResource("stone/stone_spawn.json")!!), true)
+			Keys0.WORLD_STONE.get() -> {
+				if (!loadedSpawnWorld[Keys0.WORLD_STONE.get()]!!) {
+					loadedSpawnWorld[Keys0.WORLD_STONE.get()] = true
+					preventedSpawnLocations[Keys0.WORLD_STONE.get()] = preventLocations(deserializeStructureToLocations(Keys0.WORLD_STONE, Infinity0.INSTANCE.getResource("stone/stone_spawn.json")!!), true)
 				}
-				preventedSpawnLocations[Keys.WORLD_STONE.get()]!!
+				preventedSpawnLocations[Keys0.WORLD_STONE.get()]!!
 			}
-			Keys.WORLD_NETHER.get() -> {
-				if (!loadedSpawnWorld[Keys.WORLD_NETHER.get()]!!) {
-					loadedSpawnWorld[Keys.WORLD_NETHER.get()] = true
-					preventedSpawnLocations[Keys.WORLD_NETHER.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_NETHER, Infinity0.INSTANCE.getResource("nether/nether_spawn.json")!!), false)
+			Keys0.WORLD_NETHER.get() -> {
+				if (!loadedSpawnWorld[Keys0.WORLD_NETHER.get()]!!) {
+					loadedSpawnWorld[Keys0.WORLD_NETHER.get()] = true
+					preventedSpawnLocations[Keys0.WORLD_NETHER.get()] = preventLocations(deserializeStructureToLocations(Keys0.WORLD_NETHER, Infinity0.INSTANCE.getResource("nether/nether_spawn.json")!!), false)
 				}
-				preventedSpawnLocations[Keys.WORLD_NETHER.get()]!!
+				preventedSpawnLocations[Keys0.WORLD_NETHER.get()]!!
 			}
 			else -> mutableListOf()
 		}
@@ -65,7 +65,7 @@ class MobSpawnPreventionHandler : Listener {
 		}
 	}
 
-	private fun deserializeStructureToLocations(worldKey: Keys, structure: InputStream): List<Location> {
+	private fun deserializeStructureToLocations(worldKey: Keys0, structure: InputStream): List<Location> {
 		val structureLocations: MutableList<Location> = mutableListOf()
 		val world = Bukkit.getWorld(worldKey.get())!!
 

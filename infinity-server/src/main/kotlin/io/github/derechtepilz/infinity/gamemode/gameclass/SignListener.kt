@@ -19,7 +19,7 @@
 package io.github.derechtepilz.infinity.gamemode.gameclass
 
 import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import io.github.derechtepilz.infinity.world.WorldCarver
 import net.kyori.adventure.text.Component
 import org.bukkit.block.Sign
@@ -58,20 +58,20 @@ class SignListener : Listener {
 		val player = event.player
 		val action = event.action
 		homeDimension[player.uniqueId] = SignState.HomeDimensionState.UNSET
-		if (sign.persistentDataContainer.has(Keys.SIGN_TAG_MINECRAFT_TELEPORT.get(), PersistentDataType.STRING)) {
+		if (sign.persistentDataContainer.has(Keys0.SIGN_TAG_MINECRAFT_TELEPORT.get(), PersistentDataType.STRING)) {
 			// Do stuff on left and right click
 			if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
 				player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN)
 			}
 		}
-		if (sign.persistentDataContainer.has(Keys.SIGN_TAG_HOME_DIMENSION_TELEPORT.get(), PersistentDataType.STRING)) {
+		if (sign.persistentDataContainer.has(Keys0.SIGN_TAG_HOME_DIMENSION_TELEPORT.get(), PersistentDataType.STRING)) {
 			// Do stuff on left click and right click
 			if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
 				player.sendMessage(Component.text().content("Teleporting to home dimension..."))
 			}
 			return
 		}
-		if (sign.persistentDataContainer.has(Keys.SIGN_TAG_SELECT_CLASS.get(), PersistentDataType.STRING)) {
+		if (sign.persistentDataContainer.has(Keys0.SIGN_TAG_SELECT_CLASS.get(), PersistentDataType.STRING)) {
 			// Do stuff
 			// Cycle through classes on right click
 			// Select the displayed class on left click
@@ -90,7 +90,7 @@ class SignListener : Listener {
 			}
 			return
 		}
-		if (sign.persistentDataContainer.has(Keys.SIGN_TAG_SWITCH_CLASS.get(), PersistentDataType.STRING)) {
+		if (sign.persistentDataContainer.has(Keys0.SIGN_TAG_SWITCH_CLASS.get(), PersistentDataType.STRING)) {
 			// Do stuff
 			// Cycle through classes on right click
 			// Select the displayed class on left click but open a confirmation inventory
@@ -115,14 +115,14 @@ class SignListener : Listener {
 	fun onJoin(event: PlayerJoinEvent) {
 		val player = event.player
 		// Load sign states from player
-		val homeDimensionState = SignState.HomeDimensionState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_HOME_DIMENSION.get(), PersistentDataType.STRING, "01"))
-		val classSelectionState = SignState.ClassSelectionState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_SELECT_CLASS.get(), PersistentDataType.STRING, "01"))
-		val classSwitchingState = SignState.ClassSwitchingState.getByValue(player.persistentDataContainer.getOrDefault(Keys.SIGN_STATE_SWITCH_CLASS.get(), PersistentDataType.STRING, "01"))
+		val homeDimensionState = SignState.HomeDimensionState.getByValue(player.persistentDataContainer.getOrDefault(Keys0.SIGN_STATE_HOME_DIMENSION.get(), PersistentDataType.STRING, "01"))
+		val classSelectionState = SignState.ClassSelectionState.getByValue(player.persistentDataContainer.getOrDefault(Keys0.SIGN_STATE_SELECT_CLASS.get(), PersistentDataType.STRING, "01"))
+		val classSwitchingState = SignState.ClassSwitchingState.getByValue(player.persistentDataContainer.getOrDefault(Keys0.SIGN_STATE_SWITCH_CLASS.get(), PersistentDataType.STRING, "01"))
 
 		// Remove keys from player
-		player.persistentDataContainer.remove(Keys.SIGN_STATE_HOME_DIMENSION.get())
-		player.persistentDataContainer.remove(Keys.SIGN_STATE_SELECT_CLASS.get())
-		player.persistentDataContainer.remove(Keys.SIGN_STATE_SWITCH_CLASS.get())
+		player.persistentDataContainer.remove(Keys0.SIGN_STATE_HOME_DIMENSION.get())
+		player.persistentDataContainer.remove(Keys0.SIGN_STATE_SELECT_CLASS.get())
+		player.persistentDataContainer.remove(Keys0.SIGN_STATE_SWITCH_CLASS.get())
 
 		homeDimension[player.uniqueId] = homeDimensionState
 		classSelection[player.uniqueId] = classSelectionState
@@ -145,9 +145,9 @@ class SignListener : Listener {
 		val classSwitchingState = switchClassSelection[player.uniqueId]!!
 
 		// Save values to player
-		player.persistentDataContainer.set(Keys.SIGN_STATE_HOME_DIMENSION.get(), PersistentDataType.STRING, homeDimensionState.value)
-		player.persistentDataContainer.set(Keys.SIGN_STATE_SELECT_CLASS.get(), PersistentDataType.STRING, classSelectionState.value)
-		player.persistentDataContainer.set(Keys.SIGN_STATE_SWITCH_CLASS.get(), PersistentDataType.STRING, classSwitchingState.value)
+		player.persistentDataContainer.set(Keys0.SIGN_STATE_HOME_DIMENSION.get(), PersistentDataType.STRING, homeDimensionState.value)
+		player.persistentDataContainer.set(Keys0.SIGN_STATE_SELECT_CLASS.get(), PersistentDataType.STRING, classSelectionState.value)
+		player.persistentDataContainer.set(Keys0.SIGN_STATE_SWITCH_CLASS.get(), PersistentDataType.STRING, classSwitchingState.value)
 
 		// Clear maps
 		homeDimension.remove(player.uniqueId)
