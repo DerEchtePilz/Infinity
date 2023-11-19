@@ -24,7 +24,7 @@ import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import io.github.derechtepilz.infinity.util.capitalize
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.Location
@@ -48,7 +48,7 @@ fun Player.getGamemode(): Gamemode {
 }
 
 fun Player.hasDefaultGamemode(): Boolean {
-	return this.persistentDataContainer.has(Keys.DEFAULT_GAMEMODE.get())
+	return this.persistentDataContainer.has(Keys0.DEFAULT_GAMEMODE.get())
 }
 
 /************************************

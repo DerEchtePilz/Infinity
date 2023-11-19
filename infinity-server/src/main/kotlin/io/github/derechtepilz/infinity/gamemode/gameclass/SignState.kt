@@ -21,7 +21,7 @@ package io.github.derechtepilz.infinity.gamemode.gameclass
 import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.getClass
 import io.github.derechtepilz.infinity.gamemode.normalize
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
@@ -41,7 +41,7 @@ class SignState {
 		STONE("03"),
 		NETHER("04");
 
-		private val homeTeleportLocation = Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 6.0, 101.0, 9.0)
+		private val homeTeleportLocation = Location(Bukkit.getWorld(Keys0.WORLD_LOBBY.get())!!, 6.0, 101.0, 9.0)
 
 		override fun loadFor(player: Player, delay: Boolean) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity0.INSTANCE, {
@@ -96,7 +96,7 @@ class SignState {
 		LAVABORN("04"),
 		CLASS_SELECTED("05");
 
-		private val classSelectionLocation = Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, -6.0, 101.0, 9.0)
+		private val classSelectionLocation = Location(Bukkit.getWorld(Keys0.WORLD_LOBBY.get())!!, -6.0, 101.0, 9.0)
 
 		override fun loadFor(player: Player, delay: Boolean) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity0.INSTANCE, {
@@ -161,7 +161,7 @@ class SignState {
 		STONEBORN("03"),
 		LAVABORN("04");
 
-		private val classSwitchingLocation = Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, -8.0, 101.0, 9.0)
+		private val classSwitchingLocation = Location(Bukkit.getWorld(Keys0.WORLD_LOBBY.get())!!, -8.0, 101.0, 9.0)
 
 		override fun loadFor(player: Player, delay: Boolean) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity0.INSTANCE, {

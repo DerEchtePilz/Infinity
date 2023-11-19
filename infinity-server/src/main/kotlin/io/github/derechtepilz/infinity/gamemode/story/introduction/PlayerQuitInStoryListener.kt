@@ -2,7 +2,7 @@ package io.github.derechtepilz.infinity.gamemode.story.introduction
 
 import io.github.derechtepilz.infinity.gamemode.story.StoryHandler
 import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -27,10 +27,10 @@ class PlayerQuitInStoryListener : Listener {
 	}
 
 	fun resetIntroduction(player: Player) {
-		if (player.persistentDataContainer.has(Keys.INTRODUCTION_SEQUENCE.get(), PersistentDataType.BOOLEAN)) {
-			player.persistentDataContainer.remove(Keys.STORY_STARTED.get())
-			player.persistentDataContainer.remove(Keys.INTRODUCTION_SEQUENCE.get())
-			player.persistentDataContainer.remove(Keys.GAMEMODE_SWITCH_ENABLED.get())
+		if (player.persistentDataContainer.has(Keys0.INTRODUCTION_SEQUENCE.get(), PersistentDataType.BOOLEAN)) {
+			player.persistentDataContainer.remove(Keys0.STORY_STARTED.get())
+			player.persistentDataContainer.remove(Keys0.INTRODUCTION_SEQUENCE.get())
+			player.persistentDataContainer.remove(Keys0.GAMEMODE_SWITCH_ENABLED.get())
 
 			player.switchGamemode(PlayerTeleportEvent.TeleportCause.PLUGIN)
 

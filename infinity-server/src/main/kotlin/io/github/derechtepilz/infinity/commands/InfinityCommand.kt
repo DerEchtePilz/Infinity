@@ -34,7 +34,7 @@ import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
 import io.github.derechtepilz.infinity.gamemode.switching.terminateStoryTitleTask
 import io.github.derechtepilz.infinity.items.InfinityItem
 import io.github.derechtepilz.infinity.items.Rarity
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import io.github.derechtepilz.infinity.util.Reflection
 import io.github.derechtepilz.infinity.util.capitalize
 import net.kyori.adventure.text.Component
@@ -183,12 +183,12 @@ object InfinityCommand {
 					Infinity0.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity0.INSTANCE)).setPermission("infinity.startstory", false)
 					player.updateCommands()
 					player.terminateStoryTitleTask()
-					player.persistentDataContainer.set(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN, true)
+					player.persistentDataContainer.set(Keys0.STORY_STARTED.get(), PersistentDataType.BOOLEAN, true)
 					player.sendMessage(Component.text().content("Story started! Have fun!").color(NamedTextColor.LIGHT_PURPLE).build())
 
 					// Disable gamemode switching for the player executing this command
-					player.persistentDataContainer.set(Keys.GAMEMODE_SWITCH_ENABLED.get(), PersistentDataType.BOOLEAN, false) // Disable gamemode switching during introduction sequence
-					player.persistentDataContainer.set(Keys.INTRODUCTION_SEQUENCE.get(), PersistentDataType.BOOLEAN, true) // Track if the player currently sees the introduction sequence
+					player.persistentDataContainer.set(Keys0.GAMEMODE_SWITCH_ENABLED.get(), PersistentDataType.BOOLEAN, false) // Disable gamemode switching during introduction sequence
+					player.persistentDataContainer.set(Keys0.INTRODUCTION_SEQUENCE.get(), PersistentDataType.BOOLEAN, true) // Track if the player currently sees the introduction sequence
 
 					// Initiate story start sequence
 					StoryHandler.startIntroduction(player)
@@ -304,8 +304,8 @@ object InfinityCommand {
 							val player = getSenderAsPlayer(ctx)
 							if (gamemodeOption == "infinity" || gamemodeOption == "minecraft") {
 								when (gamemodeOption) {
-									"infinity" -> player.persistentDataContainer.set(Keys.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING, gamemodeOption)
-									"minecraft" -> player.persistentDataContainer.set(Keys.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING, gamemodeOption)
+									"infinity" -> player.persistentDataContainer.set(Keys0.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING, gamemodeOption)
+									"minecraft" -> player.persistentDataContainer.set(Keys0.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING, gamemodeOption)
 								}
 								player.sendMessage(Component.text("Set default gamemode to ")
 									.color(NamedTextColor.GRAY)
@@ -320,7 +320,7 @@ object InfinityCommand {
 									.append(Component.text("!").color(NamedTextColor.GRAY))
 								)
 							} else {
-								player.persistentDataContainer.remove(Keys.DEFAULT_GAMEMODE.get())
+								player.persistentDataContainer.remove(Keys0.DEFAULT_GAMEMODE.get())
 								player.sendMessage(Component.text("Reset default gamemode!").color(NamedTextColor.RED))
 							}
 							return@executes 1
