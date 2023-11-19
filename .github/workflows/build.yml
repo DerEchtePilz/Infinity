@@ -42,7 +42,7 @@ jobs:
       - name: Build Infinity using Gradle
         run: |
           chmod +x gradlew
-          ./gradlew :reobfJar --no-daemon
+          ./gradlew reobfJar --no-daemon
 
       - name: Run tests
         run: |
