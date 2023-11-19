@@ -20,16 +20,12 @@ package io.github.derechtepilz.infinity.commands
 
 import com.mojang.brigadier.LiteralMessage
 import com.mojang.brigadier.arguments.IntegerArgumentType
-import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
-import com.mojang.brigadier.tree.ArgumentCommandNode
-import dev.jorel.commandapi.CommandAPI
-import dev.jorel.commandapi.kotlindsl.*
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
@@ -50,8 +46,6 @@ import net.minecraft.commands.arguments.coordinates.Coordinates
 import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.resources.ResourceLocation
 import org.bukkit.Location
-import org.bukkit.World
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.inventory.ItemStack
@@ -186,7 +180,7 @@ object InfinityCommand {
 				.requires(requirePlayer.and { stack -> stack.source.getBukkitSender(stack).hasPermission("infinity.startstory") })
 				.executes { ctx ->
 					val player = getSenderAsPlayer(ctx)
-					Infinity.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity.INSTANCE)).setPermission("infinity.startstory", false)
+					Infinity0.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity0.INSTANCE)).setPermission("infinity.startstory", false)
 					player.updateCommands()
 					player.terminateStoryTitleTask()
 					player.persistentDataContainer.set(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN, true)

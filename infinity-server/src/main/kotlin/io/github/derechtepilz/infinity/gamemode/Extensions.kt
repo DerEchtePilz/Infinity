@@ -18,7 +18,7 @@
 
 package io.github.derechtepilz.infinity.gamemode
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
@@ -195,7 +195,7 @@ data class ForceInfo(val previousWorld: NamespacedKey, val x: Double, val y: Dou
  *      GAME CLASS AND SIGNS      *
  **********************************/
 
-private val gameClassKey = NamespacedKey(Infinity.NAME, "gameclass")
+private val gameClassKey = NamespacedKey(Infinity0.NAME, "gameclass")
 
 fun Player.getClass(): TextComponent {
 	return GameClass.valueOf(this.persistentDataContainer.get(gameClassKey, PersistentDataType.STRING)!!.uppercase()).get()

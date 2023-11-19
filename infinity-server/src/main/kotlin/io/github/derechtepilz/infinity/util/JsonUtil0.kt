@@ -22,20 +22,20 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import java.util.*
 
-object JsonUtil {
+object JsonUtil0 {
 
 	@JvmStatic
-	fun getArray(name: String, parent: JsonObject): JsonArray {
+	fun getArray0(name: String, parent: JsonObject): JsonArray {
 		return parent[name].asJsonArray
 	}
 
 	@JvmStatic
-	fun getObject(index: Int, parent: JsonArray): JsonObject {
+	fun getObject0(index: Int, parent: JsonArray): JsonObject {
 		return parent[index].asJsonObject
 	}
 
 	@JvmStatic
-	fun <T> loadMap(jsonObject: JsonObject, mapKey: String, mapKeyType: (String) -> T, mapValues: MutableList<String>): JsonObjectSaveUtil<T, MutableList<String>> {
+	fun <T> loadMap0(jsonObject: JsonObject, mapKey: String, mapKeyType: (String) -> T, mapValues: MutableList<String>): JsonObjectSaveUtil<T, MutableList<String>> {
 		val key: T = mapKeyType.invoke(jsonObject[mapKey].asString)
 		val otherValues: MutableList<String> = mutableListOf()
 		for (s in mapValues) {
@@ -45,7 +45,7 @@ object JsonUtil {
 	}
 
 	@JvmStatic
-	fun saveMap(parent: JsonObject, key: String, map: MutableMap<UUID, String>) {
+	fun saveMap0(parent: JsonObject, key: String, map: MutableMap<UUID, String>) {
 		val dataArray = JsonArray()
 		for (uuid in map.keys) {
 			val jsonObject = JsonObject()
@@ -57,10 +57,10 @@ object JsonUtil {
 	}
 
 	@JvmStatic
-	fun <T> loadMap(jsonArray: JsonArray, firstObjectValueType: (String) -> T): SaveUtil<T, String> {
+	fun <T> loadMap(jsonArray: JsonArray, firstObjectValueType: (String) -> T): SaveUtil0<T, String> {
 		val loadedMap: MutableMap<T, String> = mutableMapOf()
 		for (i in 0 until jsonArray.size()) {
-			val dataObject = getObject(i, jsonArray)
+			val dataObject = getObject0(i, jsonArray)
 			var readValues = 0
 			var mapKey: T? = null
 			var mapValues: String? = null
@@ -74,10 +74,10 @@ object JsonUtil {
 			}
 			loadedMap[mapKey!!] = mapValues!!
 		}
-		return SaveUtil(loadedMap)
+		return SaveUtil0(loadedMap)
 	}
 
-	class SaveUtil<K, V>(private val loadedMap: MutableMap<K, V>) {
+	class SaveUtil0<K, V>(private val loadedMap: MutableMap<K, V>) {
 
 		fun saveTo(dataMap: MutableMap<K, V>) {
 			for (key in loadedMap.keys) {
