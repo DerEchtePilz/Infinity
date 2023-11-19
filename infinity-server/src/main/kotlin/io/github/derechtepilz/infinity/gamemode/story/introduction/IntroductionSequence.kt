@@ -2,9 +2,11 @@ package io.github.derechtepilz.infinity.gamemode.story.introduction
 
 import io.github.derechtepilz.infinity.Infinity
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
@@ -67,7 +69,7 @@ class IntroductionSequence(private val player: Player) {
 			.appendSpace()
 			.append(Component.text().content(player.name).color(NamedTextColor.YELLOW))
 			.append(Component.text().content("!"))
-			.build(), 1
+			.build(), 2
 		)
 		queueGuideMessage(Component.text().content("Welcome to ").append(Infinity.INSTANCE.infinityComponent).append(Component.text().content("!")).build(), 2)
 		queueGuideMessage(Component.text().content("I am going to tell you a story about what happened here. It was a really long time ago...").build(), 2)
@@ -88,8 +90,22 @@ class IntroductionSequence(private val player: Player) {
 			.append(mythicalCreature)
 			.append(Component.text().content(" got really angry and destroyed the connections between the worlds.")).build(), 7
 		)
+		queueGuideMessage(Component.text().content("Because of that, the worlds were disconnected and exchange didn't happen anymore.").build(), 8)
+		queueGuideMessage(Component.text().content("Over the years that have passed since then, each of the three worlds have developed their own civilizations."), 5)
+		queueGuideMessage(Component.text().content("The civilizations are known as classes since a few hundred years ago. There were a few years where a temporary connection has been established, hence we know about the classes."), 6)
+		queueGuideMessage(Component.text().content("You, ${player.name}, have been chosen to gain the chance to be born into one of these classes."), 11)
+		queueGuideMessage(Component.text().content("Each class has their own name and their own abilities. You have the ability to travel between the worlds, that is if you are able to gain enough knowledge about your world and its features."), 6)
+		queueGuideMessage(Component.text().content("You can always travel back here. This is kind of the core of the worlds. This is where you will travel to other worlds in the future."), 11)
+		queueGuideMessage(Component.text().content("Do you understand this so far?"), 8)
+		queueGuideMessage(Component.text().content("Anyway (:D), let me introduce you to those classes..."), 10)
+
+		// Class names with different abilities (three each)
 
 		player.sendGuideMessages()
+	}
+
+	private fun queueGuideMessage(message: ComponentLike, delayInSeconds: Int) {
+		queueGuideMessage(message.asComponent(), delayInSeconds)
 	}
 
 	private fun queueGuideMessage(message: Component, delayInSeconds: Int) {
