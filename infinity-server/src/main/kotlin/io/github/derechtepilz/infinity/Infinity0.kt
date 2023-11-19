@@ -42,10 +42,10 @@ import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.items.Rarity
 import io.github.derechtepilz.infinity.util.JsonUtil0
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
-import io.github.derechtepilz.infinity.world.WorldManager
+import io.github.derechtepilz.infinity.world.WorldManager0
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Difficulty
@@ -146,25 +146,25 @@ class Infinity0 : JavaPlugin() {
 			return
 		}
 		WorldCreateLoadEvent().callEvent()
-		val lobby = Bukkit.createWorld(WorldCreator("infinity/lobby", Keys.WORLD_LOBBY.get())
-			.generator(WorldManager.ChunkGenerators.EmptyChunkGenerator())
-			.biomeProvider(WorldManager.BiomeProviders.EmptyBiomeProvider())
+		val lobby = Bukkit.createWorld(WorldCreator("infinity/lobby", Keys0.WORLD_LOBBY.get())
+			.generator(WorldManager0.ChunkGenerators.EmptyChunkGenerator())
+			.biomeProvider(WorldManager0.BiomeProviders.EmptyBiomeProvider())
 			.seed(0L)
 		)!!
-		val sky = Bukkit.createWorld(WorldCreator("infinity/sky", Keys.WORLD_SKY.get())
-			.generator(WorldManager.ChunkGenerators.EmptyChunkGenerator())
-			.biomeProvider(WorldManager.BiomeProviders.EmptyBiomeProvider())
+		val sky = Bukkit.createWorld(WorldCreator("infinity/sky", Keys0.WORLD_SKY.get())
+			.generator(WorldManager0.ChunkGenerators.EmptyChunkGenerator())
+			.biomeProvider(WorldManager0.BiomeProviders.EmptyBiomeProvider())
 			.seed(0L)
 		)!!
-		val stone = Bukkit.createWorld(WorldCreator("infinity/stone", Keys.WORLD_STONE.get())
-			.generator(WorldManager.ChunkGenerators.StoneChunkGenerator())
-			.biomeProvider(WorldManager.BiomeProviders.StoneBiomeProvider())
+		val stone = Bukkit.createWorld(WorldCreator("infinity/stone", Keys0.WORLD_STONE.get())
+			.generator(WorldManager0.ChunkGenerators.StoneChunkGenerator())
+			.biomeProvider(WorldManager0.BiomeProviders.StoneBiomeProvider())
 			.seed(0L)
 		)!!
-		val nether = Bukkit.createWorld(WorldCreator("infinity/nether", Keys.WORLD_NETHER.get())
-			.generator(WorldManager.ChunkGenerators.NetherChunkGenerator())
+		val nether = Bukkit.createWorld(WorldCreator("infinity/nether", Keys0.WORLD_NETHER.get())
+			.generator(WorldManager0.ChunkGenerators.NetherChunkGenerator())
 			.environment(World.Environment.NETHER)
-			.biomeProvider(WorldManager.BiomeProviders.NetherBiomeProvider())
+			.biomeProvider(WorldManager0.BiomeProviders.NetherBiomeProvider())
 			.seed(0L)
 		)!!
 

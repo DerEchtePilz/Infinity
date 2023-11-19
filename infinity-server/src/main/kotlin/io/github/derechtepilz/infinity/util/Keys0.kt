@@ -23,7 +23,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
-enum class Keys(private val namespace: NamespacedKey, val isState: Boolean = false) {
+enum class Keys0(private val namespace: NamespacedKey, val isState: Boolean = false) {
 
 	/* GENERAL KEYS START */
 	WORLD_LOBBY(NamespacedKey(Infinity0.NAME, "lobby")),
@@ -81,8 +81,8 @@ enum class Keys(private val namespace: NamespacedKey, val isState: Boolean = fal
 
 	companion object {
 		@JvmStatic
-		fun fromNamespacedKey(key: NamespacedKey): Keys? {
-			for (entry in Keys.entries) {
+		fun fromNamespacedKey(key: NamespacedKey): Keys0? {
+			for (entry in Keys0.entries) {
 				if (entry.namespace == key) {
 					return entry
 				}
@@ -91,7 +91,7 @@ enum class Keys(private val namespace: NamespacedKey, val isState: Boolean = fal
 		}
 
 		@JvmStatic
-		fun Player.addKey(key: Keys) {
+		fun Player.addKey(key: Keys0) {
 			if (!key.isState) {
 				throw IllegalStateException("Cannot add non-state key. State keys have pre-defined values while a non-state key has gamemode-dependent values.")
 			}
@@ -99,7 +99,7 @@ enum class Keys(private val namespace: NamespacedKey, val isState: Boolean = fal
 		}
 
 		@JvmStatic
-		fun Player.removeKey(key: Keys) {
+		fun Player.removeKey(key: Keys0) {
 			if (!key.isState) {
 				throw IllegalStateException("Cannot remove non-state key. State keys have pre-defined values while a non-state key has gamemode-dependent values.")
 			}

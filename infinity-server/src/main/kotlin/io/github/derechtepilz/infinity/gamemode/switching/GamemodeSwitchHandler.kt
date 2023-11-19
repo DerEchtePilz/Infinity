@@ -10,7 +10,7 @@ import io.github.derechtepilz.infinity.gamemode.updateExperience
 import io.github.derechtepilz.infinity.gamemode.updateHealthHunger
 import io.github.derechtepilz.infinity.gamemode.updateInventory
 import io.github.derechtepilz.infinity.gamemode.updatePotionEffects
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import io.github.derechtepilz.infinity.util.sendTabListFooter
 import io.github.derechtepilz.infinity.world.WorldCarver
 import net.kyori.adventure.text.Component
@@ -58,7 +58,7 @@ class GamemodeSwitchHandler : Listener {
 			return
 		}
 
-		if (nextGamemode == Gamemode.INFINITY && !player.persistentDataContainer.has(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN)) {
+		if (nextGamemode == Gamemode.INFINITY && !player.persistentDataContainer.has(Keys0.STORY_STARTED.get(), PersistentDataType.BOOLEAN)) {
 			// Initiate a sequence that requires a manual player action to actually start the story
 			Infinity0.INSTANCE.playerPermissions.getOrDefault(player.uniqueId, player.addAttachment(Infinity0.INSTANCE)).setPermission("infinity.startstory", true)
 			CommandAPI.updateRequirements(player)
@@ -89,7 +89,7 @@ class GamemodeSwitchHandler : Listener {
 			removeStartStoryPermission(player)
 		}
 
-		player.gameMode = if (event.to.world.key == Keys.WORLD_LOBBY.get()) GameMode.ADVENTURE else GameMode.SURVIVAL
+		player.gameMode = if (event.to.world.key == Keys0.WORLD_LOBBY.get()) GameMode.ADVENTURE else GameMode.SURVIVAL
 		sendTabListFooter(player, nextGamemode)
 
 		if (event.cause != PlayerTeleportEvent.TeleportCause.COMMAND) {
@@ -116,7 +116,7 @@ fun Player.terminateStoryTitleTask() {
 }
 
 fun Player.switchGamemode(cause: PlayerTeleportEvent.TeleportCause): Location {
-	if (this.persistentDataContainer.has(Keys.GAMEMODE_SWITCH_ENABLED.get(), PersistentDataType.BOOLEAN)) {
+	if (this.persistentDataContainer.has(Keys0.GAMEMODE_SWITCH_ENABLED.get(), PersistentDataType.BOOLEAN)) {
 		Infinity0.INSTANCE.logger.info("${PlainTextComponentSerializer.plainText().serialize(this.name())} tried to switch gamemodes while that is currently disabled for this player!")
 		Infinity0.INSTANCE.logger.info("Logging, so server admins can give that feedback to players if needed.")
 		return this.location
@@ -151,11 +151,11 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	val currentWorldKey = if (switchInfo.force != null) switchInfo.force.previousWorld else this.world.key
 
 	// Load the new location and orientation
-	var newPosX = if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE)!! else 0.5
-	var newPosY = if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_Y.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_Y.get(), PersistentDataType.DOUBLE)!! else 101.0
-	var newPosZ = if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_Z.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_Z.get(), PersistentDataType.DOUBLE)!! else 0.5
-	var newYaw = if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_YAW.get(), PersistentDataType.FLOAT)) this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_YAW.get(), PersistentDataType.FLOAT)!! else 0.0F
-	var newPitch = if (this.persistentDataContainer.has(Keys.SWITCH_GAMEMODE_LAST_PITCH.get(), PersistentDataType.FLOAT)) this.persistentDataContainer.get(Keys.SWITCH_GAMEMODE_LAST_PITCH.get(), PersistentDataType.FLOAT)!! else 0.0F
+	var newPosX = if (this.persistentDataContainer.has(Keys0.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys0.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE)!! else 0.5
+	var newPosY = if (this.persistentDataContainer.has(Keys0.SWITCH_GAMEMODE_LAST_Y.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys0.SWITCH_GAMEMODE_LAST_Y.get(), PersistentDataType.DOUBLE)!! else 101.0
+	var newPosZ = if (this.persistentDataContainer.has(Keys0.SWITCH_GAMEMODE_LAST_Z.get(), PersistentDataType.DOUBLE)) this.persistentDataContainer.get(Keys0.SWITCH_GAMEMODE_LAST_Z.get(), PersistentDataType.DOUBLE)!! else 0.5
+	var newYaw = if (this.persistentDataContainer.has(Keys0.SWITCH_GAMEMODE_LAST_YAW.get(), PersistentDataType.FLOAT)) this.persistentDataContainer.get(Keys0.SWITCH_GAMEMODE_LAST_YAW.get(), PersistentDataType.FLOAT)!! else 0.0F
+	var newPitch = if (this.persistentDataContainer.has(Keys0.SWITCH_GAMEMODE_LAST_PITCH.get(), PersistentDataType.FLOAT)) this.persistentDataContainer.get(Keys0.SWITCH_GAMEMODE_LAST_PITCH.get(), PersistentDataType.FLOAT)!! else 0.0F
 
 	// Overwrite coordinates and rotation if SwitchInfo contains a non-null Location
 	newPosX = if (switchInfo.targetLocation != null) switchInfo.targetLocation.x else newPosX
@@ -165,19 +165,19 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 	newPitch = if (switchInfo.targetLocation != null) switchInfo.targetLocation.pitch else newPitch
 
 	// Overwrite coordinates and rotation if target world is infinity:lobby
-	newPosX = if (switchInfo.targetWorld == Keys.WORLD_LOBBY.get()) 0.5 else newPosX
-	newPosY = if (switchInfo.targetWorld == Keys.WORLD_LOBBY.get()) 101.0 else newPosY
-	newPosZ = if (switchInfo.targetWorld == Keys.WORLD_LOBBY.get()) 0.5 else newPosZ
-	newYaw = if (switchInfo.targetWorld == Keys.WORLD_LOBBY.get()) 0.0f else newYaw
-	newPitch = if (switchInfo.targetWorld == Keys.WORLD_LOBBY.get()) 0.0f else newPitch
+	newPosX = if (switchInfo.targetWorld == Keys0.WORLD_LOBBY.get()) 0.5 else newPosX
+	newPosY = if (switchInfo.targetWorld == Keys0.WORLD_LOBBY.get()) 101.0 else newPosY
+	newPosZ = if (switchInfo.targetWorld == Keys0.WORLD_LOBBY.get()) 0.5 else newPosZ
+	newYaw = if (switchInfo.targetWorld == Keys0.WORLD_LOBBY.get()) 0.0f else newYaw
+	newPitch = if (switchInfo.targetWorld == Keys0.WORLD_LOBBY.get()) 0.0f else newPitch
 
 	// Update the persistent data container
-	this.persistentDataContainer.set(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING, currentWorldKey.asString())
-	this.persistentDataContainer.set(Keys.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE, currentLocationX)
-	this.persistentDataContainer.set(Keys.SWITCH_GAMEMODE_LAST_Y.get(), PersistentDataType.DOUBLE, currentLocationY)
-	this.persistentDataContainer.set(Keys.SWITCH_GAMEMODE_LAST_Z.get(), PersistentDataType.DOUBLE, currentLocationZ)
-	this.persistentDataContainer.set(Keys.SWITCH_GAMEMODE_LAST_YAW.get(), PersistentDataType.FLOAT, currentYaw)
-	this.persistentDataContainer.set(Keys.SWITCH_GAMEMODE_LAST_PITCH.get(), PersistentDataType.FLOAT, currentPitch)
+	this.persistentDataContainer.set(Keys0.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING, currentWorldKey.asString())
+	this.persistentDataContainer.set(Keys0.SWITCH_GAMEMODE_LAST_X.get(), PersistentDataType.DOUBLE, currentLocationX)
+	this.persistentDataContainer.set(Keys0.SWITCH_GAMEMODE_LAST_Y.get(), PersistentDataType.DOUBLE, currentLocationY)
+	this.persistentDataContainer.set(Keys0.SWITCH_GAMEMODE_LAST_Z.get(), PersistentDataType.DOUBLE, currentLocationZ)
+	this.persistentDataContainer.set(Keys0.SWITCH_GAMEMODE_LAST_YAW.get(), PersistentDataType.FLOAT, currentYaw)
+	this.persistentDataContainer.set(Keys0.SWITCH_GAMEMODE_LAST_PITCH.get(), PersistentDataType.FLOAT, currentPitch)
 
 	val newLocation = Location(Bukkit.getWorld(switchInfo.targetWorld)!!, newPosX, newPosY, newPosZ, newYaw, newPitch)
 
@@ -194,5 +194,5 @@ private fun Player.updateLastLocationAndSwitch(cause: PlayerTeleportEvent.Telepo
 }
 
 private fun Player.getLastWorldKey(gamemode: Gamemode): String {
-	return this.persistentDataContainer.getOrDefault(Keys.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING, gamemode.getWorld().key.asString())
+	return this.persistentDataContainer.getOrDefault(Keys0.SWITCH_GAMEMODE_LAST_WORLD.get(), PersistentDataType.STRING, gamemode.getWorld().key.asString())
 }

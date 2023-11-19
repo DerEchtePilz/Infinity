@@ -20,7 +20,7 @@ package io.github.derechtepilz.infinity.gamemode
 
 import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import io.github.derechtepilz.infinity.util.sendTabListFooter
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
@@ -38,7 +38,7 @@ class PlayerJoinServerListener : Listener {
 	@EventHandler
 	fun onJoin(event: PlayerJoinEvent) {
 		val player: Player = event.player
-		if (!player.persistentDataContainer.has(Keys.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING)) {
+		if (!player.persistentDataContainer.has(Keys0.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING)) {
 			if (event.player.getGamemode() == Gamemode.MINECRAFT) {
 				sendInfinitySuggestion(player)
 			}
@@ -51,7 +51,7 @@ class PlayerJoinServerListener : Listener {
 		}
 		sendTabListFooter(player, player.getGamemode())
 		if (player.hasDefaultGamemode()) {
-			val defaultGamemode = Gamemode.valueOf(player.persistentDataContainer.get(Keys.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING)!!.uppercase())
+			val defaultGamemode = Gamemode.valueOf(player.persistentDataContainer.get(Keys0.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING)!!.uppercase())
 			if (defaultGamemode == player.getGamemode()) {
 				return
 			}

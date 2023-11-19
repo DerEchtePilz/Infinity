@@ -1,13 +1,17 @@
 package io.github.derechtepilz.infinity;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
 import io.github.derechtepilz.infinity.util.JsonUtil;
+import io.github.derechtepilz.infinity.util.Keys;
+import io.github.derechtepilz.infinity.world.WorldManager;
+import io.github.derechtepilz.infinity.world.WorldManager0;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -79,10 +83,10 @@ public class Infinity extends JavaPlugin {
                 JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData);
             }
         } catch (IOException e) {
-            getLogger().severe("There was a problem reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
+            getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
         }
 
-        // Register commands
+        // TODO: Register commands
     }
 
     @Override
@@ -93,6 +97,88 @@ public class Infinity extends JavaPlugin {
             return;
         }
         new WorldCreateLoadEvent().callEvent();
+        World lobby = Bukkit.createWorld(new WorldCreator("infinity/lobby", Keys.WORLD_LOBBY.get())
+            .generator(new WorldManager.ChunkGenerators.EmptyChunkGenerator())
+            .biomeProvider(new WorldManager.BiomeProviders.EmptyBiomeProvider())
+            .seed(0L)
+        );
+        World sky = Bukkit.createWorld(new WorldCreator("infinity/sky", Keys.WORLD_SKY.get())
+            .generator(new WorldManager.ChunkGenerators.EmptyChunkGenerator())
+            .biomeProvider(new WorldManager.BiomeProviders.EmptyBiomeProvider())
+            .seed(0L)
+        );
+        World stone = Bukkit.createWorld(new WorldCreator("infinity/stone", Keys.WORLD_STONE.get())
+            .generator(new WorldManager.ChunkGenerators.StoneChunkGenerator())
+            .biomeProvider(new WorldManager.BiomeProviders.StoneBiomeProvider())
+            .seed(0L)
+        );
+        World nether = Bukkit.createWorld(new WorldCreator("infinity/nether", Keys.WORLD_NETHER.get())
+            .generator(new WorldManager.ChunkGenerators.NetherChunkGenerator())
+            .environment(World.Environment.NETHER)
+            .biomeProvider(new WorldManager.BiomeProviders.NetherBiomeProvider())
+            .seed(0L)
+        );
+
+        assert lobby != null;
+        assert sky != null;
+        assert stone != null;
+        assert nether != null;
+
+        lobby.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        lobby.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        lobby.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        lobby.setGameRule(GameRule.KEEP_INVENTORY, true);
+        lobby.setTime(6000);
+
+        sky.setGameRule(GameRule.KEEP_INVENTORY, true);
+        stone.setGameRule(GameRule.KEEP_INVENTORY, true);
+        nether.setGameRule(GameRule.KEEP_INVENTORY, true);
+
+        sky.setDifficulty(Difficulty.HARD);
+        stone.setDifficulty(Difficulty.HARD);
+        nether.setDifficulty(Difficulty.HARD);
+
+        sky.setViewDistance(16);
+        stone.setViewDistance(16);
+        nether.setViewDistance(16);
+
+        // TODO: Create structures
+
+        // TODO: Register events
+
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
+            String messageString = new String(message).substring(1);
+            String firstCharacter = messageString.substring(0, 1);
+            messageString = messageString.replaceFirst(firstCharacter, firstCharacter.toUpperCase());
+            getLogger().info("${player.name} just logged in using " + messageString);
+        });
+    }
+
+    @Override
+    public void onDisable() {
+        if (!canLoad) {
+            // Safeguard so potentially saved player data is not deleted
+            return;
+        }
+        // Save player data
+        try {
+            BufferedWriter configWriter = getConfigWriter();
+            assert configWriter != null;
+            JsonObject playerDataObject = new JsonObject();
+
+            JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData);
+            JsonUtil.saveMap(playerDataObject, "experienceData", experienceData);
+            JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData);
+            JsonUtil.saveMap(playerDataObject, "potionEffectData", potionEffectData);
+
+            String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject);
+            configWriter.write(jsonString);
+            configWriter.close();
+        } catch (IOException e) {
+            getLogger().severe("There was a problem while writing player data. It is possible that data has been lost when restarting. This is NOT a plugin issue! Please DO NOT report this!");
+        }
+
+        // TODO: Save additional data, done in listeners, comes later
     }
 
     private BufferedReader getConfigReader() {

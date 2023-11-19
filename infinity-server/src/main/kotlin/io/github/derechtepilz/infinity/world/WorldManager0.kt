@@ -25,7 +25,7 @@ import org.bukkit.generator.ChunkGenerator
 import org.bukkit.generator.WorldInfo
 import java.util.*
 
-class WorldManager {
+class WorldManager0 {
 
 	class ChunkGenerators {
 

@@ -19,7 +19,7 @@
 package io.github.derechtepilz.infinity.gamemode.worldmovement
 
 import io.github.derechtepilz.infinity.Infinity0
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Bukkit
@@ -55,7 +55,7 @@ class EnderChestHandler : Listener {
 				if (event.isLeftClick) {
 					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
 					Bukkit.getScheduler().runTaskLater(Infinity0.INSTANCE, Runnable {
-						player.teleport(Location(Bukkit.getWorld(Keys.WORLD_SKY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+						player.teleport(Location(Bukkit.getWorld(Keys0.WORLD_SKY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 					}, 20)
 				}
 			}
@@ -68,7 +68,7 @@ class EnderChestHandler : Listener {
 				if (event.isLeftClick) {
 					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
 					Bukkit.getScheduler().runTaskLater(Infinity0.INSTANCE, Runnable {
-						player.teleport(Location(Bukkit.getWorld(Keys.WORLD_STONE.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+						player.teleport(Location(Bukkit.getWorld(Keys0.WORLD_STONE.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 					}, 20)
 				}
 			}
@@ -81,14 +81,14 @@ class EnderChestHandler : Listener {
 				if (event.isLeftClick) {
 					player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
 					Bukkit.getScheduler().runTaskLater(Infinity0.INSTANCE, Runnable {
-						player.teleport(Location(Bukkit.getWorld(Keys.WORLD_NETHER.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+						player.teleport(Location(Bukkit.getWorld(Keys0.WORLD_NETHER.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 					}, 20)
 				}
 			}
 			EnderChestInventory.INSTANCE.lobbyTeleport() -> {
 				player.playSound(Sound.sound(Key.key("minecraft:block.note_block.bell"), Sound.Source.PLAYER, 1.0f, 0.5f))
 				Bukkit.getScheduler().runTaskLater(Infinity0.INSTANCE, Runnable {
-					player.teleport(Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
+					player.teleport(Location(Bukkit.getWorld(Keys0.WORLD_LOBBY.get())!!, 0.5, 101.0, 0.5), TeleportCause.PLUGIN)
 				}, 20)
 			}
 		}

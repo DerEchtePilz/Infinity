@@ -21,7 +21,7 @@ package io.github.derechtepilz.infinity.world
 import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
 import io.github.derechtepilz.infinity.structure.StructureLoader
-import io.github.derechtepilz.infinity.util.Keys
+import io.github.derechtepilz.infinity.util.Keys0
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -39,7 +39,7 @@ class WorldCarver {
 	class LobbyCarver(val world: World) {
 
 		init {
-			if (world.key != Keys.WORLD_LOBBY.get()) {
+			if (world.key != Keys0.WORLD_LOBBY.get()) {
 				throw IllegalArgumentException("World 'infinity:lobby' expected but received '${world.key}'")
 			}
 			// Load structure if there's no block at 0 100 0
@@ -60,13 +60,13 @@ class WorldCarver {
 			val travelToMinecraft = world.getBlockAt(8, 101, 9)
 			travelToMinecraft.type = Material.CHERRY_WALL_SIGN
 			val travelToMinecraftState = travelToMinecraft.state as Sign
-			travelToMinecraftState.persistentDataContainer.set(Keys.SIGN_TAG_MINECRAFT_TELEPORT.get(), PersistentDataType.STRING, "minecraftTeleport")
+			travelToMinecraftState.persistentDataContainer.set(Keys0.SIGN_TAG_MINECRAFT_TELEPORT.get(), PersistentDataType.STRING, "minecraftTeleport")
 			travelToMinecraftState.update()
 
 			val travelToHomeDimension = world.getBlockAt(6, 101, 9)
 			travelToHomeDimension.type = Material.CHERRY_WALL_SIGN
 			val travelToHomeDimensionState = travelToHomeDimension.state as Sign
-			travelToHomeDimensionState.persistentDataContainer.set(Keys.SIGN_TAG_HOME_DIMENSION_TELEPORT.get(), PersistentDataType.STRING, "homeDimensionTeleport")
+			travelToHomeDimensionState.persistentDataContainer.set(Keys0.SIGN_TAG_HOME_DIMENSION_TELEPORT.get(), PersistentDataType.STRING, "homeDimensionTeleport")
 			travelToHomeDimensionState.update()
 
 			val classSelectionInfo = world.getBlockAt(-5, 101, 9)
@@ -75,7 +75,7 @@ class WorldCarver {
 			val selectFirstClass = world.getBlockAt(-6, 101, 9)
 			selectFirstClass.type = Material.CHERRY_WALL_SIGN
 			val selectFirstClassState = selectFirstClass.state as Sign
-			selectFirstClassState.persistentDataContainer.set(Keys.SIGN_TAG_SELECT_CLASS.get(), PersistentDataType.STRING, "selectClass")
+			selectFirstClassState.persistentDataContainer.set(Keys0.SIGN_TAG_SELECT_CLASS.get(), PersistentDataType.STRING, "selectClass")
 			selectFirstClassState.update()
 
 			val switchClassWarning = world.getBlockAt(-7, 101, 9)
@@ -84,7 +84,7 @@ class WorldCarver {
 			val switchClass = world.getBlockAt(-8, 101, 9)
 			switchClass.type = Material.CHERRY_WALL_SIGN
 			val switchClassState = switchClass.state as Sign
-			switchClassState.persistentDataContainer.set(Keys.SIGN_TAG_SWITCH_CLASS.get(), PersistentDataType.STRING, "switchClass")
+			switchClassState.persistentDataContainer.set(Keys0.SIGN_TAG_SWITCH_CLASS.get(), PersistentDataType.STRING, "switchClass")
 			switchClassState.update()
 
 			applyText(travelToMinecraft.state, arrayOf(
@@ -164,7 +164,7 @@ class WorldCarver {
 
 	class SkyCarver(val world: World) {
 		init {
-			if (world.key != Keys.WORLD_SKY.get()) {
+			if (world.key != Keys0.WORLD_SKY.get()) {
 				throw IllegalArgumentException("World 'infinity:sky' expected but received '${world.key}'")
 			}
 			// Load structure if there's no block at 0 100 0
@@ -177,7 +177,7 @@ class WorldCarver {
 
 	class StoneCarver(val world: World) {
 		init {
-			if (world.key != Keys.WORLD_STONE.get()) {
+			if (world.key != Keys0.WORLD_STONE.get()) {
 				throw IllegalArgumentException("World 'infinity:stone' expected but received '${world.key}'")
 			}
 			// Load structure if there's a block at 0 101 0
@@ -190,7 +190,7 @@ class WorldCarver {
 
 	class NetherCarver(val world: World) {
 		init {
-			if (world.key != Keys.WORLD_NETHER.get()) {
+			if (world.key != Keys0.WORLD_NETHER.get()) {
 				throw IllegalArgumentException("World 'infinity:nether' expected but received '${world.key}'")
 			}
 			// Load structure if there's lava at 0 100 0

@@ -6,8 +6,8 @@ import dev.jorel.commandapi.kotlindsl.commandTree
 import dev.jorel.commandapi.kotlindsl.literalArgument
 import dev.jorel.commandapi.kotlindsl.namespacedKeyArgument
 import dev.jorel.commandapi.kotlindsl.playerExecutor
-import io.github.derechtepilz.infinity.util.Keys
-import io.github.derechtepilz.infinity.util.Keys.Companion.removeKey
+import io.github.derechtepilz.infinity.util.Keys0
+import io.github.derechtepilz.infinity.util.Keys0.Companion.removeKey
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.NamespacedKey
@@ -24,18 +24,18 @@ class DevUtilCommand {
 				literalArgument("*") {
 					playerExecutor { player, _ ->
 						val namespacedKeyList: MutableList<NamespacedKey> = mutableListOf()
-						for (key in Keys.entries) {
+						for (key in Keys0.entries) {
 							namespacedKeyList.add(key.get())
 						}
 						namespacedKeyList.removeIf { key: NamespacedKey -> !player.persistentDataContainer.has(key) }
-						val keysToRemove: MutableList<Keys> = mutableListOf()
+						val keys0ToRemove: MutableList<Keys0> = mutableListOf()
 						for (namespace in namespacedKeyList) {
-							if (Keys.fromNamespacedKey(namespace)!!.isState) {
-								keysToRemove.add(Keys.fromNamespacedKey(namespace)!!)
+							if (Keys0.fromNamespacedKey(namespace)!!.isState) {
+								keys0ToRemove.add(Keys0.fromNamespacedKey(namespace)!!)
 							}
 						}
 						player.sendMessage(Component.text().content("Removed keys:").color(NamedTextColor.RED))
-						for (key in keysToRemove) {
+						for (key in keys0ToRemove) {
 							player.removeKey(key)
 							player.sendMessage(Component.text().content("- ${key.get()}"))
 						}
@@ -44,7 +44,7 @@ class DevUtilCommand {
 				namespacedKeyArgument("key") {
 					(this as NamespacedKeyArgument).replaceSafeSuggestions(SafeSuggestions.suggest { info ->
 						val namespacedKeyList: MutableList<NamespacedKey> = mutableListOf()
-						for (key in Keys.entries) {
+						for (key in Keys0.entries) {
 							namespacedKeyList.add(key.get())
 						}
 						namespacedKeyList.removeIf { key: NamespacedKey -> info.sender is Player && !(info.sender as Player).persistentDataContainer.has(key) }
@@ -60,7 +60,7 @@ class DevUtilCommand {
 					playerExecutor { player, args ->
 						val keyToRemove: NamespacedKey = args["key"]!! as NamespacedKey
 						try {
-							player.removeKey(Keys.fromNamespacedKey(keyToRemove)!!)
+							player.removeKey(Keys0.fromNamespacedKey(keyToRemove)!!)
 							player.sendMessage(Component.text().content("Removed key '${keyToRemove.asString()}' successfully! Undefined behaviour ahead (maybe!)").color(NamedTextColor.RED).build())
 						} catch (e: IllegalStateException) {
 							player.sendMessage(Component.text().content(e.message!!).color(NamedTextColor.RED))
