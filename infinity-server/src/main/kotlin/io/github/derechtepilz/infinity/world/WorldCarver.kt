@@ -18,15 +18,13 @@
 
 package io.github.derechtepilz.infinity.world
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener
-import io.github.derechtepilz.infinity.gamemode.gameclass.SignState
 import io.github.derechtepilz.infinity.structure.StructureLoader
 import io.github.derechtepilz.infinity.util.Keys
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.BlockState
@@ -47,7 +45,7 @@ class WorldCarver {
 			// Load structure if there's no block at 0 100 0
 			val canLoadStructure = world.getBlockAt(0, 100, 0).type == Material.AIR
 			if (canLoadStructure) {
-				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("lobby/lobby_spawn.json")!!)
+				StructureLoader(world.key.key, Infinity0.INSTANCE.getResource("lobby/lobby_spawn.json")!!)
 			}
 
 			/*
@@ -172,7 +170,7 @@ class WorldCarver {
 			// Load structure if there's no block at 0 100 0
 			val canLoadStructure = world.getBlockAt(0, 100, 0).type == Material.AIR
 			if (canLoadStructure) {
-				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("sky/sky_spawn.json")!!)
+				StructureLoader(world.key.key, Infinity0.INSTANCE.getResource("sky/sky_spawn.json")!!)
 			}
 		}
 	}
@@ -185,7 +183,7 @@ class WorldCarver {
 			// Load structure if there's a block at 0 101 0
 			val canLoadStructure = world.getBlockAt(0, 101, 0).type != Material.AIR
 			if (canLoadStructure) {
-				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("stone/stone_spawn.json")!!)
+				StructureLoader(world.key.key, Infinity0.INSTANCE.getResource("stone/stone_spawn.json")!!)
 			}
 		}
 	}
@@ -198,7 +196,7 @@ class WorldCarver {
 			// Load structure if there's lava at 0 100 0
 			val canLoadStructure = world.getBlockAt(0, 100, 0).type == Material.LAVA
 			if (canLoadStructure) {
-				StructureLoader(world.key.key, Infinity.INSTANCE.getResource("nether/nether_spawn.json")!!)
+				StructureLoader(world.key.key, Infinity0.INSTANCE.getResource("nether/nether_spawn.json")!!)
 			}
 		}
 	}

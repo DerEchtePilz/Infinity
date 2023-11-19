@@ -18,7 +18,7 @@
 
 package io.github.derechtepilz.infinity.gamemode
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.Gamemode.*
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
@@ -41,7 +41,7 @@ enum class Gamemode(private val defaultWorld: World) {
 	 *
 	 * Contains three worlds to play and a lobby that is the central point of the story.
 	 */
-	INFINITY(Bukkit.getWorld(NamespacedKey(Infinity.NAME, "lobby"))!!),
+	INFINITY(Bukkit.getWorld(NamespacedKey(Infinity0.NAME, "lobby"))!!),
 
 	/**
 	 * A fallback value for compatibility with other custom created worlds.

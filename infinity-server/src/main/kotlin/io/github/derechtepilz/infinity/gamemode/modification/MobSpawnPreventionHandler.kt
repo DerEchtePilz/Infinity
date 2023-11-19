@@ -1,7 +1,7 @@
 package io.github.derechtepilz.infinity.gamemode.modification
 
 import com.google.gson.JsonParser
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.util.Keys
 import org.bukkit.Bukkit
@@ -34,21 +34,21 @@ class MobSpawnPreventionHandler : Listener {
 			Keys.WORLD_SKY.get() -> {
 				if (!loadedSpawnWorld[Keys.WORLD_SKY.get()]!!) {
 					loadedSpawnWorld[Keys.WORLD_SKY.get()] = true
-					preventedSpawnLocations[Keys.WORLD_SKY.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_SKY, Infinity.INSTANCE.getResource("sky/sky_spawn.json")!!), false)
+					preventedSpawnLocations[Keys.WORLD_SKY.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_SKY, Infinity0.INSTANCE.getResource("sky/sky_spawn.json")!!), false)
 				}
 				preventedSpawnLocations[Keys.WORLD_SKY.get()]!!
 			}
 			Keys.WORLD_STONE.get() -> {
 				if (!loadedSpawnWorld[Keys.WORLD_STONE.get()]!!) {
 					loadedSpawnWorld[Keys.WORLD_STONE.get()] = true
-					preventedSpawnLocations[Keys.WORLD_STONE.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_STONE, Infinity.INSTANCE.getResource("stone/stone_spawn.json")!!), true)
+					preventedSpawnLocations[Keys.WORLD_STONE.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_STONE, Infinity0.INSTANCE.getResource("stone/stone_spawn.json")!!), true)
 				}
 				preventedSpawnLocations[Keys.WORLD_STONE.get()]!!
 			}
 			Keys.WORLD_NETHER.get() -> {
 				if (!loadedSpawnWorld[Keys.WORLD_NETHER.get()]!!) {
 					loadedSpawnWorld[Keys.WORLD_NETHER.get()] = true
-					preventedSpawnLocations[Keys.WORLD_NETHER.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_NETHER, Infinity.INSTANCE.getResource("nether/nether_spawn.json")!!), false)
+					preventedSpawnLocations[Keys.WORLD_NETHER.get()] = preventLocations(deserializeStructureToLocations(Keys.WORLD_NETHER, Infinity0.INSTANCE.getResource("nether/nether_spawn.json")!!), false)
 				}
 				preventedSpawnLocations[Keys.WORLD_NETHER.get()]!!
 			}

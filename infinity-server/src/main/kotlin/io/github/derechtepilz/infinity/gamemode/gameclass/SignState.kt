@@ -18,7 +18,7 @@
 
 package io.github.derechtepilz.infinity.gamemode.gameclass
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.getClass
 import io.github.derechtepilz.infinity.gamemode.normalize
 import io.github.derechtepilz.infinity.util.Keys
@@ -44,7 +44,7 @@ class SignState {
 		private val homeTeleportLocation = Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, 6.0, 101.0, 9.0)
 
 		override fun loadFor(player: Player, delay: Boolean) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity.INSTANCE, {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity0.INSTANCE, {
 				loadFor(player)
 			}, if (delay) 10 else 0)
 		}
@@ -99,7 +99,7 @@ class SignState {
 		private val classSelectionLocation = Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, -6.0, 101.0, 9.0)
 
 		override fun loadFor(player: Player, delay: Boolean) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity.INSTANCE, {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity0.INSTANCE, {
 				loadFor(player)
 			}, if (delay) 10 else 0)
 		}
@@ -164,7 +164,7 @@ class SignState {
 		private val classSwitchingLocation = Location(Bukkit.getWorld(Keys.WORLD_LOBBY.get())!!, -8.0, 101.0, 9.0)
 
 		override fun loadFor(player: Player, delay: Boolean) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity.INSTANCE, {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Infinity0.INSTANCE, {
 				loadFor(player)
 			}, if (delay) 10 else 0)
 		}

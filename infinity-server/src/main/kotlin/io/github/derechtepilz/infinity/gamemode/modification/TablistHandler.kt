@@ -1,6 +1,6 @@
 package io.github.derechtepilz.infinity.gamemode.modification
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.github.derechtepilz.infinity.util.Reflection
@@ -28,15 +28,15 @@ class TablistHandler : Listener {
 		}
 		val player = event.player
 		if (currentGamemode == Gamemode.INFINITY) {
-			Infinity.INSTANCE.infinityPlayerList.add(player.uniqueId)
-			Infinity.INSTANCE.minecraftPlayerList.remove(player.uniqueId)
+			Infinity0.INSTANCE.infinityPlayerList.add(player.uniqueId)
+			Infinity0.INSTANCE.minecraftPlayerList.remove(player.uniqueId)
 			updateTabList()
 			sendBossbar(player, currentGamemode)
 			return
 		}
 		if (currentGamemode == Gamemode.MINECRAFT) {
-			Infinity.INSTANCE.minecraftPlayerList.add(player.uniqueId)
-			Infinity.INSTANCE.infinityPlayerList.remove(player.uniqueId)
+			Infinity0.INSTANCE.minecraftPlayerList.add(player.uniqueId)
+			Infinity0.INSTANCE.infinityPlayerList.remove(player.uniqueId)
 			updateTabList()
 			sendBossbar(player, currentGamemode)
 			return
@@ -46,12 +46,12 @@ class TablistHandler : Listener {
 	@EventHandler
 	fun onJoin(event: PlayerJoinEvent) {
 		if (event.player.getGamemode() == Gamemode.MINECRAFT) {
-			Infinity.INSTANCE.infinityPlayerList.remove(event.player.uniqueId)
-			Infinity.INSTANCE.minecraftPlayerList.add(event.player.uniqueId)
+			Infinity0.INSTANCE.infinityPlayerList.remove(event.player.uniqueId)
+			Infinity0.INSTANCE.minecraftPlayerList.add(event.player.uniqueId)
 		}
 		if (event.player.getGamemode() == Gamemode.INFINITY) {
-			Infinity.INSTANCE.minecraftPlayerList.remove(event.player.uniqueId)
-			Infinity.INSTANCE.infinityPlayerList.add(event.player.uniqueId)
+			Infinity0.INSTANCE.minecraftPlayerList.remove(event.player.uniqueId)
+			Infinity0.INSTANCE.infinityPlayerList.add(event.player.uniqueId)
 		}
 
 		updateTabList()
@@ -59,31 +59,31 @@ class TablistHandler : Listener {
 
 	@EventHandler
 	fun onQuit(event: PlayerQuitEvent) {
-		Infinity.INSTANCE.infinityPlayerList.remove(event.player.uniqueId)
-		Infinity.INSTANCE.minecraftPlayerList.remove(event.player.uniqueId)
+		Infinity0.INSTANCE.infinityPlayerList.remove(event.player.uniqueId)
+		Infinity0.INSTANCE.minecraftPlayerList.remove(event.player.uniqueId)
 
 		updateTabList()
 	}
 
 	private fun updateTabList() {
-		Bukkit.getScheduler().runTaskLater(Infinity.INSTANCE, Runnable {
+		Bukkit.getScheduler().runTaskLater(Infinity0.INSTANCE, Runnable {
 			for (player in Bukkit.getOnlinePlayers()) {
 				val packetsToSend: MutableList<Packet<*>> = mutableListOf()
 				if (player.getGamemode() == Gamemode.INFINITY) {
-					for (uuid in Infinity.INSTANCE.infinityPlayerList) {
+					for (uuid in Infinity0.INSTANCE.infinityPlayerList) {
 						val addPlayerToInfo: ClientboundPlayerInfoUpdatePacket = ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(Reflection.getServerPlayer(uuid), true)
 						packetsToSend.add(addPlayerToInfo)
 					}
-					for (uuid in Infinity.INSTANCE.minecraftPlayerList) {
+					for (uuid in Infinity0.INSTANCE.minecraftPlayerList) {
 						val removePlayerFromInfo: ClientboundPlayerInfoUpdatePacket = ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(Reflection.getServerPlayer(uuid), false)
 						packetsToSend.add(removePlayerFromInfo)
 					}
 				} else {
-					for (uuid in Infinity.INSTANCE.minecraftPlayerList) {
+					for (uuid in Infinity0.INSTANCE.minecraftPlayerList) {
 						val addPlayerToInfo: ClientboundPlayerInfoUpdatePacket = ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(Reflection.getServerPlayer(uuid), true)
 						packetsToSend.add(addPlayerToInfo)
 					}
-					for (uuid in Infinity.INSTANCE.infinityPlayerList) {
+					for (uuid in Infinity0.INSTANCE.infinityPlayerList) {
 						val removePlayerFromInfo: ClientboundPlayerInfoUpdatePacket = ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(Reflection.getServerPlayer(uuid), false)
 						packetsToSend.add(removePlayerFromInfo)
 					}
@@ -99,12 +99,12 @@ class TablistHandler : Listener {
 		val bossbarChangedGamemode = BossBar.bossBar(Component.text().content(playerChanged.name)
 			.color(NamedTextColor.GREEN)
 			.append(Component.text().content(" now plays ").color(NamedTextColor.GRAY).build())
-			.append(if (newGamemode == Gamemode.INFINITY) Infinity.INSTANCE.infinityComponent else Component.text().content("Minecraft").color(NamedTextColor.GREEN)),
+			.append(if (newGamemode == Gamemode.INFINITY) Infinity0.INSTANCE.infinityComponent else Component.text().content("Minecraft").color(NamedTextColor.GREEN)),
 			0.0f, BossBar.Color.WHITE, BossBar.Overlay.PROGRESS
 		)
 
 		val runnable = BossBarTimer(bossbarChangedGamemode)
-		val taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Infinity.INSTANCE, runnable, 0, 2)
+		val taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(Infinity0.INSTANCE, runnable, 0, 2)
 		runnable.id = taskId
 	}
 
