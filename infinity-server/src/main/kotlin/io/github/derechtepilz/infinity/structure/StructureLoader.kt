@@ -19,7 +19,7 @@
 package io.github.derechtepilz.infinity.structure
 
 import com.google.gson.JsonParser
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -33,8 +33,6 @@ import org.bukkit.block.data.type.Slab.Type
 import org.bukkit.block.data.type.Stairs
 import org.bukkit.block.data.type.Stairs.Shape
 import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
@@ -45,7 +43,7 @@ class StructureLoader(private val world: String, private val structureFile: Inpu
 	}
 
 	private fun generateStructure() {
-		val world = Bukkit.getWorld(NamespacedKey(Infinity.NAME, world))!!
+		val world = Bukkit.getWorld(NamespacedKey(Infinity0.NAME, world))!!
 		val structureReader = BufferedReader(InputStreamReader(structureFile))
 		val builder = java.lang.StringBuilder()
 		var line: String?

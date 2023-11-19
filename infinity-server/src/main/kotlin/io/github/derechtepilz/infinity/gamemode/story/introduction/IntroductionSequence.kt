@@ -1,19 +1,17 @@
 package io.github.derechtepilz.infinity.gamemode.story.introduction
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.entity.Villager
 import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.scheduler.BukkitTask
 import java.util.Vector
 
 class IntroductionSequence(private val player: Player) {
@@ -30,7 +28,7 @@ class IntroductionSequence(private val player: Player) {
 	init {
 		// Hide all other players
 		for (target in Bukkit.getOnlinePlayers()) {
-			player.hidePlayer(Infinity.INSTANCE, target)
+			player.hidePlayer(Infinity0.INSTANCE, target)
 		}
 
 		// Spawn the story guide for the player
@@ -42,7 +40,7 @@ class IntroductionSequence(private val player: Player) {
 		storyIntroductionGuide.isCustomNameVisible = true
 		storyIntroductionGuide.setRotation(-180.0f, 0.0f)
 		storyIntroductionGuide.setAI(false)
-		player.showEntity(Infinity.INSTANCE, storyIntroductionGuide)
+		player.showEntity(Infinity0.INSTANCE, storyIntroductionGuide)
 
 		guidePrefix = Component.text().content("[")
 			.color(NamedTextColor.WHITE)
@@ -71,7 +69,7 @@ class IntroductionSequence(private val player: Player) {
 			.append(Component.text().content("!"))
 			.build(), 2
 		)
-		queueGuideMessage(Component.text().content("Welcome to ").append(Infinity.INSTANCE.infinityComponent).append(Component.text().content("!")).build(), 2)
+		queueGuideMessage(Component.text().content("Welcome to ").append(Infinity0.INSTANCE.infinityComponent).append(Component.text().content("!")).build(), 2)
 		queueGuideMessage(Component.text().content("I am going to tell you a story about what happened here. It was a really long time ago...").build(), 2)
 		queueGuideMessage(Component.text().content("Thousands of years ago, there were three worlds, full of life and potential. ").build(), 5)
 		queueGuideMessage(Component.text().content("People could travel these worlds with ease and learn from each other.").build(), 5)
@@ -115,12 +113,12 @@ class IntroductionSequence(private val player: Player) {
 	}
 
 	private fun Player.sendGuideMessages() {
-		Bukkit.getScheduler().runTaskAsynchronously(Infinity.INSTANCE, Runnable {
+		Bukkit.getScheduler().runTaskAsynchronously(Infinity0.INSTANCE, Runnable {
 			var currentIndex = 0
 			while (currentIndex < queuedMessagesList.size) {
 				if (currentIndex == sentMessages.size) {
 					val message = queuedMessagesList[currentIndex]
-					Bukkit.getScheduler().runTaskLater(Infinity.INSTANCE, Runnable {
+					Bukkit.getScheduler().runTaskLater(Infinity0.INSTANCE, Runnable {
 						this.sendMessage(message)
 						sentMessages.add(message)
 					}, queuedMessages[message]!!.toLong())

@@ -18,7 +18,7 @@
 
 package io.github.derechtepilz.infinity.items
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -29,9 +29,9 @@ import org.bukkit.persistence.PersistentDataType
 abstract class InfinityItem @JvmOverloads constructor(material: Material, rarity: Rarity, variationId: Int = -1) : ItemStack(material) {
 
 	companion object {
-		val ITEM_ID_KEY: NamespacedKey = NamespacedKey(Infinity.NAME, "item_id")
-		val RARITY_KEY: NamespacedKey = NamespacedKey(Infinity.NAME, "rarity")
-		val VARIATION_ID: NamespacedKey = NamespacedKey(Infinity.NAME, "variation")
+		val ITEM_ID_KEY: NamespacedKey = NamespacedKey(Infinity0.NAME, "item_id")
+		val RARITY_KEY: NamespacedKey = NamespacedKey(Infinity0.NAME, "rarity")
+		val VARIATION_ID: NamespacedKey = NamespacedKey(Infinity0.NAME, "variation")
 	}
 
 	var rarity: Rarity

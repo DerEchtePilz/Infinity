@@ -18,7 +18,7 @@
 
 package io.github.derechtepilz.infinity.gamemode
 
-import io.github.derechtepilz.infinity.Infinity
+import io.github.derechtepilz.infinity.Infinity0
 import io.github.derechtepilz.infinity.gamemode.switching.switchGamemode
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.sendTabListFooter
@@ -62,14 +62,14 @@ class PlayerJoinServerListener : Listener {
 	private fun sendInfinitySuggestion(player: Player) {
 		player.sendMessage(Component.text("Want to play ")
 			.color(NamedTextColor.YELLOW)
-			.append(Infinity.INSTANCE.infinityComponent)
+			.append(Infinity0.INSTANCE.infinityComponent)
 			.append(Component.text("? Click ").color(NamedTextColor.YELLOW))
 			.append(Component.text("[here]")
 				.color(NamedTextColor.GREEN)
 				.clickEvent(ClickEvent.runCommand("/infinity gamemode infinity"))
 				.hoverEvent(Component.text("Click to play ")
 					.color(NamedTextColor.YELLOW)
-					.append(Infinity.INSTANCE.infinityComponent)
+					.append(Infinity0.INSTANCE.infinityComponent)
 				)
 			)
 			.append(Component.text(" to play!").color(NamedTextColor.YELLOW))
@@ -115,27 +115,27 @@ class PlayerJoinServerListener : Listener {
 					.append(Component.text("world").color(NamedTextColor.GRAY))
 					.append(Component.newline())
 					.append(Component.text("you were in if you joined ").color(NamedTextColor.GRAY))
-					.append(Infinity.INSTANCE.infinityComponent)
+					.append(Infinity0.INSTANCE.infinityComponent)
 					.append(Component.newline())
 					.append(Component.text("in a previous session.").color(NamedTextColor.GRAY))
 				)
 			)
 			.append(Component.text("]").color(NamedTextColor.WHITE))
 			.append(Component.text(" [").color(NamedTextColor.WHITE))
-			.append(Infinity.INSTANCE.infinityComponent
+			.append(Infinity0.INSTANCE.infinityComponent
 				.clickEvent(ClickEvent.runCommand("/infinity defaultgamemode infinity"))
 				.hoverEvent(Component.text("Set your default gamemode to ")
 					.color(NamedTextColor.GRAY)
-					.append(Infinity.INSTANCE.infinityComponent)
+					.append(Infinity0.INSTANCE.infinityComponent)
 					.append(Component.newline())
 					.append(Component.newline())
 					.append(Component.text("This will make ").color(NamedTextColor.GRAY))
-					.append(Infinity.INSTANCE.infinityComponent)
+					.append(Infinity0.INSTANCE.infinityComponent)
 					.append(Component.text(" your default").color(NamedTextColor.GRAY))
 					.append(Component.newline())
 					.append(Component.text("gamemode and makes you join the last ").color(NamedTextColor.GRAY))
 					.append(Component.newline())
-					.append(Infinity.INSTANCE.infinityComponent)
+					.append(Infinity0.INSTANCE.infinityComponent)
 					.append(Component.text(" world you were in if you").color(NamedTextColor.GRAY))
 					.append(Component.newline())
 					.append(Component.text("joined ").color(NamedTextColor.GRAY))

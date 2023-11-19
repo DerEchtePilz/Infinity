@@ -41,7 +41,7 @@ import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
 import io.github.derechtepilz.infinity.items.InfinityAxe
 import io.github.derechtepilz.infinity.items.InfinityPickaxe
 import io.github.derechtepilz.infinity.items.Rarity
-import io.github.derechtepilz.infinity.util.JsonUtil
+import io.github.derechtepilz.infinity.util.JsonUtil0
 import io.github.derechtepilz.infinity.util.Keys
 import io.github.derechtepilz.infinity.util.capitalize
 import io.github.derechtepilz.infinity.world.WorldCarver
@@ -61,7 +61,7 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.util.*
 
-class Infinity : JavaPlugin() {
+class Infinity0 : JavaPlugin() {
 
 	init {
 		try {
@@ -80,7 +80,7 @@ class Infinity : JavaPlugin() {
 
 	companion object {
 		const val NAME = "infinity"
-		lateinit var INSTANCE: Infinity
+		lateinit var INSTANCE: Infinity0
 		var canLoad = true
 
 		fun loadItems() {
@@ -123,15 +123,15 @@ class Infinity : JavaPlugin() {
 				jsonBuilder.append(line)
 			}
 			val jsonObject = JsonParser.parseString(jsonBuilder.toString()).asJsonObject
-			val inventoryDataArray = JsonUtil.getArray("inventoryData", jsonObject)
-			val experienceDataArray = JsonUtil.getArray("experienceData", jsonObject)
-			val healthHungerDataArray = JsonUtil.getArray("healthHungerData", jsonObject)
-			val potionEffectDataArray = JsonUtil.getArray("potionEffectData", jsonObject)
+			val inventoryDataArray = JsonUtil0.getArray0("inventoryData", jsonObject)
+			val experienceDataArray = JsonUtil0.getArray0("experienceData", jsonObject)
+			val healthHungerDataArray = JsonUtil0.getArray0("healthHungerData", jsonObject)
+			val potionEffectDataArray = JsonUtil0.getArray0("potionEffectData", jsonObject)
 
-			JsonUtil.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData)
-			JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData)
-			JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData)
-			JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData)
+			JsonUtil0.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData)
+			JsonUtil0.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData)
+			JsonUtil0.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData)
+			JsonUtil0.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData)
 		}
 		CommandAPI.onLoad(CommandAPIBukkitConfig(this).missingExecutorImplementationMessage("You cannot execute this command!"))
 
@@ -220,10 +220,10 @@ class Infinity : JavaPlugin() {
 		val configWriter = getConfigWriter()
 		val playerDataObject = JsonObject()
 
-		JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData)
-		JsonUtil.saveMap(playerDataObject, "experienceData", experienceData)
-		JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData)
-		JsonUtil.saveMap(playerDataObject, "potionEffectData", potionEffectData)
+		JsonUtil0.saveMap0(playerDataObject, "inventoryData", inventoryData)
+		JsonUtil0.saveMap0(playerDataObject, "experienceData", experienceData)
+		JsonUtil0.saveMap0(playerDataObject, "healthHungerData", healthHungerData)
+		JsonUtil0.saveMap0(playerDataObject, "potionEffectData", potionEffectData)
 
 		val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject)
 		configWriter.write(jsonString)

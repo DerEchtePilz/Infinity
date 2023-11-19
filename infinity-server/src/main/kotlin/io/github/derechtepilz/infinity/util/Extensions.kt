@@ -18,7 +18,6 @@
 
 package io.github.derechtepilz.infinity.util
 
-import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor

@@ -1,8 +1,6 @@
 package io.github.derechtepilz.tests
 
-import be.seeseemelk.mockbukkit.UnimplementedOperationException
 import io.github.derechtepilz.TestBase
-import io.github.derechtepilz.infinity.Infinity
 import io.github.derechtepilz.infinity.Registry
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-import java.util.logging.Level
 import kotlin.random.Random
 
 @Suppress("ReplaceManualRangeWithIndicesCalls")
