@@ -38,8 +38,9 @@ import io.github.derechtepilz.infinity.gamemode.story.introduction.PlayerQuitInS
 import io.github.derechtepilz.infinity.gamemode.switching.GamemodeSwitchHandler
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler
-import io.github.derechtepilz.infinity.items.InfinityAxe
-import io.github.derechtepilz.infinity.items.InfinityPickaxe
+import io.github.derechtepilz.infinity.items.InfinityAxe0
+import io.github.derechtepilz.infinity.items.InfinityPickaxe0
+import io.github.derechtepilz.infinity.items.InfinityPickaxe1
 import io.github.derechtepilz.infinity.items.Rarity
 import io.github.derechtepilz.infinity.util.JsonUtil0
 import io.github.derechtepilz.infinity.util.Keys0
@@ -85,9 +86,9 @@ class Infinity0 : JavaPlugin() {
 
 		fun loadItems() {
 			// Dummy method for tests so Infinity items can be used in tests
-			Registry.Item.register(InfinityPickaxe.ITEM_ID, InfinityPickaxe(Rarity.UNCOMMON))
-			for (i in 0 until InfinityAxe.VARIATIONS) {
-				Registry.Item.register(InfinityAxe.ITEM_ID, InfinityAxe(Rarity.UNCOMMON, i))
+			Registry0.Item.register(InfinityPickaxe1., InfinityPickaxe0(Rarity.UNCOMMON))
+			for (i in 0 until InfinityAxe0.VARIATIONS) {
+				Registry0.Item.register(InfinityAxe0.ITEM_ID, InfinityAxe0(Rarity.UNCOMMON, i))
 			}
 		}
 	}
