@@ -194,6 +194,10 @@ public class Infinity extends JavaPlugin {
 		return instance;
 	}
 
+	public Component getInfinityComponent() {
+		return infinityComponent;
+	}
+
 	public Map<UUID, String> getInventoryData() {
 		return inventoryData;
 	}

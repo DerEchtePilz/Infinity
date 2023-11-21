@@ -1,9 +1,11 @@
 package io.github.derechtepilz.infinity.util;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.gamemode.Gamemode;
 import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -13,6 +15,11 @@ public class PlayerUtil {
 	}
 
 	private static final NamespacedKey gameClassKey = new NamespacedKey(Infinity.NAME, "gameclass");
+
+	public static Gamemode getGamemode(Player player) {
+		World world = player.getWorld();
+		return Gamemode.getFromKey(world.getKey());
+	}
 
 	public static TextComponent getGameClass(Player player) {
 		return GameClass.valueOf(player.getPersistentDataContainer().get(gameClassKey, PersistentDataType.STRING).toUpperCase()).get();
