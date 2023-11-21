@@ -11,5 +11,8 @@ tab_width = 4
 [{*.kt,*.kts}]
 indent_style = tab
 
+[*.java]
+indent_style = tab
+
 [*.yml]
 indent_size = 2

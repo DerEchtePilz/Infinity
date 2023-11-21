@@ -190,27 +190,3 @@ fun Player.updatePotionEffects(potionEffects: MutableMap<UUID, String>) {
 
 data class SwitchInfo(val force: ForceInfo?, val targetWorld: NamespacedKey, val targetLocation: Location?)
 data class ForceInfo(val previousWorld: NamespacedKey, val x: Double, val y: Double, val z: Double, val yaw: Float, val pitch: Float)
-
-/**********************************
- *      GAME CLASS AND SIGNS      *
- **********************************/
-
-private val gameClassKey = NamespacedKey(Infinity0.NAME, "gameclass")
-
-fun Player.getClass(): TextComponent {
-	return GameClass.valueOf(this.persistentDataContainer.get(gameClassKey, PersistentDataType.STRING)!!.uppercase()).get()
-}
-
-fun Player.setClass(gameClass: GameClass) {
-	this.persistentDataContainer.set(gameClassKey, PersistentDataType.STRING, gameClass.name.lowercase())
-}
-
-@Suppress("ReplaceManualRangeWithIndicesCalls")
-fun Enum<*>.normalize(): String {
-	val wordArray = this.name.lowercase().split("_")
-	var normalizedValue = ""
-	for (i in 0 until wordArray.size) {
-		normalizedValue = "$normalizedValue ${if (i == 0) wordArray[i].capitalize() else wordArray[i]}"
-	}
-	return normalizedValue.trim()
-}
