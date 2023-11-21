@@ -26,7 +26,7 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import io.github.derechtepilz.infinity.Infinity0
-import io.github.derechtepilz.infinity.Registry
+import io.github.derechtepilz.infinity.Registry0
 import io.github.derechtepilz.infinity.gamemode.Gamemode
 import io.github.derechtepilz.infinity.gamemode.getGamemode
 import io.github.derechtepilz.infinity.gamemode.story.StoryHandler
@@ -55,7 +55,7 @@ import java.util.function.Predicate
 object InfinityCommand {
 
 	fun register() {
-		val itemIds = Registry.Item.getItemIds()
+		val itemIds = Registry0.Item.getItemIds()
 		val requirePlayer = Predicate<CommandSourceStack> { stack -> stack.source.getBukkitSender(stack) is Player }
 		val requirePlayerOperator = Predicate<CommandSourceStack> { stack -> stack.source.getBukkitSender(stack) is Player && stack.source.getBukkitSender(stack).isOp }
 
@@ -65,7 +65,7 @@ object InfinityCommand {
 				.then(LiteralArgumentBuilder.literal<CommandSourceStack>("*")
 					.executes { ctx ->
 						val sender = getSenderAsPlayer(ctx)
-						sender.inventory.addItem(*Registry.Item.getAllItems())
+						sender.inventory.addItem(*Registry0.Item.getAllItems())
 						return@executes 1
 					}
 				)
@@ -89,7 +89,7 @@ object InfinityCommand {
 					val currentRarity = heldItem.itemMeta.persistentDataContainer.get(InfinityItem.RARITY_KEY, PersistentDataType.STRING)!!
 					val variationId = heldItem.itemMeta.persistentDataContainer.get(InfinityItem.VARIATION_ID, PersistentDataType.INTEGER)!!
 
-					val basicItem = Registry.Item.getItem(itemId, variationId)!!
+					val basicItem = Registry0.Item.getItem(itemId, variationId)!!
 					val upgradedItem = basicItem.upgradeItem(Rarity.valueOf(currentRarity.uppercase()))
 					player.inventory.setItem(selectedSlot, upgradedItem)
 					player.sendMessage(Component.text("Your ")
@@ -126,7 +126,7 @@ object InfinityCommand {
 					val currentRarity = heldItem.itemMeta.persistentDataContainer.get(InfinityItem.RARITY_KEY, PersistentDataType.STRING)!!
 					val variationId = heldItem.itemMeta.persistentDataContainer.get(InfinityItem.VARIATION_ID, PersistentDataType.INTEGER)!!
 
-					val basicItem = Registry.Item.getItem(itemId, variationId)!!
+					val basicItem = Registry0.Item.getItem(itemId, variationId)!!
 					val downgradedItem = basicItem.downgradeItem(Rarity.valueOf(currentRarity.uppercase()))
 					player.inventory.setItem(selectedSlot, downgradedItem)
 					player.sendMessage(Component.text("Your ")
@@ -206,12 +206,12 @@ object InfinityCommand {
 							.executes { ctx ->
 								val player = getSenderAsPlayer(ctx)
 								val variationId = ctx.getArgument("variation", Int::class.java)
-								val item = Registry.Item.getItem(itemId, variationId)
+								val item = Registry0.Item.getItem(itemId, variationId)
 								if (item == null) {
-									val backup = Registry.Item.getItem(itemId, 0)!!
+									val backup = Registry0.Item.getItem(itemId, 0)!!
 									player.sendMessage(Component.text("The ")
 										.color(NamedTextColor.RED)
-										.append(backup.displayName().color(NamedTextColor.RED).hoverEvent(Registry.Item.getItem(itemId, 0)!!))
+										.append(backup.displayName().color(NamedTextColor.RED).hoverEvent(Registry0.Item.getItem(itemId, 0)!!))
 										.append(Component.text(" does not have a variation id $variationId"))
 									)
 									return@executes 1
@@ -222,7 +222,7 @@ object InfinityCommand {
 						)
 						.executes { ctx ->
 							val player = getSenderAsPlayer(ctx)
-							val item = Registry.Item.getItem(itemId, -1)!!
+							val item = Registry0.Item.getItem(itemId, -1)!!
 							player.inventory.addItem(item)
 							return@executes 1
 						}
@@ -250,7 +250,7 @@ object InfinityCommand {
 						}
 						val itemId = heldItem.itemMeta.persistentDataContainer[InfinityItem.ITEM_ID_KEY, PersistentDataType.STRING]!!
 						val variation = heldItem.itemMeta.persistentDataContainer[InfinityItem.VARIATION_ID, PersistentDataType.INTEGER]!!
-						val item = Registry.Item.getItem(itemId, variation)
+						val item = Registry0.Item.getItem(itemId, variation)
 						player.inventory.setItem(selectedSlot, item!!.updateRarityTo(rarity))
 						return@executes 1
 					}

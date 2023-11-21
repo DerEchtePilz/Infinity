@@ -33,7 +33,7 @@ import org.bukkit.block.sign.Side
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
-class WorldCarver {
+class WorldCarver1 {
 
 	@Suppress("ReplaceManualRangeWithIndicesCalls")
 	class LobbyCarver(val world: World) {

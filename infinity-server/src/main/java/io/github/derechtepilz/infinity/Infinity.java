@@ -5,10 +5,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
+import io.github.derechtepilz.infinity.items.InfinityAxe;
+import io.github.derechtepilz.infinity.items.InfinityPickaxe;
+import io.github.derechtepilz.infinity.items.Rarity;
 import io.github.derechtepilz.infinity.util.JsonUtil;
 import io.github.derechtepilz.infinity.util.Keys;
+import io.github.derechtepilz.infinity.world.WorldCarver;
 import io.github.derechtepilz.infinity.world.WorldManager;
-import io.github.derechtepilz.infinity.world.WorldManager0;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
@@ -21,7 +24,7 @@ import java.util.*;
 public class Infinity extends JavaPlugin {
 
     public static final String NAME = "infinity";
-    public static Infinity instance;
+    private static Infinity instance;
     private boolean canLoad = true;
 
     {
@@ -35,7 +38,10 @@ public class Infinity extends JavaPlugin {
         }
         if (canLoad) {
             // Register items
-            // TODO: Convert to Java before registering
+            Registry.Item.register(InfinityPickaxe.ITEM_ID, new InfinityPickaxe(Rarity.UNCOMMON));
+            for (int i = 0; i < InfinityAxe.VARIATIONS; i++) {
+                Registry.Item.register(InfinityAxe.ITEM_ID, new InfinityAxe(Rarity.UNCOMMON, i));
+            }
         }
     }
 
@@ -142,7 +148,10 @@ public class Infinity extends JavaPlugin {
         stone.setViewDistance(16);
         nether.setViewDistance(16);
 
-        // TODO: Create structures
+        new WorldCarver.LobbyCarver(lobby);
+        new WorldCarver.SkyCarver(sky);
+        new WorldCarver.StoneCarver(stone);
+        new WorldCarver.NetherCarver(nether);
 
         // TODO: Register events
 
@@ -179,6 +188,26 @@ public class Infinity extends JavaPlugin {
         }
 
         // TODO: Save additional data, done in listeners, comes later
+    }
+
+    public static Infinity getInstance() {
+        return instance;
+    }
+
+    public Map<UUID, String> getInventoryData() {
+        return inventoryData;
+    }
+
+    public Map<UUID, String> getExperienceData() {
+        return experienceData;
+    }
+
+    public Map<UUID, String> getHealthHungerData() {
+        return healthHungerData;
+    }
+
+    public Map<UUID, String> getPotionEffectData() {
+        return potionEffectData;
     }
 
     private BufferedReader getConfigReader() {
