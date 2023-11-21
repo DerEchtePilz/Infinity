@@ -1,7 +1,7 @@
 package io.github.derechtepilz.tests
 
 import io.github.derechtepilz.TestBase
-import io.github.derechtepilz.infinity.Registry
+import io.github.derechtepilz.infinity.Registry0
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer
@@ -33,8 +33,8 @@ class SerializationTests : TestBase() {
 	fun saveAndLoadInventorySerializationTest() {
 		val player = server.addPlayer()
 
-		val pickaxe = Registry.Item.getItem("infinity_pickaxe", -1)
-		val axeFarming = Registry.Item.getItem("infinity_axe", 0)
+		val pickaxe = Registry0.Item.getItem("infinity_pickaxe", -1)
+		val axeFarming = Registry0.Item.getItem("infinity_axe", 0)
 		player.inventory.setItem(0, pickaxe)
 		player.enderChest.setItem(0, axeFarming)
 

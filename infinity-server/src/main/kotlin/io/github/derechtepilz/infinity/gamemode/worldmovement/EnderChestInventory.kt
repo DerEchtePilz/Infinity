@@ -19,7 +19,7 @@
 package io.github.derechtepilz.infinity.gamemode.worldmovement
 
 import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass
-import io.github.derechtepilz.infinity.items.minecraft.ItemBuilder
+import io.github.derechtepilz.infinity.items.minecraft.ItemBuilder0
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -35,9 +35,9 @@ class EnderChestInventory(private val player: Player) {
 	private val mm: MiniMessage = MiniMessage.miniMessage()
 	private val enderChestTitle = mm.deserialize("<gradient:#04750b:#0b41bd>Ender Chest</gradient>")
 
-	private val fillerItem = ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(Component.empty()).build()
+	private val fillerItem = ItemBuilder0(Material.BLACK_STAINED_GLASS_PANE).setName(Component.empty()).build()
 
-	private val lobbyTeleport = ItemBuilder(Material.NETHER_STAR).setName(Component.text()
+	private val lobbyTeleport = ItemBuilder0(Material.NETHER_STAR).setName(Component.text()
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
@@ -45,7 +45,7 @@ class EnderChestInventory(private val player: Player) {
 		.build()
 	).build()
 
-	private val classOneTeleport = ItemBuilder(Material.ENDER_PEARL).setName(Component.text()
+	private val classOneTeleport = ItemBuilder0(Material.ENDER_PEARL).setName(Component.text()
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
@@ -56,7 +56,7 @@ class EnderChestInventory(private val player: Player) {
 		Component.text().content("Right-click to select").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false).build()
 	)).build()
 
-	private val classTwoTeleport = ItemBuilder(Material.ENDER_PEARL).setName(Component.text()
+	private val classTwoTeleport = ItemBuilder0(Material.ENDER_PEARL).setName(Component.text()
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
@@ -67,7 +67,7 @@ class EnderChestInventory(private val player: Player) {
 		Component.text().content("Right-click to select").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false).build()
 	)).build()
 
-	private val classThreeTeleport = ItemBuilder(Material.ENDER_PEARL).setName(Component.text()
+	private val classThreeTeleport = ItemBuilder0(Material.ENDER_PEARL).setName(Component.text()
 		.content("Teleport to: ")
 		.color(NamedTextColor.GREEN)
 		.decoration(TextDecoration.ITALIC, false)
