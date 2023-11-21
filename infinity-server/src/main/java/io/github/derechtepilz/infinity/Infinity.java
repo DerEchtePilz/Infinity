@@ -23,223 +23,223 @@ import java.util.*;
 
 public class Infinity extends JavaPlugin {
 
-    public static final String NAME = "infinity";
-    private static Infinity instance;
-    private boolean canLoad = true;
+	public static final String NAME = "infinity";
+	private static Infinity instance;
+	private boolean canLoad = true;
 
-    {
-        try {
-            Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
-            Class.forName("net.kyori.adventure.text.Component");
-        } catch (ClassNotFoundException e) {
-            getLogger().severe("You do not seem to run a Paper server. This plugin heavily relies on API provided by Paper that Spigot does not have natively.");
-            getLogger().severe("Please upgrade to Paper here to use this plugin: https://papermc.io/downloads/paper");
-            canLoad = false;
-        }
-        if (canLoad) {
-            // Register items
-            Registry.Item.register(InfinityPickaxe.ITEM_ID, new InfinityPickaxe(Rarity.UNCOMMON));
-            for (int i = 0; i < InfinityAxe.VARIATIONS; i++) {
-                Registry.Item.register(InfinityAxe.ITEM_ID, new InfinityAxe(Rarity.UNCOMMON, i));
-            }
-        }
-    }
+	{
+		try {
+			Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
+			Class.forName("net.kyori.adventure.text.Component");
+		} catch (ClassNotFoundException e) {
+			getLogger().severe("You do not seem to run a Paper server. This plugin heavily relies on API provided by Paper that Spigot does not have natively.");
+			getLogger().severe("Please upgrade to Paper here to use this plugin: https://papermc.io/downloads/paper");
+			canLoad = false;
+		}
+		if (canLoad) {
+			// Register items
+			Registry.Item.register(InfinityPickaxe.ITEM_ID, new InfinityPickaxe(Rarity.UNCOMMON));
+			for (int i = 0; i < InfinityAxe.VARIATIONS; i++) {
+				Registry.Item.register(InfinityAxe.ITEM_ID, new InfinityAxe(Rarity.UNCOMMON, i));
+			}
+		}
+	}
 
-    private final MiniMessage mm = MiniMessage.miniMessage();
-    private final Component infinityComponent = mm.deserialize("<gradient:#18e1f0:#de18e1f0>Minecraft Infinity</gradient>");
+	private final MiniMessage mm = MiniMessage.miniMessage();
+	private final Component infinityComponent = mm.deserialize("<gradient:#18e1f0:#de18e1f0>Minecraft Infinity</gradient>");
 
-    private final Map<UUID, Integer> startStoryTask = new HashMap<>();
-    private final Map<UUID, PermissionAttachment> playerPermissions = new HashMap<>();
+	private final Map<UUID, Integer> startStoryTask = new HashMap<>();
+	private final Map<UUID, PermissionAttachment> playerPermissions = new HashMap<>();
 
-    private final List<UUID> infinityPlayerList = new ArrayList<>();
-    private final List<UUID> minecraftPlayerList = new ArrayList<>();
+	private final List<UUID> infinityPlayerList = new ArrayList<>();
+	private final List<UUID> minecraftPlayerList = new ArrayList<>();
 
-    private final Map<UUID, String> inventoryData = new HashMap<>();
-    private final Map<UUID, String> experienceData = new HashMap<>();
-    private final Map<UUID, String> healthHungerData = new HashMap<>();
-    private final Map<UUID, String> potionEffectData = new HashMap<>();
+	private final Map<UUID, String> inventoryData = new HashMap<>();
+	private final Map<UUID, String> experienceData = new HashMap<>();
+	private final Map<UUID, String> healthHungerData = new HashMap<>();
+	private final Map<UUID, String> potionEffectData = new HashMap<>();
 
-    @Override
-    public void onLoad() {
-        if (!canLoad) return;
+	@Override
+	public void onLoad() {
+		if (!canLoad) return;
 
-        // Check server version, disable on 1.19.4 and lower
+		// Check server version, disable on 1.19.4 and lower
 
-        instance = this;
+		instance = this;
 
-        // Load the plugin
-        try {
-            BufferedReader configReader = getConfigReader();
-            if (configReader != null) {
-                StringBuilder jsonBuilder = new StringBuilder();
-                String line;
-                while ((line = configReader.readLine()) != null) {
-                    jsonBuilder.append(line);
-                }
-                JsonObject jsonObject = JsonParser.parseString(jsonBuilder.toString()).getAsJsonObject();
+		// Load the plugin
+		try {
+			BufferedReader configReader = getConfigReader();
+			if (configReader != null) {
+				StringBuilder jsonBuilder = new StringBuilder();
+				String line;
+				while ((line = configReader.readLine()) != null) {
+					jsonBuilder.append(line);
+				}
+				JsonObject jsonObject = JsonParser.parseString(jsonBuilder.toString()).getAsJsonObject();
 
-                JsonArray inventoryDataArray = JsonUtil.getArray("inventoryData", jsonObject);
-                JsonArray experienceDataArray = JsonUtil.getArray("experienceData", jsonObject);
-                JsonArray healthHungerDataArray = JsonUtil.getArray("healthHungerData", jsonObject);
-                JsonArray potionEffectDataArray = JsonUtil.getArray("potionEffectData", jsonObject);
+				JsonArray inventoryDataArray = JsonUtil.getArray("inventoryData", jsonObject);
+				JsonArray experienceDataArray = JsonUtil.getArray("experienceData", jsonObject);
+				JsonArray healthHungerDataArray = JsonUtil.getArray("healthHungerData", jsonObject);
+				JsonArray potionEffectDataArray = JsonUtil.getArray("potionEffectData", jsonObject);
 
-                JsonUtil.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData);
-                JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData);
-                JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData);
-                JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData);
-            }
-        } catch (IOException e) {
-            getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
-        }
+				JsonUtil.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData);
+				JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData);
+				JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData);
+				JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData);
+			}
+		} catch (IOException e) {
+			getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
+		}
 
-        // TODO: Register commands
-    }
+		// TODO: Register commands
+	}
 
-    @Override
-    public void onEnable() {
-        if (!canLoad) {
-            getLogger().warning("Enabling sequence not called. Please upgrade to Paper.");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        new WorldCreateLoadEvent().callEvent();
-        World lobby = Bukkit.createWorld(new WorldCreator("infinity/lobby", Keys.WORLD_LOBBY.get())
-            .generator(new WorldManager.ChunkGenerators.EmptyChunkGenerator())
-            .biomeProvider(new WorldManager.BiomeProviders.EmptyBiomeProvider())
-            .seed(0L)
-        );
-        World sky = Bukkit.createWorld(new WorldCreator("infinity/sky", Keys.WORLD_SKY.get())
-            .generator(new WorldManager.ChunkGenerators.EmptyChunkGenerator())
-            .biomeProvider(new WorldManager.BiomeProviders.EmptyBiomeProvider())
-            .seed(0L)
-        );
-        World stone = Bukkit.createWorld(new WorldCreator("infinity/stone", Keys.WORLD_STONE.get())
-            .generator(new WorldManager.ChunkGenerators.StoneChunkGenerator())
-            .biomeProvider(new WorldManager.BiomeProviders.StoneBiomeProvider())
-            .seed(0L)
-        );
-        World nether = Bukkit.createWorld(new WorldCreator("infinity/nether", Keys.WORLD_NETHER.get())
-            .generator(new WorldManager.ChunkGenerators.NetherChunkGenerator())
-            .environment(World.Environment.NETHER)
-            .biomeProvider(new WorldManager.BiomeProviders.NetherBiomeProvider())
-            .seed(0L)
-        );
+	@Override
+	public void onEnable() {
+		if (!canLoad) {
+			getLogger().warning("Enabling sequence not called. Please upgrade to Paper.");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+		new WorldCreateLoadEvent().callEvent();
+		World lobby = Bukkit.createWorld(new WorldCreator("infinity/lobby", Keys.WORLD_LOBBY.get())
+			.generator(new WorldManager.ChunkGenerators.EmptyChunkGenerator())
+			.biomeProvider(new WorldManager.BiomeProviders.EmptyBiomeProvider())
+			.seed(0L)
+		);
+		World sky = Bukkit.createWorld(new WorldCreator("infinity/sky", Keys.WORLD_SKY.get())
+			.generator(new WorldManager.ChunkGenerators.EmptyChunkGenerator())
+			.biomeProvider(new WorldManager.BiomeProviders.EmptyBiomeProvider())
+			.seed(0L)
+		);
+		World stone = Bukkit.createWorld(new WorldCreator("infinity/stone", Keys.WORLD_STONE.get())
+			.generator(new WorldManager.ChunkGenerators.StoneChunkGenerator())
+			.biomeProvider(new WorldManager.BiomeProviders.StoneBiomeProvider())
+			.seed(0L)
+		);
+		World nether = Bukkit.createWorld(new WorldCreator("infinity/nether", Keys.WORLD_NETHER.get())
+			.generator(new WorldManager.ChunkGenerators.NetherChunkGenerator())
+			.environment(World.Environment.NETHER)
+			.biomeProvider(new WorldManager.BiomeProviders.NetherBiomeProvider())
+			.seed(0L)
+		);
 
-        assert lobby != null;
-        assert sky != null;
-        assert stone != null;
-        assert nether != null;
+		assert lobby != null;
+		assert sky != null;
+		assert stone != null;
+		assert nether != null;
 
-        lobby.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-        lobby.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        lobby.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        lobby.setGameRule(GameRule.KEEP_INVENTORY, true);
-        lobby.setTime(6000);
+		lobby.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+		lobby.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+		lobby.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+		lobby.setGameRule(GameRule.KEEP_INVENTORY, true);
+		lobby.setTime(6000);
 
-        sky.setGameRule(GameRule.KEEP_INVENTORY, true);
-        stone.setGameRule(GameRule.KEEP_INVENTORY, true);
-        nether.setGameRule(GameRule.KEEP_INVENTORY, true);
+		sky.setGameRule(GameRule.KEEP_INVENTORY, true);
+		stone.setGameRule(GameRule.KEEP_INVENTORY, true);
+		nether.setGameRule(GameRule.KEEP_INVENTORY, true);
 
-        sky.setDifficulty(Difficulty.HARD);
-        stone.setDifficulty(Difficulty.HARD);
-        nether.setDifficulty(Difficulty.HARD);
+		sky.setDifficulty(Difficulty.HARD);
+		stone.setDifficulty(Difficulty.HARD);
+		nether.setDifficulty(Difficulty.HARD);
 
-        sky.setViewDistance(16);
-        stone.setViewDistance(16);
-        nether.setViewDistance(16);
+		sky.setViewDistance(16);
+		stone.setViewDistance(16);
+		nether.setViewDistance(16);
 
-        new WorldCarver.LobbyCarver(lobby);
-        new WorldCarver.SkyCarver(sky);
-        new WorldCarver.StoneCarver(stone);
-        new WorldCarver.NetherCarver(nether);
+		new WorldCarver.LobbyCarver(lobby);
+		new WorldCarver.SkyCarver(sky);
+		new WorldCarver.StoneCarver(stone);
+		new WorldCarver.NetherCarver(nether);
 
-        // TODO: Register events
+		// TODO: Register events
 
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
-            String messageString = new String(message).substring(1);
-            String firstCharacter = messageString.substring(0, 1);
-            messageString = messageString.replaceFirst(firstCharacter, firstCharacter.toUpperCase());
-            getLogger().info("${player.name} just logged in using " + messageString);
-        });
-    }
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
+			String messageString = new String(message).substring(1);
+			String firstCharacter = messageString.substring(0, 1);
+			messageString = messageString.replaceFirst(firstCharacter, firstCharacter.toUpperCase());
+			getLogger().info("${player.name} just logged in using " + messageString);
+		});
+	}
 
-    @Override
-    public void onDisable() {
-        if (!canLoad) {
-            // Safeguard so potentially saved player data is not deleted
-            return;
-        }
-        // Save player data
-        try {
-            BufferedWriter configWriter = getConfigWriter();
-            assert configWriter != null;
-            JsonObject playerDataObject = new JsonObject();
+	@Override
+	public void onDisable() {
+		if (!canLoad) {
+			// Safeguard so potentially saved player data is not deleted
+			return;
+		}
+		// Save player data
+		try {
+			BufferedWriter configWriter = getConfigWriter();
+			assert configWriter != null;
+			JsonObject playerDataObject = new JsonObject();
 
-            JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData);
-            JsonUtil.saveMap(playerDataObject, "experienceData", experienceData);
-            JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData);
-            JsonUtil.saveMap(playerDataObject, "potionEffectData", potionEffectData);
+			JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData);
+			JsonUtil.saveMap(playerDataObject, "experienceData", experienceData);
+			JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData);
+			JsonUtil.saveMap(playerDataObject, "potionEffectData", potionEffectData);
 
-            String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject);
-            configWriter.write(jsonString);
-            configWriter.close();
-        } catch (IOException e) {
-            getLogger().severe("There was a problem while writing player data. It is possible that data has been lost when restarting. This is NOT a plugin issue! Please DO NOT report this!");
-        }
+			String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject);
+			configWriter.write(jsonString);
+			configWriter.close();
+		} catch (IOException e) {
+			getLogger().severe("There was a problem while writing player data. It is possible that data has been lost when restarting. This is NOT a plugin issue! Please DO NOT report this!");
+		}
 
-        // TODO: Save additional data, done in listeners, comes later
-    }
+		// TODO: Save additional data, done in listeners, comes later
+	}
 
-    public static Infinity getInstance() {
-        return instance;
-    }
+	public static Infinity getInstance() {
+		return instance;
+	}
 
-    public Map<UUID, String> getInventoryData() {
-        return inventoryData;
-    }
+	public Map<UUID, String> getInventoryData() {
+		return inventoryData;
+	}
 
-    public Map<UUID, String> getExperienceData() {
-        return experienceData;
-    }
+	public Map<UUID, String> getExperienceData() {
+		return experienceData;
+	}
 
-    public Map<UUID, String> getHealthHungerData() {
-        return healthHungerData;
-    }
+	public Map<UUID, String> getHealthHungerData() {
+		return healthHungerData;
+	}
 
-    public Map<UUID, String> getPotionEffectData() {
-        return potionEffectData;
-    }
+	public Map<UUID, String> getPotionEffectData() {
+		return potionEffectData;
+	}
 
-    private BufferedReader getConfigReader() {
-        try {
-            File configDirectory = new File("./infinity/config");
-            if (!configDirectory.exists()) {
-                return null;
-            }
-            File configFile = new File(configDirectory, "player-data-json");
-            if (!configFile.exists()) {
-                return null;
-            }
-            return new BufferedReader(new FileReader(configFile));
-        } catch (FileNotFoundException e) {
-            return null;
-        }
-    }
+	private BufferedReader getConfigReader() {
+		try {
+			File configDirectory = new File("./infinity/config");
+			if (!configDirectory.exists()) {
+				return null;
+			}
+			File configFile = new File(configDirectory, "player-data-json");
+			if (!configFile.exists()) {
+				return null;
+			}
+			return new BufferedReader(new FileReader(configFile));
+		} catch (FileNotFoundException e) {
+			return null;
+		}
+	}
 
-    private BufferedWriter getConfigWriter() {
-        try {
-            File configDirectory = new File("./infinity/config");
-            if (!configDirectory.exists()) {
-                configDirectory.mkdirs();
-            }
-            File configFile = new File(configDirectory, "player-data-json");
-            if (!configFile.exists()) {
-                configFile.createNewFile();
-            }
-            return new BufferedWriter(new FileWriter(configFile));
-        } catch (IOException e) {
-            return null;
-        }
-    }
+	private BufferedWriter getConfigWriter() {
+		try {
+			File configDirectory = new File("./infinity/config");
+			if (!configDirectory.exists()) {
+				configDirectory.mkdirs();
+			}
+			File configFile = new File(configDirectory, "player-data-json");
+			if (!configFile.exists()) {
+				configFile.createNewFile();
+			}
+			return new BufferedWriter(new FileWriter(configFile));
+		} catch (IOException e) {
+			return null;
+		}
+	}
 
 }
