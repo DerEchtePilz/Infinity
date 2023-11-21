@@ -37,16 +37,6 @@ import java.util.*
  *      GAME MODE      *
  ***********************/
 
-fun Player.getGamemode(): Gamemode {
-	val playerWorld = this.world
-	return Gamemode.getFromKey(playerWorld.key)
-	/*return when (playerWorld.key.namespace) {
-		"infinity" -> Gamemode.INFINITY
-		"minecraft" -> Gamemode.MINECRAFT
-		else -> Gamemode.UNKNOWN
-	}*/
-}
-
 fun Player.hasDefaultGamemode(): Boolean {
 	return this.persistentDataContainer.has(Keys0.DEFAULT_GAMEMODE.get())
 }
