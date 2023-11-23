@@ -59,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Infinity
-          path: build/libs/Infinity-${{ steps.version_query.outputs.version }}.jar
+          path: infinity-server/build/libs/infinity-server-${{ steps.version_query.outputs.version }}.jar
