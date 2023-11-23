@@ -73,6 +73,10 @@ public enum Keys {
 		return namespace;
 	}
 
+	public boolean isState() {
+		return isState;
+	}
+
 	public static Keys fromNamespacedKey(NamespacedKey key) {
 		for (Keys entry : Keys.values()) {
 			if (entry.namespace == key) {
