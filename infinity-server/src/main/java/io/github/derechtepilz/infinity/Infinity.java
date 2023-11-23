@@ -1,10 +1,16 @@
 package io.github.derechtepilz.infinity;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
+import io.github.derechtepilz.infinity.commands.DevUtilCommand;
+import io.github.derechtepilz.infinity.commands.InfinityCommand;
+import io.github.derechtepilz.infinity.gamemode.PlayerJoinServerListener;
+import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
+import io.github.derechtepilz.infinity.gamemode.modification.*;
+import io.github.derechtepilz.infinity.gamemode.story.introduction.PlayerQuitInStoryListener;
+import io.github.derechtepilz.infinity.gamemode.switching.GamemodeSwitchHandler;
+import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener;
+import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler;
 import io.github.derechtepilz.infinity.items.InfinityAxe;
 import io.github.derechtepilz.infinity.items.InfinityPickaxe;
 import io.github.derechtepilz.infinity.items.Rarity;
@@ -15,6 +21,7 @@ import io.github.derechtepilz.infinity.world.WorldManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -92,7 +99,8 @@ public class Infinity extends JavaPlugin {
 			getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
 
-		// TODO: Register commands
+		InfinityCommand.register();
+		DevUtilCommand.register();
 	}
 
 	@Override
@@ -153,7 +161,18 @@ public class Infinity extends JavaPlugin {
 		new WorldCarver.StoneCarver(stone);
 		new WorldCarver.NetherCarver(nether);
 
-		// TODO: Register events
+		Bukkit.getPluginManager().registerEvents(new PlayerJoinServerListener(), this);
+		Bukkit.getPluginManager().registerEvents(new GamemodeSwitchHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new AdvancementDisableHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
+		Bukkit.getPluginManager().registerEvents(new ChatHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new ChestListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DeathHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new EnderChestHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new PortalDisableHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new MobSpawnPreventionHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new TablistHandler(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerQuitInStoryListener(), this);
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
 			String messageString = new String(message).substring(1);
@@ -187,7 +206,12 @@ public class Infinity extends JavaPlugin {
 			getLogger().severe("There was a problem while writing player data. It is possible that data has been lost when restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
 
-		// TODO: Save additional data, done in listeners, comes later
+		// If PaperMC/Paper #9679 gets merged, this is redundant
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			SignListener.INSTANCE.saveSignStatesFor(player);
+			DeathHandler.INSTANCE.saveSpawnPointsFor(player);
+			PlayerQuitInStoryListener.INSTANCE.resetIntroduction(player);
+		}
 	}
 
 	public static Infinity getInstance() {
@@ -196,6 +220,22 @@ public class Infinity extends JavaPlugin {
 
 	public Component getInfinityComponent() {
 		return infinityComponent;
+	}
+
+	public Map<UUID, Integer> getStartStoryTask() {
+		return startStoryTask;
+	}
+
+	public Map<UUID, PermissionAttachment> getPlayerPermissions() {
+		return playerPermissions;
+	}
+
+	public List<UUID> getInfinityPlayerList() {
+		return infinityPlayerList;
+	}
+
+	public List<UUID> getMinecraftPlayerList() {
+		return minecraftPlayerList;
 	}
 
 	public Map<UUID, String> getInventoryData() {
