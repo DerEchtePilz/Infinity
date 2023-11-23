@@ -41,10 +41,6 @@ dependencies {
 	implementation(project(":infinity-api"))
 	compileOnly("com.google.code.gson:gson:2.10.1")
 	paperweight.paperDevBundle(paperVersion)
-
-	configurations.testRuntimeClasspath {
-		exclude(group = "io.papermc.paper", module = "paper-server")
-	}
 }
 
 tasks.withType<JavaCompile> {
