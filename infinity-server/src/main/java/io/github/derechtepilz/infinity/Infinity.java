@@ -18,16 +18,20 @@
 
 package io.github.derechtepilz.infinity;
 
-import com.google.gson.*;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
 import io.github.derechtepilz.infinity.commands.DevUtilCommand;
 import io.github.derechtepilz.infinity.commands.InfinityCommand;
-import io.github.derechtepilz.infinity.gamemode.PlayerJoinServerListener;
+import io.github.derechtepilz.infinity.commonevents.JoinEventListener;
+import io.github.derechtepilz.infinity.commonevents.QuitEventListener;
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
 import io.github.derechtepilz.infinity.gamemode.modification.*;
-import io.github.derechtepilz.infinity.gamemode.story.introduction.PlayerQuitInStoryListener;
+import io.github.derechtepilz.infinity.gamemode.story.introduction.PlayerQuitInStoryHandler;
 import io.github.derechtepilz.infinity.gamemode.switching.GamemodeSwitchHandler;
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener;
 import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler;
@@ -42,9 +46,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -186,7 +187,8 @@ public class Infinity extends JavaPlugin {
 		new WorldCarver.StoneCarver(stone);
 		new WorldCarver.NetherCarver(nether);
 
-		Bukkit.getPluginManager().registerEvents(new PlayerJoinServerListener(), this);
+		Bukkit.getPluginManager().registerEvents(new JoinEventListener(), this);
+		Bukkit.getPluginManager().registerEvents(new QuitEventListener(), this);
 		Bukkit.getPluginManager().registerEvents(new GamemodeSwitchHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new AdvancementDisableHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
@@ -197,13 +199,6 @@ public class Infinity extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new PortalDisableHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new MobSpawnPreventionHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new TablistHandler(), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerQuitInStoryListener(), this);
-		Bukkit.getPluginManager().registerEvents(new Listener() {
-			@EventHandler
-			public void sendCommands(PlayerJoinEvent event) {
-				//event.getPlayer().updateCommands();
-			}
-		}, this);
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
 			String messageString = new String(message).substring(1);
@@ -241,9 +236,9 @@ public class Infinity extends JavaPlugin {
 
 		// If PaperMC/Paper #9679 gets merged, this is redundant
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			SignListener.INSTANCE.saveSignStatesFor(player);
-			DeathHandler.INSTANCE.saveSpawnPointsFor(player);
-			PlayerQuitInStoryListener.INSTANCE.resetIntroduction(player);
+			SignListener.getInstance().saveSignStatesFor(player);
+			DeathHandler.getInstance().saveSpawnPointsFor(player);
+			PlayerQuitInStoryHandler.resetIntroduction(player);
 		}
 	}
 

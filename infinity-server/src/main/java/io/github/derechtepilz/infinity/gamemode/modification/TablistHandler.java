@@ -38,6 +38,12 @@ import java.util.UUID;
 
 public class TablistHandler implements Listener {
 
+	private static TablistHandler INSTANCE;
+
+	public TablistHandler() {
+		INSTANCE = this;
+	}
+
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
 		Gamemode previousGamemode = Gamemode.getFromKey(event.getFrom().getKey());
@@ -59,9 +65,7 @@ public class TablistHandler implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+	public void addToTablist(Player player) {
 		if (PlayerUtil.getGamemode(player) == Gamemode.INFINITY) {
 			Infinity.getInstance().getInfinityPlayerList().add(player.getUniqueId());
 			Infinity.getInstance().getMinecraftPlayerList().remove(player.getUniqueId());
@@ -72,9 +76,7 @@ public class TablistHandler implements Listener {
 		updateTabList();
 	}
 
-	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
+	public void removeFromTablist(Player player) {
 		Infinity.getInstance().getInfinityPlayerList().remove(player.getUniqueId());
 		Infinity.getInstance().getMinecraftPlayerList().remove(player.getUniqueId());
 
@@ -111,4 +113,7 @@ public class TablistHandler implements Listener {
 		}, 20);
 	}
 
+	public static TablistHandler getInstance() {
+		return INSTANCE;
+	}
 }

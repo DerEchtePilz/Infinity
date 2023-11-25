@@ -47,7 +47,7 @@ public class DeathHandler implements Listener {
 	private final Map<UUID, Location> infinityRespawns = new HashMap<>();
 	private final Map<UUID, Location> minecraftRespawns = new HashMap<>();
 
-	public static DeathHandler INSTANCE;
+	private static DeathHandler INSTANCE;
 
 	public DeathHandler() {
 		INSTANCE = this;
@@ -104,10 +104,7 @@ public class DeathHandler implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-
+	public void loadPlayerSpawnPoints(Player player) {
 		// Load Minecraft spawn point
 		World minecraftSpawnWorld = Bukkit.getWorld(player.getPersistentDataContainer().getOrDefault(Keys.DEATH_RESPAWN_MC_WORLD.get(), PersistentDataType.STRING, "world"));
 		double minecraftSpawnX = player.getPersistentDataContainer().getOrDefault(Keys.DEATH_RESPAWN_MC_POS_X.get(), PersistentDataType.DOUBLE, 0.0);
@@ -137,12 +134,6 @@ public class DeathHandler implements Listener {
 		infinityRespawns.put(player.getUniqueId(), infinitySpawnLocation);
 	}
 
-	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		saveSpawnPointsFor(player);
-	}
-
 	public void saveSpawnPointsFor(Player player) {
 		Location minecraftSpawnLocation = minecraftRespawns.get(player.getUniqueId());
 		Location infinitySpawnLocation = infinityRespawns.get(player.getUniqueId());
@@ -161,4 +152,7 @@ public class DeathHandler implements Listener {
 		infinityRespawns.remove(player.getUniqueId());
 	}
 
+	public static DeathHandler getInstance() {
+		return INSTANCE;
+	}
 }

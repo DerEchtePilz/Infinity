@@ -20,6 +20,7 @@ package io.github.derechtepilz.infinity.gamemode.switching;
 
 import io.github.derechtepilz.infinity.Infinity;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
+import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.world.WorldCarver;
@@ -106,7 +107,7 @@ public class GamemodeSwitchHandler implements Listener {
 			return;
 		}
 
-		Location location = PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN);
+		Location location = GamemodeState.valueOf(nextGamemode.name()).loadFor(player);
 		event.setTo(location);
 	}
 

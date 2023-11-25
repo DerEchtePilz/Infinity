@@ -19,6 +19,7 @@
 package io.github.derechtepilz.infinity.gamemode;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import net.kyori.adventure.text.Component;
@@ -29,14 +30,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
 
-public class PlayerJoinServerListener implements Listener {
+public class PlayerJoinServerListener {
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+	private PlayerJoinServerListener() {}
+
+	public static void sendJoinMessage(Player player) {
 		// TODO: Change messages sent to the player upon login
 		if (!player.getPersistentDataContainer().has(Keys.DEFAULT_GAMEMODE.get(), PersistentDataType.STRING)) {
 			if (PlayerUtil.getGamemode(player) == Gamemode.MINECRAFT) {
@@ -52,11 +52,11 @@ public class PlayerJoinServerListener implements Listener {
 			if (defaultGamemode == PlayerUtil.getGamemode(player)) {
 				return;
 			}
-			PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN);
+			GamemodeState.valueOf(defaultGamemode.name()).loadFor(player);
 		}
 	}
 
-	private void sendInfinitySuggestion(Player player) {
+	private static void sendInfinitySuggestion(Player player) {
 		player.sendMessage(Component.text("Want to play ")
 			.color(NamedTextColor.YELLOW)
 			.append(Infinity.getInstance().getInfinityComponent())
@@ -73,7 +73,7 @@ public class PlayerJoinServerListener implements Listener {
 		);
 	}
 
-	private void sendDefaultGamemodeMessage(Player player) {
+	private static void sendDefaultGamemodeMessage(Player player) {
 		player.sendMessage(Component.text("Set default gamemode: ")
 			.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
 			.color(NamedTextColor.GRAY)
@@ -127,7 +127,7 @@ public class PlayerJoinServerListener implements Listener {
 		);
 	}
 
-	private void sendResetDefaultGamemode(Player player) {
+	private static void sendResetDefaultGamemode(Player player) {
 		player.sendMessage(Component.text("Reset default gamemode ")
 			.color(NamedTextColor.GRAY)
 			.append(Component.text("[here]")
