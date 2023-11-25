@@ -19,13 +19,19 @@
 package io.github.derechtepilz.infinity.gamemode.gameclass;
 
 import io.github.derechtepilz.infinity.util.Keys;
+import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.world.WorldCarver;
+import net.kyori.adventure.text.Component;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
@@ -46,7 +52,61 @@ public class SignListener implements Listener {
 
 	@EventHandler
 	public void onSignClick(PlayerInteractEvent event) {
-
+		Block clickedBlock = event.getClickedBlock();
+		if (clickedBlock == null) return;
+		if (!(clickedBlock.getState() instanceof Sign)) {
+			return;
+		}
+		Sign sign = (Sign) clickedBlock.getState();
+		Player player = event.getPlayer();
+		Action action = event.getAction();
+		homeDimension.put(player.getUniqueId(), SignState.HomeDimensionState.UNSET);
+		if (sign.getPersistentDataContainer().has(Keys.SIGN_TAG_MINECRAFT_TELEPORT.get(), PersistentDataType.STRING)) {
+			// Do stuff on left and right click
+			if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
+				PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN);
+			}
+		}
+		if (sign.getPersistentDataContainer().has(Keys.SIGN_TAG_HOME_DIMENSION_TELEPORT.get(), PersistentDataType.STRING)) {
+			// Do stuff on left click and right click
+			if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
+				player.sendMessage(Component.text().content("Teleporting to home dimension..."));
+			}
+			return;
+		}
+		if (sign.getPersistentDataContainer().has(Keys.SIGN_TAG_SELECT_CLASS.get(), PersistentDataType.STRING)) {
+			// Do stuff
+			// Cycle through classes on right click
+			// Select the displayed class on left click
+			if (action == Action.LEFT_CLICK_BLOCK) {
+				player.sendMessage(Component.text().content("Selecting class..."));
+				player.sendMessage(classSelection.getOrDefault(player.getUniqueId(), SignState.ClassSelectionState.NO_CLASS_SELECTED).asString());
+			}
+			if (action == Action.RIGHT_CLICK_BLOCK) {
+				SignState.ClassSelectionState testClass = (classSelection.containsKey(player.getUniqueId()))
+					? classSelection.get(player.getUniqueId()).getNext()
+					: SignState.ClassSelectionState.AIRBORN;
+				testClass.loadFor(player);
+				classSelection.put(player.getUniqueId(), SignState.ClassSelectionState.valueOf(testClass.asString().content().toUpperCase().replace(" ", "_")));
+			}
+			return;
+		}
+		if (sign.getPersistentDataContainer().has(Keys.SIGN_TAG_SWITCH_CLASS.get(), PersistentDataType.STRING)) {
+			// Do stuff
+			// Cycle through classes on right click
+			// Select the displayed class on left click but open a confirmation inventory
+			if (action == Action.LEFT_CLICK_BLOCK) {
+				player.sendMessage(Component.text().content("Switching class..."));
+				player.sendMessage(switchClassSelection.getOrDefault(player.getUniqueId(), SignState.ClassSwitchingState.NO_CLASS_SELECTED).asString());
+			}
+			if (action == Action.RIGHT_CLICK_BLOCK) {
+				SignState.ClassSwitchingState testClass = (switchClassSelection.containsKey(player.getUniqueId()))
+					? switchClassSelection.get(player.getUniqueId()).getNext()
+					: SignState.ClassSwitchingState.AIRBORN;
+				testClass.loadFor(player);
+				switchClassSelection.put(player.getUniqueId(), SignState.ClassSwitchingState.valueOf(testClass.asString().content().toUpperCase().replace(" ", "_")));
+			}
+		}
 	}
 
 	@EventHandler

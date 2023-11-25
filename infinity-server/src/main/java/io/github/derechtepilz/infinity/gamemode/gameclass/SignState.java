@@ -23,6 +23,7 @@ import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.util.StringUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -66,11 +67,11 @@ public class SignState {
 		}
 
 		@Override
-		public Component asString() {
+		public TextComponent asString() {
 			return Component.text().content(StringUtil.normalize(this)).build();
 		}
 
-		private void loadFor(Player player) {
+		public void loadFor(Player player) {
 			Sign signState = (Sign) Material.CHERRY_WALL_SIGN.createBlockData().createBlockState();
 			SignSide side = signState.getSide(Side.FRONT);
 			side.line(0, Component.empty());
@@ -134,11 +135,11 @@ public class SignState {
 		}
 
 		@Override
-		public Component asString() {
+		public TextComponent asString() {
 			return GameClass.valueOf(this.name()).get();
 		}
 
-		private void loadFor(Player player) {
+		public void loadFor(Player player) {
 			Sign signState = (Sign) Material.CHERRY_WALL_SIGN.createBlockData().createBlockState();
 			SignSide side = signState.getSide(Side.FRONT);
 			switch (this) {
@@ -206,11 +207,11 @@ public class SignState {
 		}
 
 		@Override
-		public Component asString() {
+		public TextComponent asString() {
 			return GameClass.valueOf(this.name()).get();
 		}
 
-		private void loadFor(Player player) {
+		public void loadFor(Player player) {
 			Sign signState = (Sign) Material.CHERRY_WALL_SIGN.createBlockData().createBlockState();
 			SignSide side = signState.getSide(Side.FRONT);
 			switch (this) {
@@ -239,11 +240,15 @@ public class SignState {
 
 	public interface State<T> {
 
+		default void loadFor(Player player) {
+			loadFor(player, false);
+		}
+
 		void loadFor(Player player, boolean delay);
 
 		T getNext();
 
-		Component asString();
+		TextComponent asString();
 
 	}
 

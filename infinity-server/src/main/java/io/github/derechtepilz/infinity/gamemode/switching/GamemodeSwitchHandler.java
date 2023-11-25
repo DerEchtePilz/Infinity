@@ -68,6 +68,7 @@ public class GamemodeSwitchHandler implements Listener {
 		if (nextGamemode == Gamemode.INFINITY && !player.getPersistentDataContainer().has(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN)) {
 			// Initiate a sequence that requires a manual player action to actually start the story
 			Infinity.getInstance().getPlayerPermissions().getOrDefault(player.getUniqueId(), player.addAttachment(Infinity.getInstance())).setPermission("infinity.startstory", true);
+			player.updateCommands();
 			player.sendMessage(Component.text().content("Start the story!")
 				.color(NamedTextColor.GREEN)
 				.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE)

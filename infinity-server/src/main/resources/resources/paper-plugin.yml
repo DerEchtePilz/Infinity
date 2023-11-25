@@ -1,6 +1,0 @@
-name: Infinity
-version: '${version}'
-main: io.github.derechtepilz.infinity.Infinity
-authors:
-  - DerEchtePilz
-api-version: '1.20'

@@ -99,7 +99,7 @@ public class InventorySerializer {
 
 			// Save every element in the list
 			for (int i = 0; i < inventory.getSize(); i++) {
-				dataOutput.writeObject(inventory.getItem(i).serializeAsBytes());
+				dataOutput.writeObject((inventory.getItem(i) == null) ? null : inventory.getItem(i).serializeAsBytes());
 			}
 
 			// Serialize that array
