@@ -41,8 +41,8 @@ public class Reflection {
 
 	public static DedicatedServer getDedicatedServer() {
 		try {
-			return (DedicatedServer) Class.forName(getCraftBukkitClass("CraftServer")).cast(Bukkit.getServer());
-		} catch (ClassNotFoundException e) {
+			return (DedicatedServer) Class.forName(getCraftBukkitClass("CraftServer")).getDeclaredMethod("getServer").invoke(Bukkit.getServer());
+		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			return null;
 		}
     }

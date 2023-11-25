@@ -22,6 +22,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.Reflection;
 import net.kyori.adventure.text.Component;
@@ -29,6 +30,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.resources.ResourceLocation;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
@@ -76,22 +78,26 @@ public class DevUtilCommand {
 						List<NamespacedKey> namespacedKeyList = new ArrayList<>();
 						for (Keys key : Keys.values()) {
 							namespacedKeyList.add(key.get());
+							if (!key.isState()) {
+								namespacedKeyList.remove(key.get());
+							}
 						}
 						namespacedKeyList.removeIf(key -> !player.getPersistentDataContainer().has(key));
 						List<NamespacedKey> suggestedList = new ArrayList<>();
 						for (NamespacedKey namespace : namespacedKeyList) {
-							if (namespace.asString().startsWith(builder.getInput())) {
+							if (namespace.asString().startsWith(builder.getRemaining())) {
 								suggestedList.add(namespace);
 							}
 						}
 						String[] namespacedKeys = suggestedList.stream().map(NamespacedKey::toString).toArray(String[]::new);
 						Suggestions suggestions;
+						SuggestionsBuilder keySuggestions = builder.add(builder);
 						for (String suggestion : namespacedKeys) {
 							if (suggestion.toLowerCase().startsWith(builder.getRemaining().toLowerCase())) {
-								builder.suggest(suggestion);
+								keySuggestions = builder.suggest(suggestion);
 							}
 						}
-						suggestions = builder.build();
+						suggestions = keySuggestions.build();
 						return CompletableFuture.completedFuture(suggestions);
 					})
 					.executes(ctx -> {

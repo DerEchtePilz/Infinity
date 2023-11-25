@@ -22,6 +22,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.arguments.*;
 import io.github.derechtepilz.infinity.Infinity;
 import io.github.derechtepilz.infinity.Registry;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
@@ -32,6 +35,7 @@ import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.util.Reflection;
 import io.github.derechtepilz.infinity.util.StringUtil;
+import io.papermc.paper.math.Position;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.commands.CommandSourceStack;
@@ -40,7 +44,9 @@ import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -148,12 +154,12 @@ public class InfinityCommand {
 			.then(LiteralArgumentBuilder.<CommandSourceStack>literal("teleport")
 				.requires(requirePlayerOperator)
 				.then(RequiredArgumentBuilder.<CommandSourceStack, ResourceLocation>argument("world", DimensionArgument.dimension())
-					.then(RequiredArgumentBuilder.<CommandSourceStack, Coordinates>argument("location", Vec3Argument.vec3())
+					.then(RequiredArgumentBuilder.<CommandSourceStack, Coordinates>argument("location", Vec3Argument.vec3(true))
 						.executes((ctx) -> {
 							Player player = getSenderAsPlayer(ctx);
 							World targetWorld = DimensionArgument.getDimension(ctx, "world").getWorld();
-							Vec3 vec3 = Vec3Argument.getVec3(ctx, "location");
-							Location targetLocation = new Location(null, vec3.x, vec3.y, vec3.z);
+							Vec3 vec3 = Vec3Argument.getCoordinates(ctx, "location").getPosition(ctx.getSource());
+							Location targetLocation = new Location(player.getWorld(), vec3.x(), vec3.y(), vec3.z());
 							Gamemode currentGamemode = Gamemode.getFromKey(player.getWorld().getKey());
 							Gamemode targetGamemode = Gamemode.getFromKey(targetWorld.getKey());
 							if (currentGamemode == targetGamemode) {
@@ -186,6 +192,7 @@ public class InfinityCommand {
 					Player player = getSenderAsPlayer(ctx);
 					Infinity.getInstance().getPlayerPermissions().getOrDefault(player.getUniqueId(), player.addAttachment(Infinity.getInstance())).setPermission("infinity.startstory", false);
 					PlayerUtil.terminateStoryTitleTask(player);
+					player.updateCommands();
 					player.getPersistentDataContainer().set(Keys.STORY_STARTED.get(), PersistentDataType.BOOLEAN, true);
 					player.sendMessage(Component.text().content("Story started! Have fun!").color(NamedTextColor.LIGHT_PURPLE).build());
 

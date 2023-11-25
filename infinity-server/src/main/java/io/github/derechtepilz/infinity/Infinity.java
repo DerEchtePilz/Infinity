@@ -19,6 +19,8 @@
 package io.github.derechtepilz.infinity;
 
 import com.google.gson.*;
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
 import io.github.derechtepilz.infinity.commands.DevUtilCommand;
 import io.github.derechtepilz.infinity.commands.InfinityCommand;
@@ -40,6 +42,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -71,7 +76,7 @@ public class Infinity extends JavaPlugin {
 	}
 
 	private final MiniMessage mm = MiniMessage.miniMessage();
-	private final Component infinityComponent = mm.deserialize("<gradient:#18e1f0:#de18e1f0>Minecraft Infinity</gradient>");
+	private final Component infinityComponent = mm.deserialize("<gradient:#18e1f0:#de18f0>Minecraft Infinity</gradient>");
 
 	private final Map<UUID, Integer> startStoryTask = new HashMap<>();
 	private final Map<UUID, PermissionAttachment> playerPermissions = new HashMap<>();
@@ -116,6 +121,8 @@ public class Infinity extends JavaPlugin {
 		} catch (IOException e) {
 			getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
+
+		CommandAPI.onLoad(new CommandAPIBukkitConfig(this).verboseOutput(true).silentLogs(false));
 
 		InfinityCommand.register();
 		DevUtilCommand.register();
@@ -191,13 +198,21 @@ public class Infinity extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new MobSpawnPreventionHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new TablistHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerQuitInStoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new Listener() {
+			@EventHandler
+			public void sendCommands(PlayerJoinEvent event) {
+				//event.getPlayer().updateCommands();
+			}
+		}, this);
 
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
 			String messageString = new String(message).substring(1);
 			String firstCharacter = messageString.substring(0, 1);
 			messageString = messageString.replaceFirst(firstCharacter, firstCharacter.toUpperCase());
-			getLogger().info("${player.name} just logged in using " + messageString);
+			getLogger().info(player.getName() + " just logged in using " + messageString);
 		});
+
+		CommandAPI.onEnable();
 	}
 
 	@Override
