@@ -28,6 +28,7 @@ import dev.jorel.commandapi.arguments.*;
 import io.github.derechtepilz.infinity.Infinity;
 import io.github.derechtepilz.infinity.Registry;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
+import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
 import io.github.derechtepilz.infinity.gamemode.story.StoryHandler;
 import io.github.derechtepilz.infinity.items.InfinityItem;
 import io.github.derechtepilz.infinity.items.Rarity;
@@ -151,39 +152,6 @@ public class InfinityCommand {
 					return 1;
 				})
 			)
-			.then(LiteralArgumentBuilder.<CommandSourceStack>literal("teleport")
-				.requires(requirePlayerOperator)
-				.then(RequiredArgumentBuilder.<CommandSourceStack, ResourceLocation>argument("world", DimensionArgument.dimension())
-					.then(RequiredArgumentBuilder.<CommandSourceStack, Coordinates>argument("location", Vec3Argument.vec3(true))
-						.executes((ctx) -> {
-							Player player = getSenderAsPlayer(ctx);
-							World targetWorld = DimensionArgument.getDimension(ctx, "world").getWorld();
-							Vec3 vec3 = Vec3Argument.getCoordinates(ctx, "location").getPosition(ctx.getSource());
-							Location targetLocation = new Location(player.getWorld(), vec3.x(), vec3.y(), vec3.z());
-							Gamemode currentGamemode = Gamemode.getFromKey(player.getWorld().getKey());
-							Gamemode targetGamemode = Gamemode.getFromKey(targetWorld.getKey());
-							if (currentGamemode == targetGamemode) {
-								player.teleport(new Location(targetWorld, targetLocation.getX(), targetLocation.getY(), targetLocation.getZ()));
-							} else {
-								PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN, targetWorld, targetLocation);
-							}
-							return 1;
-						})
-					)
-					.executes((ctx) -> {
-						Player player = getSenderAsPlayer(ctx);
-						World targetWorld = DimensionArgument.getDimension(ctx, "world").getWorld();
-						Gamemode currentGamemode = PlayerUtil.getGamemode(player);
-						Gamemode targetGamemode = Gamemode.getFromKey(targetWorld.getKey());
-						if (currentGamemode == targetGamemode) {
-							player.teleport(new Location(targetWorld, player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ()));
-						} else {
-							PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN, targetWorld, new Location(targetWorld, player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ()));
-						}
-						return 1;
-					})
-				)
-			)
 			.then(LiteralArgumentBuilder.<CommandSourceStack>literal("startstory")
 				.requires(requirePlayer.and(
 					stack -> stack.source.getBukkitSender(stack).hasPermission("infinity.startstory"))
@@ -281,7 +249,7 @@ public class InfinityCommand {
 								switch (gamemode) {
 									case "infinity" -> {
 										if (PlayerUtil.getGamemode(player) != Gamemode.INFINITY) {
-											PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN);
+											GamemodeState.INFINITY.loadFor(player);
 										} else {
 											player.sendMessage(Component.text("You cannot execute this command right now as you are already playing ")
 												.color(NamedTextColor.RED)
@@ -292,7 +260,7 @@ public class InfinityCommand {
 
 									case "minecraft" -> {
 										if (PlayerUtil.getGamemode(player) != Gamemode.MINECRAFT) {
-											PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN);
+											GamemodeState.MINECRAFT.loadFor(player);
 										} else {
 											player.sendMessage(Component.text("You cannot execute this command right now as you are already playing ")
 												.color(NamedTextColor.RED)

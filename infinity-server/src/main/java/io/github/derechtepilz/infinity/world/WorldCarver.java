@@ -144,9 +144,9 @@ public class WorldCarver {
 		}
 
 		public static void setupPlayerSignWithDelay(Player player) {
-			SignListener.INSTANCE.getHomeDimension().get(player.getUniqueId()).loadFor(player, true);
-			SignListener.INSTANCE.getClassSelection().get(player.getUniqueId()).loadFor(player, true);
-			SignListener.INSTANCE.getSwitchClassSelection().get(player.getUniqueId()).loadFor(player, true);
+			SignListener.getInstance().getHomeDimension().get(player.getUniqueId()).loadFor(player, true);
+			SignListener.getInstance().getClassSelection().get(player.getUniqueId()).loadFor(player, true);
+			SignListener.getInstance().getSwitchClassSelection().get(player.getUniqueId()).loadFor(player, true);
 		}
 
 		private void applyText(BlockState sign, Component[] content) {

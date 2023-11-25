@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when worlds created by the Infinity API are created or loaded.
+ * <p>
+ * This purely is a status event. It doesn't contain any information and cannot be used to modify Infinity's world generation.
  */
 public class WorldCreateLoadEvent extends Event {
 

@@ -38,6 +38,13 @@ public enum Gamemode {
 		return world;
 	}
 
+	public Gamemode getOpposite() {
+		return switch (this) {
+			case MINECRAFT -> INFINITY;
+			case INFINITY -> MINECRAFT;
+		};
+	}
+
 	public static Gamemode getFromKey(NamespacedKey key) {
 		return valueOf(key.namespace().toUpperCase());
 	}

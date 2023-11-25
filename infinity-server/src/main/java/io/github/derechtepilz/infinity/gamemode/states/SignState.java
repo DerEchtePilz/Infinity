@@ -16,9 +16,10 @@
  *  along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.derechtepilz.infinity.gamemode.gameclass;
+package io.github.derechtepilz.infinity.gamemode.states;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.gamemode.gameclass.GameClass;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.util.StringUtil;
@@ -235,20 +236,6 @@ public class SignState {
 			if (value.equals(STONEBORN.value)) return STONEBORN;
 			return LAVABORN;
 		}
-
-	}
-
-	public interface State<T> {
-
-		default void loadFor(Player player) {
-			loadFor(player, false);
-		}
-
-		void loadFor(Player player, boolean delay);
-
-		T getNext();
-
-		TextComponent asString();
 
 	}
 

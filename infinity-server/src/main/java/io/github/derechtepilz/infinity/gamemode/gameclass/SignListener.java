@@ -18,6 +18,8 @@
 
 package io.github.derechtepilz.infinity.gamemode.gameclass;
 
+import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
+import io.github.derechtepilz.infinity.gamemode.states.SignState;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.world.WorldCarver;
@@ -40,7 +42,7 @@ import java.util.UUID;
 
 public class SignListener implements Listener {
 
-	public static SignListener INSTANCE;
+	private static SignListener INSTANCE;
 
 	private final Map<UUID, SignState.HomeDimensionState> homeDimension = new HashMap<>();
 	private final Map<UUID, SignState.ClassSelectionState> classSelection = new HashMap<>();
@@ -64,7 +66,7 @@ public class SignListener implements Listener {
 		if (sign.getPersistentDataContainer().has(Keys.SIGN_TAG_MINECRAFT_TELEPORT.get(), PersistentDataType.STRING)) {
 			// Do stuff on left and right click
 			if (action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK) {
-				PlayerUtil.switchGamemode(player, PlayerTeleportEvent.TeleportCause.PLUGIN);
+				GamemodeState.MINECRAFT.loadFor(player);
 			}
 		}
 		if (sign.getPersistentDataContainer().has(Keys.SIGN_TAG_HOME_DIMENSION_TELEPORT.get(), PersistentDataType.STRING)) {
@@ -109,9 +111,7 @@ public class SignListener implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+	public void setupSignStates(Player player) {
 		// Load sign states from player
 		SignState.HomeDimensionState homeDimensionState = SignState.HomeDimensionState.getByValue(player.getPersistentDataContainer().getOrDefault(Keys.SIGN_STATE_HOME_DIMENSION.get(), PersistentDataType.STRING, "01"));
 		SignState.ClassSelectionState classSelectionState = SignState.ClassSelectionState.getByValue(player.getPersistentDataContainer().getOrDefault(Keys.SIGN_STATE_SELECT_CLASS.get(), PersistentDataType.STRING, "01"));
@@ -130,12 +130,6 @@ public class SignListener implements Listener {
 		WorldCarver.LobbyCarver.setupPlayerSignWithDelay(player);
 	}
 
-	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		saveSignStatesFor(player);
-	}
-
 	public void saveSignStatesFor(Player player) {
 		SignState.HomeDimensionState homeDimensionState = homeDimension.get(player.getUniqueId());
 		SignState.ClassSelectionState classSelectionState = classSelection.get(player.getUniqueId());
@@ -150,6 +144,10 @@ public class SignListener implements Listener {
 		homeDimension.remove(player.getUniqueId());
 		classSelection.remove(player.getUniqueId());
 		switchClassSelection.remove(player.getUniqueId());
+	}
+
+	public static SignListener getInstance() {
+		return INSTANCE;
 	}
 
 	public Map<UUID, SignState.HomeDimensionState> getHomeDimension() {
