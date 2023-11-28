@@ -33,13 +33,11 @@ repositories {
 	mavenCentral()
 }
 
-val commandAPIVersion: String by project
 val kotlinVersion: String by project
 val paperVersion: String by project
 
 dependencies {
 	implementation(project(":infinity-api"))
-	implementation("dev.jorel:commandapi-bukkit-shade:9.2.0")
 	compileOnly("com.google.code.gson:gson:2.10.1")
 	paperweight.paperDevBundle(paperVersion)
 }
@@ -69,7 +67,6 @@ tasks.withType<ProcessResources> {
 tasks.withType<ShadowJar> {
 	dependencies {
 		include(dependency("io.github.derechtepilz:infinity-api:${project.version}"))
-		include(dependency("dev.jorel:commandapi-bukkit-shade"))
 	}
 	minimize()
 }

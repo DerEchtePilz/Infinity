@@ -19,9 +19,11 @@
 package io.github.derechtepilz.infinity.gamemode.serializer;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -37,9 +39,12 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class InventorySerializer {
+public class InventorySerializer extends Serializer {
 
-	private InventorySerializer() {}
+	private static InventorySerializer instance;
+
+	private InventorySerializer() {
+	}
 
 	public static String serialize(Player player) {
 		try {
@@ -136,6 +141,19 @@ public class InventorySerializer {
 			}
 			return null;
 		}
+	}
+
+	public static String createBackup(Player player) {
+		String currentGamemodeData = serialize(player);
+		String savedGamemodeData = Infinity.getInstance().getInventoryData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+	}
+
+	public static InventorySerializer getInstance() {
+		if (instance == null) {
+			instance = new InventorySerializer();
+		}
+		return instance;
 	}
 
 }

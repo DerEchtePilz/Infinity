@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface GamemodeSeparator {
 
-	void updateInventory(Player player, Map<UUID, String> inventory);
+	void updateInventory(Player player, Map<UUID, String> inventories);
 
 	void updatePotionEffects(Player player, Map<UUID, String> potionEffects);
 

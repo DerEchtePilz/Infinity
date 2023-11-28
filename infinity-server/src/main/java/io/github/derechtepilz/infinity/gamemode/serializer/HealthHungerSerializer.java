@@ -19,6 +19,7 @@
 package io.github.derechtepilz.infinity.gamemode.serializer;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class HealthHungerSerializer {
+public class HealthHungerSerializer extends Serializer {
+
+	private static HealthHungerSerializer instance;
 
 	private HealthHungerSerializer() {}
 
@@ -67,6 +70,19 @@ public class HealthHungerSerializer {
 			}
 			return null;
 		}
+	}
+
+	public static String createBackup(Player player) {
+		String currentGamemodeData = serialize(player);
+		String savedGamemodeData = Infinity.getInstance().getHealthHungerData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+	}
+
+	public static HealthHungerSerializer getInstance() {
+		if (instance == null) {
+			instance = new HealthHungerSerializer();
+		}
+		return instance;
 	}
 
 }

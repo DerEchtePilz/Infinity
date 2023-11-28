@@ -22,9 +22,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.*;
 import io.github.derechtepilz.infinity.Infinity;
 import io.github.derechtepilz.infinity.Registry;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
@@ -36,21 +33,10 @@ import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.util.Reflection;
 import io.github.derechtepilz.infinity.util.StringUtil;
-import io.papermc.paper.math.Position;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.arguments.DimensionArgument;
-import net.minecraft.commands.arguments.coordinates.Coordinates;
-import net.minecraft.commands.arguments.coordinates.Vec3Argument;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -170,6 +156,16 @@ public class InfinityCommand {
 
 					// Initiate story start sequence
 					StoryHandler.startIntroduction(player);
+					return 1;
+				})
+			)
+			.then(LiteralArgumentBuilder.<CommandSourceStack>literal("backup")
+				.requires(requirePlayerOperator)
+				.executes((ctx) -> {
+					Player player = getSenderAsPlayer(ctx);
+					player.sendMessage(Component.text().content("Creating backup manually. This does not impact the regular backup interval!").color(NamedTextColor.GRAY));
+					Infinity.getInstance().getPlayerDataHandler().createBackup();
+					player.sendMessage(Component.text().content("Backup finished!").color(NamedTextColor.GRAY));
 					return 1;
 				})
 			)

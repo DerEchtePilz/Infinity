@@ -1,5 +1,6 @@
 package io.github.derechtepilz.infinity.commonevents;
 
+import io.github.derechtepilz.infinity.Infinity;
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
 import io.github.derechtepilz.infinity.gamemode.modification.DeathHandler;
 import io.github.derechtepilz.infinity.gamemode.modification.TablistHandler;
@@ -16,6 +17,7 @@ public class QuitEventListener implements Listener {
 		DeathHandler.getInstance().saveSpawnPointsFor(event.getPlayer());
 		TablistHandler.getInstance().removeFromTablist(event.getPlayer());
 		PlayerQuitInStoryHandler.resetIntroduction(event.getPlayer());
+		Infinity.getInstance().getPlayerDataHandler().backupActivePlayerData(event.getPlayer());
 	}
 
 }
