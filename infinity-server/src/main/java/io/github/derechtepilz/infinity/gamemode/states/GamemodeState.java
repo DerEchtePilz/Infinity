@@ -55,10 +55,10 @@ public enum GamemodeState {
 		player.teleport(location);
 
 		// 3. Load inventories, levels, potion effects, health and hunger
-		PlayerUtil.updateInventory(player, Infinity.getInstance().getInventoryData());
-		PlayerUtil.updateExperience(player, Infinity.getInstance().getExperienceData());
-		PlayerUtil.updateHealthHunger(player, Infinity.getInstance().getHealthHungerData());
-		PlayerUtil.updatePotionEffects(player, Infinity.getInstance().getPotionEffectData());
+		Infinity.getInstance().getPlayerDataHandler().updateInventory(player, Infinity.getInstance().getInventoryData());
+		Infinity.getInstance().getPlayerDataHandler().updateExperience(player, Infinity.getInstance().getExperienceData());
+		Infinity.getInstance().getPlayerDataHandler().updateHealthHunger(player, Infinity.getInstance().getHealthHungerData());
+		Infinity.getInstance().getPlayerDataHandler().updatePotionEffects(player, Infinity.getInstance().getPotionEffectData());
 		return location;
 	}
 

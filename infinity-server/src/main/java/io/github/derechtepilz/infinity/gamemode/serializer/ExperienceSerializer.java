@@ -19,6 +19,7 @@
 package io.github.derechtepilz.infinity.gamemode.serializer;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class ExperienceSerializer {
+public class ExperienceSerializer extends Serializer {
+
+	private static ExperienceSerializer instance;
 
 	private ExperienceSerializer() {}
 
@@ -66,6 +69,19 @@ public class ExperienceSerializer {
 			}
 			return null;
 		}
+	}
+
+	public static String createBackup(Player player) {
+		String currentGamemodeData = serialize(player);
+		String savedGamemodeData = Infinity.getInstance().getExperienceData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+	}
+
+	public static ExperienceSerializer getInstance() {
+		if (instance == null) {
+			instance = new ExperienceSerializer();
+		}
+		return instance;
 	}
 
 }

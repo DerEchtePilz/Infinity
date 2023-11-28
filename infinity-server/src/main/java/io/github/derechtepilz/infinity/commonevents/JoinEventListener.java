@@ -1,5 +1,6 @@
 package io.github.derechtepilz.infinity.commonevents;
 
+import io.github.derechtepilz.infinity.Infinity;
 import io.github.derechtepilz.infinity.gamemode.PlayerJoinServerListener;
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
 import io.github.derechtepilz.infinity.gamemode.modification.DeathHandler;
@@ -16,6 +17,7 @@ public class JoinEventListener implements Listener {
 		SignListener.getInstance().setupSignStates(event.getPlayer());
 		DeathHandler.getInstance().loadPlayerSpawnPoints(event.getPlayer());
 		TablistHandler.getInstance().addToTablist(event.getPlayer());
+		Infinity.getInstance().getPlayerDataHandler().removeFromOfflinePlayers(event.getPlayer());
 	}
 
 }

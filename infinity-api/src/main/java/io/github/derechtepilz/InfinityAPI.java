@@ -10,6 +10,13 @@ public class InfinityAPI {
 		return server;
 	}
 
+	public static void setServer(InfinityAPIServer server) {
+		if (InfinityAPI.server != null) {
+			throw new IllegalStateException("InfinityAPIServer is already defined!");
+		}
+		InfinityAPI.server = server;
+	}
+
 	public static GamemodeSeparator getGamemodeSeparator() {
 		return server.getGamemodeSeparator();
 	}

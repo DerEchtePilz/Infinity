@@ -22,9 +22,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import io.github.derechtepilz.InfinityAPI;
+import io.github.derechtepilz.InfinityAPIServer;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
+import io.github.derechtepilz.infinity.backup.PlayerDataHandler;
 import io.github.derechtepilz.infinity.commands.DevUtilCommand;
 import io.github.derechtepilz.infinity.commands.InfinityCommand;
 import io.github.derechtepilz.infinity.commonevents.JoinEventListener;
@@ -42,6 +43,7 @@ import io.github.derechtepilz.infinity.util.JsonUtil;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.world.WorldCarver;
 import io.github.derechtepilz.infinity.world.WorldManager;
+import io.github.derechtepilz.separation.GamemodeSeparator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
@@ -52,7 +54,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.util.*;
 
-public class Infinity extends JavaPlugin {
+public class Infinity extends JavaPlugin implements InfinityAPIServer {
 
 	public static final String NAME = "infinity";
 	private static Infinity instance;
@@ -90,6 +92,8 @@ public class Infinity extends JavaPlugin {
 	private final Map<UUID, String> healthHungerData = new HashMap<>();
 	private final Map<UUID, String> potionEffectData = new HashMap<>();
 
+	private final PlayerDataHandler playerDataHandler = new PlayerDataHandler();
+
 	@Override
 	public void onLoad() {
 		if (!canLoad) return;
@@ -97,6 +101,7 @@ public class Infinity extends JavaPlugin {
 		// Check server version, disable on 1.19.4 and lower
 
 		instance = this;
+		InfinityAPI.setServer(this);
 
 		// Load the plugin
 		try {
@@ -122,8 +127,6 @@ public class Infinity extends JavaPlugin {
 		} catch (IOException e) {
 			getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
-
-		CommandAPI.onLoad(new CommandAPIBukkitConfig(this).verboseOutput(true).silentLogs(false));
 
 		InfinityCommand.register();
 		DevUtilCommand.register();
@@ -206,8 +209,6 @@ public class Infinity extends JavaPlugin {
 			messageString = messageString.replaceFirst(firstCharacter, firstCharacter.toUpperCase());
 			getLogger().info(player.getName() + " just logged in using " + messageString);
 		});
-
-		CommandAPI.onEnable();
 	}
 
 	@Override
@@ -282,6 +283,10 @@ public class Infinity extends JavaPlugin {
 		return potionEffectData;
 	}
 
+	public PlayerDataHandler getPlayerDataHandler() {
+		return playerDataHandler;
+	}
+
 	private BufferedReader getConfigReader() {
 		try {
 			File configDirectory = new File("./infinity/config");
@@ -314,4 +319,8 @@ public class Infinity extends JavaPlugin {
 		}
 	}
 
+	@Override
+	public GamemodeSeparator getGamemodeSeparator() {
+		return playerDataHandler;
+	}
 }

@@ -23,6 +23,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -36,9 +37,12 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class EffectSerializer {
+public class EffectSerializer extends Serializer {
 
-	private EffectSerializer() {}
+	private static EffectSerializer instance;
+
+	private EffectSerializer() {
+	}
 
 	public static String serialize(Player player) {
 		try {
@@ -96,6 +100,19 @@ public class EffectSerializer {
 			}
 			return null;
 		}
+	}
+
+	public static String createBackup(Player player) {
+		String currentGamemodeData = serialize(player);
+		String savedGamemodeData = Infinity.getInstance().getPotionEffectData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+	}
+
+	public static EffectSerializer getInstance() {
+		if (instance == null) {
+			instance = new EffectSerializer();
+		}
+		return instance;
 	}
 
 }
