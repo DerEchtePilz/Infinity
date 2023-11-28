@@ -31,7 +31,12 @@ import io.github.derechtepilz.infinity.commands.InfinityCommand;
 import io.github.derechtepilz.infinity.commonevents.JoinEventListener;
 import io.github.derechtepilz.infinity.commonevents.QuitEventListener;
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
-import io.github.derechtepilz.infinity.gamemode.modification.*;
+import io.github.derechtepilz.infinity.gamemode.modification.AdvancementDisableHandler;
+import io.github.derechtepilz.infinity.gamemode.modification.ChatHandler;
+import io.github.derechtepilz.infinity.gamemode.modification.DeathHandler;
+import io.github.derechtepilz.infinity.gamemode.modification.MobSpawnPreventionHandler;
+import io.github.derechtepilz.infinity.gamemode.modification.PortalDisableHandler;
+import io.github.derechtepilz.infinity.gamemode.modification.TablistHandler;
 import io.github.derechtepilz.infinity.gamemode.story.introduction.PlayerQuitInStoryHandler;
 import io.github.derechtepilz.infinity.gamemode.switching.GamemodeSwitchHandler;
 import io.github.derechtepilz.infinity.gamemode.worldmovement.ChestListener;
@@ -46,13 +51,27 @@ import io.github.derechtepilz.infinity.world.WorldManager;
 import io.github.derechtepilz.separation.GamemodeSeparator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameRule;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class Infinity extends JavaPlugin implements InfinityAPIServer {
 

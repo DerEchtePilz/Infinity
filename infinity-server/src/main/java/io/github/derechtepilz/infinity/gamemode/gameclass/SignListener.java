@@ -21,7 +21,6 @@ package io.github.derechtepilz.infinity.gamemode.gameclass;
 import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
 import io.github.derechtepilz.infinity.gamemode.states.SignState;
 import io.github.derechtepilz.infinity.util.Keys;
-import io.github.derechtepilz.infinity.util.PlayerUtil;
 import io.github.derechtepilz.infinity.world.WorldCarver;
 import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
@@ -31,9 +30,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;

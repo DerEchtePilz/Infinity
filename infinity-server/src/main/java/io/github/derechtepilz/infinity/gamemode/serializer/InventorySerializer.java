@@ -19,11 +19,9 @@
 package io.github.derechtepilz.infinity.gamemode.serializer;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.derechtepilz.infinity.Infinity;
-import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

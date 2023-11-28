@@ -23,7 +23,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.derechtepilz.infinity.Infinity;
-import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

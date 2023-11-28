@@ -20,7 +20,6 @@ package io.github.derechtepilz.infinity.items;
 
 import io.github.derechtepilz.infinity.util.StringUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
