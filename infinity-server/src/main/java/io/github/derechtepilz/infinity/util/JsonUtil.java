@@ -21,7 +21,11 @@ package io.github.derechtepilz.infinity.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class JsonUtil {

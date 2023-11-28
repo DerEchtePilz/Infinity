@@ -19,7 +19,6 @@
 package io.github.derechtepilz.infinity.gamemode.serializer;
 
 import io.github.derechtepilz.infinity.Infinity;
-import io.github.derechtepilz.infinity.util.PlayerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
