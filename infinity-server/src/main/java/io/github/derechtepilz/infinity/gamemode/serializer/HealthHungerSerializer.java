@@ -73,8 +73,9 @@ public class HealthHungerSerializer extends Serializer {
 
 	public static String createBackup(Player player) {
 		String currentGamemodeData = serialize(player);
-		String savedGamemodeData = Infinity.getInstance().getHealthHungerData().getOrDefault(player.getUniqueId(), null);
-		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+		String minecraftData = Infinity.getInstance().getMinecraftData().getHealthHungerData().getOrDefault(player.getUniqueId(), null);
+		String infinityData = Infinity.getInstance().getInfinityData().getHealthHungerData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, minecraftData, infinityData);
 	}
 
 	public static HealthHungerSerializer getInstance() {

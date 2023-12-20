@@ -19,6 +19,12 @@
 package io.github.derechtepilz.infinity.gamemode;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.data.InfinityData;
+import io.github.derechtepilz.infinity.data.MinecraftData;
+import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer;
+import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer;
+import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer;
+import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer;
 import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
@@ -51,6 +57,29 @@ public class PlayerJoinServerListener {
 			}
 			GamemodeState.valueOf(defaultGamemode.name()).loadFor(player);
 		}
+	}
+
+	public static void setupPlayerData(Player player) {
+		if (player.getPersistentDataContainer().has(Keys.HAS_JOINED.get())) {
+			return;
+		}
+		String inventoryData = InventorySerializer.serialize(player);
+		String experienceData = ExperienceSerializer.serialize(player);
+		String healthHungerData = HealthHungerSerializer.serialize(player);
+		String potionEffectData = EffectSerializer.serialize(player);
+
+		MinecraftData minecraftData =  Infinity.getInstance().getMinecraftData();
+		InfinityData infinityData =  Infinity.getInstance().getInfinityData();
+
+		minecraftData.setInventoryData(player.getUniqueId(), inventoryData);
+		minecraftData.setExperienceData(player.getUniqueId(), experienceData);
+		minecraftData.setHealthHungerData(player.getUniqueId(), healthHungerData);
+		minecraftData.setPotionEffectData(player.getUniqueId(), potionEffectData);
+
+		infinityData.setInventoryData(player.getUniqueId(), inventoryData);
+		infinityData.setExperienceData(player.getUniqueId(), experienceData);
+		infinityData.setHealthHungerData(player.getUniqueId(), healthHungerData);
+		infinityData.setPotionEffectData(player.getUniqueId(), potionEffectData);
 	}
 
 	private static void sendInfinitySuggestion(Player player) {

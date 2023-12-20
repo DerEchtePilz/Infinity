@@ -3,12 +3,12 @@ package io.github.derechtepilz.infinity.backup;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.data.Data;
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
-import io.github.derechtepilz.separation.GamemodeSeparator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class PlayerDataHandler implements GamemodeSeparator {
+public class PlayerDataHandler {
 
 	private final Set<UUID> offlinePlayers = new HashSet<>();
 	private final Map<UUID, String> lastGamemodeBackup = new HashMap<>();
@@ -37,42 +37,29 @@ public class PlayerDataHandler implements GamemodeSeparator {
 
 	public PlayerDataHandler() {}
 
-	@Override
-	public void updateInventory(Player player, Map<UUID, String> inventories) {
-		toggleInventory(player, inventories);
+	public void updateInventory(Player player, Data inventoryData) {
+		toggleInventory(player, inventoryData);
 	}
 
-	@Override
-	public void updatePotionEffects(Player player, Map<UUID, String> potionEffects) {
-		togglePotionEffects(player, potionEffects);
+	public void updateExperience(Player player, Data experienceData) {
+		toggleExperience(player, experienceData);
 	}
 
-	@Override
-	public void updateHealthHunger(Player player, Map<UUID, String> healthHunger) {
-		toggleHealthHunger(player, healthHunger);
+	public void updateHealthHunger(Player player, Data healthHungerData) {
+		toggleHealthHunger(player, healthHungerData);
 	}
 
-	@Override
-	public void updateExperience(Player player, Map<UUID, String> experience) {
-		toggleExperience(player, experience);
+	public void updatePotionEffects(Player player, Data potionEffectData) {
+		togglePotionEffects(player, potionEffectData);
 	}
 
-	private void toggleInventory(Player player, Map<UUID, String> inventories) {
+
+	private void toggleInventory(Player player, Data inventoryData) {
 		// Serialize the enderchest and inventory of the player
-		String inventoryData = InventorySerializer.serialize(player);
+		String inventory = InventorySerializer.serialize(player);
 
 		// Load the player inventory and enderchest
-		String playerData = inventories.getOrDefault(player.getUniqueId(), null);
-
-		if (playerData == null) {
-			// Save the player inventory and enderchest
-			inventories.put(player.getUniqueId(), inventoryData);
-
-			// Clear the enderchest and inventory of the player
-			player.getInventory().clear();
-			player.getEnderChest().clear();
-			return;
-		}
+		String playerData = inventoryData.getInventoryData().get(player.getUniqueId());
 
 		// Deserialize the enderchest and inventory of the player
 		List<ItemStack[]> playerInventoryData = InventorySerializer.deserialize(playerData);
@@ -80,7 +67,7 @@ public class PlayerDataHandler implements GamemodeSeparator {
 		ItemStack[] enderChestContents = playerInventoryData.get(1);
 
 		// Save the player inventory and enderchest
-		inventories.put(player.getUniqueId(), inventoryData);
+		inventoryData.getOtherGamemodeData().setInventoryData(player.getUniqueId(), inventory);
 
 		// Clear the enderchest and inventory of the player
 		player.getInventory().clear();
@@ -91,60 +78,40 @@ public class PlayerDataHandler implements GamemodeSeparator {
 		player.getEnderChest().setContents(enderChestContents);
 	}
 
-	private void togglePotionEffects(Player player, Map<UUID, String> potionEffects) {
-		// Serialize the potion effects of the player
-		String potionEffectData = EffectSerializer.serialize(player);
+	private void toggleExperience(Player player, Data experienceData) {
+		// Serialize the experience of the player
+		String experience = ExperienceSerializer.serialize(player);
 
-		// Load the player's potion effects
-		String playerData = potionEffects.getOrDefault(player.getUniqueId(), null);
+		// Load the player's experience
+		String playerData = experienceData.getExperienceData().get(player.getUniqueId());
 
-		if (playerData == null) {
-			// For each player, player is only reached when switching gamemodes the first time
-			// Save the player's potion effects
-			potionEffects.put(player.getUniqueId(), potionEffectData);
+		// Deserialize the player's experience
+		List<? extends Number> playerExperienceData = ExperienceSerializer.deserialize(playerData);
 
-			// Reset the player's potion effects
-			player.clearActivePotionEffects();
-			return;
-		}
+		// Save the player's experience
+		experienceData.getOtherGamemodeData().setExperienceData(player.getUniqueId(), experience);
 
-		// Deserialize the player's potion effects
-		List<PotionEffect> potionEffectList = EffectSerializer.deserialize(playerData);
+		// Reset the player's experience
+		player.setLevel(0);
+		player.setExp(0.0f);
 
-		// Save the player's potion effects
-		potionEffects.put(player.getUniqueId(), potionEffectData);
-
-		// Reset the player's potion effects
-		player.clearActivePotionEffects();
-
-		// Update the player's potion effects
-		player.addPotionEffects(potionEffectList);
+		// Update the player's experience
+		player.setLevel((int) playerExperienceData.get(0));
+		player.setExp((float) playerExperienceData.get(1));
 	}
 
-	private void toggleHealthHunger(Player player, Map<UUID, String> healthHunger) {
+	private void toggleHealthHunger(Player player, Data healthHungerData) {
 		// Serialize the health and hunger of the player
-		String healthHungerData = HealthHungerSerializer.serialize(player);
+		String healthHunger = HealthHungerSerializer.serialize(player);
 
 		// Load the player's health and hunger
-		String playerData = healthHunger.getOrDefault(player.getUniqueId(), null);
-
-		if (playerData == null) {
-			// For each player, player is only reached when switching gamemodes the first time
-			// Save the player's health and hunger
-			healthHunger.put(player.getUniqueId(), healthHungerData);
-
-			// Reset the player's health and hunger
-			player.setHealth(20.0);
-			player.setFoodLevel(20);
-			player.setSaturation(20.0f);
-			return;
-		}
+		String playerData = healthHungerData.getHealthHungerData().get(player.getUniqueId());
 
 		// Deserialize the player's health and hunger
 		List<? extends Number> healthHungerList = HealthHungerSerializer.deserialize(playerData);
 
 		// Save the player's health and hunger
-		healthHunger.put(player.getUniqueId(), healthHungerData);
+		healthHungerData.getOtherGamemodeData().setHealthHungerData(player.getUniqueId(), healthHunger);
 
 		// Reset the player's health and hunger
 		player.setHealth(20.0);
@@ -157,40 +124,28 @@ public class PlayerDataHandler implements GamemodeSeparator {
 		player.setSaturation((float) healthHungerList.get(2));
 	}
 
-	private void toggleExperience(Player player, Map<UUID, String> experience) {
-		// Serialize the experience of the player
-		String experienceData = ExperienceSerializer.serialize(player);
+	private void togglePotionEffects(Player player, Data potionEffectData) {
+		// Serialize the potion effects of the player
+		String potionEffect = EffectSerializer.serialize(player);
 
-		// Load the player's experience
-		String playerData = experience.getOrDefault(player.getUniqueId(), null);
+		// Load the player's potion effects
+		String playerData = potionEffectData.getPotionEffectData().get(player.getUniqueId());
 
-		if (playerData == null) {
-			// For each player, player is only reached when switching gamemodes the first time
-			// Save the player's experience
-			experience.put(player.getUniqueId(), experienceData);
+		// Deserialize the player's potion effects
+		List<PotionEffect> potionEffectList = EffectSerializer.deserialize(playerData);
 
-			// Reset the player's experience
-			player.setLevel(0);
-			player.setExp(0.0f);
-			return;
-		}
+		// Save the player's potion effects
+		potionEffectData.getOtherGamemodeData().setPotionEffectData(player.getUniqueId(), potionEffect);
 
-		// Deserialize the player's experience
-		List<? extends Number> playerExperienceData = ExperienceSerializer.deserialize(playerData);
+		// Reset the player's potion effects
+		player.clearActivePotionEffects();
 
-		// Save the player's experience
-		experience.put(player.getUniqueId(), experienceData);
-
-		// Reset the player's experience
-		player.setLevel(0);
-		player.setExp(0.0f);
-
-		// Update the player's experience
-		player.setLevel((int) playerExperienceData.get(0));
-		player.setExp((float) playerExperienceData.get(1));
+		// Update the player's potion effects
+		player.addPotionEffects(potionEffectList);
 	}
 
 	public void createBackup() {
+		Infinity.getInstance().getLogger().info("Backing up player data...");
 		List<UUID> backedUpPlayers = new ArrayList<>();
 		Map<UUID, String> gamemodeBackupData = new HashMap<>();
 		Map<UUID, String> inventoryBackupData = new HashMap<>();
@@ -219,6 +174,7 @@ public class PlayerDataHandler implements GamemodeSeparator {
 			experienceBackupData.put(uuid, lastExperienceBackup.get(uuid));
 		}
 		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("time", System.currentTimeMillis());
 		for (UUID uuid : backedUpPlayers) {
 			JsonObject playerData = new JsonObject();
 			playerData.addProperty("gamemode", gamemodeBackupData.get(uuid));
@@ -228,19 +184,30 @@ public class PlayerDataHandler implements GamemodeSeparator {
 			playerData.addProperty("healthHunger", healthHungerBackupData.get(uuid));
 			jsonObject.add(uuid.toString(), playerData);
 		}
-		File backupFile = new File("infinity/config", "backup-data.json");
-		if (backupFile.exists()) {
-			backupFile.delete();
+		// Don't save a "backup" with zero saved players
+		if (backedUpPlayers.isEmpty()) {
+			return;
 		}
-		String backupString = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
-		try {
-			backupFile.createNewFile();
-			BufferedWriter fileWriter = new BufferedWriter(new FileWriter(backupFile));
-			fileWriter.write(backupString);
-			fileWriter.close();
-		} catch (IOException e) {
-			Infinity.getInstance().getLogger().warning("Failed to write backup data to file. This might be a bug. Please report this!");
-		}
+		Bukkit.getScheduler().runTaskAsynchronously(Infinity.getInstance(), () -> {
+			File backupFile = new File("infinity/config", "backup-data.json");
+			if (backupFile.exists()) {
+				backupFile.delete();
+			}
+			String backupString = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+			try {
+				backupFile.createNewFile();
+				BufferedWriter fileWriter = new BufferedWriter(new FileWriter(backupFile));
+				fileWriter.write(backupString);
+				fileWriter.close();
+			} catch (IOException e) {
+				Infinity.getInstance().getLogger().warning("Failed to write backup data to file. This might be a bug. Please report this!");
+			}
+			Infinity.getInstance().getLogger().info("Finished backing up player data!");
+		});
+	}
+
+	public void loadBackup() {
+
 	}
 
 	public void removeFromOfflinePlayers(Player player) {

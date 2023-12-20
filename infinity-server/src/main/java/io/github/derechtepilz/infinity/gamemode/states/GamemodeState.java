@@ -1,6 +1,7 @@
 package io.github.derechtepilz.infinity.gamemode.states;
 
 import io.github.derechtepilz.infinity.Infinity;
+import io.github.derechtepilz.infinity.data.Data;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
@@ -55,10 +56,10 @@ public enum GamemodeState {
 		player.teleport(location);
 
 		// 3. Load inventories, levels, potion effects, health and hunger
-		Infinity.getInstance().getPlayerDataHandler().updateInventory(player, Infinity.getInstance().getInventoryData());
-		Infinity.getInstance().getPlayerDataHandler().updateExperience(player, Infinity.getInstance().getExperienceData());
-		Infinity.getInstance().getPlayerDataHandler().updateHealthHunger(player, Infinity.getInstance().getHealthHungerData());
-		Infinity.getInstance().getPlayerDataHandler().updatePotionEffects(player, Infinity.getInstance().getPotionEffectData());
+		Infinity.getInstance().getPlayerDataHandler().updateInventory(player, getGamemodeData(player));
+		Infinity.getInstance().getPlayerDataHandler().updateExperience(player, getGamemodeData(player));
+		Infinity.getInstance().getPlayerDataHandler().updateHealthHunger(player, getGamemodeData(player));
+		Infinity.getInstance().getPlayerDataHandler().updatePotionEffects(player, getGamemodeData(player));
 		return location;
 	}
 
@@ -96,4 +97,9 @@ public enum GamemodeState {
 		float newPitch = 0.0f;
 		return new Location(original.getWorld(), newPosX, newPosY, newPosZ, newYaw, newPitch);
 	}
+
+	private Data getGamemodeData(Player player) {
+		return PlayerUtil.getGamemode(player) == Gamemode.INFINITY ? Infinity.getInstance().getInfinityData() : Infinity.getInstance().getMinecraftData();
+	}
+
 }

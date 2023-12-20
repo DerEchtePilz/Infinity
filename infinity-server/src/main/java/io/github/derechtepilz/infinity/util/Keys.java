@@ -33,6 +33,10 @@ public enum Keys {
 	DEFAULT_GAMEMODE(new NamespacedKey(Infinity.NAME, "default_gamemode")),
 	/* GENERAL KEYS END */
 
+	/* TOGGLE KEYS START */
+	HAS_JOINED(new NamespacedKey(Infinity.NAME, "has_joined")),
+	/* TOGGLE KEYS END */
+
 	/*
 	 * GAME STATE KEYS START
 	 *

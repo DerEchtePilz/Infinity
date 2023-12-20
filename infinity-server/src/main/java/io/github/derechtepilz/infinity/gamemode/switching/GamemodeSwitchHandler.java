@@ -99,6 +99,7 @@ public class GamemodeSwitchHandler implements Listener {
 
 		player.setGameMode(event.getTo().getWorld().getKey().equals(Keys.WORLD_LOBBY.get()) ? GameMode.ADVENTURE : GameMode.SURVIVAL);
 		PlayerUtil.sendTabListFooter(player, nextGamemode);
+		Infinity.getInstance().getPlayerGamemode().put(player.getUniqueId(), nextGamemode);
 
 		if (event.getCause() != PlayerTeleportEvent.TeleportCause.COMMAND) {
 			// Safeguard, so teleporting with /execute in <dimension> run teleport x y z doesn't cause a StackOverflowError

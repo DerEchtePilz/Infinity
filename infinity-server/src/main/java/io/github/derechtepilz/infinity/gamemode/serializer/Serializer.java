@@ -9,13 +9,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public abstract class Serializer {
+public class Serializer {
 
-	protected String buildBackupString(String currentGamemodeData, String savedGamemodeData) {
+	protected String buildBackupString(String currentGamemodeData, String minecraftData, String infinityData) {
 		try {
 			JsonObject backupObject = new JsonObject();
 			backupObject.addProperty("currentGamemodeData", currentGamemodeData);
-			backupObject.addProperty("savedGamemodeData", savedGamemodeData);
+			backupObject.addProperty("minecraftData", minecraftData);
+			backupObject.addProperty("infinityData", infinityData);
 			String backupJsonString = new GsonBuilder().create().toJson(backupObject);
 
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

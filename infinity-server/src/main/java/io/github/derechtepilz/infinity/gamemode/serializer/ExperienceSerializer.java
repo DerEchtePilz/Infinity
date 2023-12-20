@@ -72,8 +72,9 @@ public class ExperienceSerializer extends Serializer {
 
 	public static String createBackup(Player player) {
 		String currentGamemodeData = serialize(player);
-		String savedGamemodeData = Infinity.getInstance().getExperienceData().getOrDefault(player.getUniqueId(), null);
-		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+		String minecraftData = Infinity.getInstance().getMinecraftData().getExperienceData().getOrDefault(player.getUniqueId(), null);
+		String infinityData = Infinity.getInstance().getInfinityData().getExperienceData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, minecraftData, infinityData);
 	}
 
 	public static ExperienceSerializer getInstance() {
