@@ -26,6 +26,7 @@ import io.github.derechtepilz.infinity.commonevents.JoinEventListener;
 import io.github.derechtepilz.infinity.commonevents.QuitEventListener;
 import io.github.derechtepilz.infinity.data.InfinityData;
 import io.github.derechtepilz.infinity.data.MinecraftData;
+import io.github.derechtepilz.infinity.data.PlayerData;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
 import io.github.derechtepilz.infinity.gamemode.modification.AdvancementDisableHandler;
@@ -98,6 +99,7 @@ public class Infinity extends JavaPlugin {
 
 	private final MinecraftData minecraftData = new MinecraftData();
 	private final InfinityData infinityData = new InfinityData();
+	private final PlayerData playerData = new PlayerData();
 
 	private final PlayerDataHandler playerDataHandler = new PlayerDataHandler();
 
@@ -112,6 +114,7 @@ public class Infinity extends JavaPlugin {
 		// Load the plugin
 		minecraftData.loadData();
 		infinityData.loadData();
+		playerData.loadData();
 
 		InfinityCommand.register();
 		DevUtilCommand.register();
@@ -166,10 +169,6 @@ public class Infinity extends JavaPlugin {
 		stone.setDifficulty(Difficulty.HARD);
 		nether.setDifficulty(Difficulty.HARD);
 
-		sky.setViewDistance(16);
-		stone.setViewDistance(16);
-		nether.setViewDistance(16);
-
 		new WorldCarver.LobbyCarver(lobby);
 		new WorldCarver.SkyCarver(sky);
 		new WorldCarver.StoneCarver(stone);
@@ -207,6 +206,7 @@ public class Infinity extends JavaPlugin {
 		// Save player data
 		minecraftData.saveData();
 		infinityData.saveData();
+		playerData.saveData();
 
 		// If PaperMC/Paper #9679 gets merged, this is redundant
 		for (Player player : Bukkit.getOnlinePlayers()) {

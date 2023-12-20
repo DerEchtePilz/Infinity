@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,22 +29,6 @@ public abstract class Data {
 		this.experienceData = new HashMap<>();
 		this.healthHungerData = new HashMap<>();
 		this.potionEffectData = new HashMap<>();
-	}
-
-	public Map<UUID, String> getInventoryData() {
-		return Collections.unmodifiableMap(inventoryData);
-	}
-
-	public Map<UUID, String> getExperienceData() {
-		return Collections.unmodifiableMap(experienceData);
-	}
-
-	public Map<UUID, String> getHealthHungerData() {
-		return Collections.unmodifiableMap(healthHungerData);
-	}
-
-	public Map<UUID, String> getPotionEffectData() {
-		return Collections.unmodifiableMap(potionEffectData);
 	}
 
 	public void saveData() {
@@ -87,12 +70,14 @@ public abstract class Data {
 			JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData);
 			JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData);
 			JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData);
+
+			getReader().close();
 		} catch (IOException e) {
 			Infinity.getInstance().getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
 	}
 
-	protected BufferedWriter getWriter(String dataFileName) {
+	BufferedWriter getWriter(String dataFileName) {
 		try {
 			File dataDirectory = new File("./infinity/data");
 			if (!dataDirectory.exists()) {
@@ -108,7 +93,7 @@ public abstract class Data {
 		}
 	}
 
-	protected BufferedReader getReader(String dataFileName) {
+	BufferedReader getReader(String dataFileName) {
 		try {
 			File dataDirectory = new File("./infinity/data");
 			if (!dataDirectory.exists()) {
@@ -123,24 +108,6 @@ public abstract class Data {
 			return null;
 		}
 	}
-
-	public void setInventoryData(UUID player, String data) {
-		inventoryData.put(player, data);
-	}
-
-	public void setExperienceData(UUID player, String data) {
-		experienceData.put(player, data);
-	}
-
-	public void setHealthHungerData(UUID player, String data) {
-		healthHungerData.put(player, data);
-	}
-
-	public void setPotionEffectData(UUID player, String data) {
-		potionEffectData.put(player, data);
-	}
-
-	public abstract Data getOtherGamemodeData();
 
 	public abstract BufferedWriter getWriter();
 

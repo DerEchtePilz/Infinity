@@ -1,7 +1,7 @@
 package io.github.derechtepilz.infinity.gamemode.states;
 
 import io.github.derechtepilz.infinity.Infinity;
-import io.github.derechtepilz.infinity.data.Data;
+import io.github.derechtepilz.infinity.data.GamemodeData;
 import io.github.derechtepilz.infinity.gamemode.Gamemode;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.util.PlayerUtil;
@@ -98,7 +98,7 @@ public enum GamemodeState {
 		return new Location(original.getWorld(), newPosX, newPosY, newPosZ, newYaw, newPitch);
 	}
 
-	private Data getGamemodeData(Player player) {
+	private GamemodeData getGamemodeData(Player player) {
 		return PlayerUtil.getGamemode(player) == Gamemode.INFINITY ? Infinity.getInstance().getInfinityData() : Infinity.getInstance().getMinecraftData();
 	}
 

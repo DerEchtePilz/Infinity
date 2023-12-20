@@ -3,7 +3,7 @@ package io.github.derechtepilz.infinity.backup;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import io.github.derechtepilz.infinity.Infinity;
-import io.github.derechtepilz.infinity.data.Data;
+import io.github.derechtepilz.infinity.data.GamemodeData;
 import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer;
@@ -37,24 +37,24 @@ public class PlayerDataHandler {
 
 	public PlayerDataHandler() {}
 
-	public void updateInventory(Player player, Data inventoryData) {
+	public void updateInventory(Player player, GamemodeData inventoryData) {
 		toggleInventory(player, inventoryData);
 	}
 
-	public void updateExperience(Player player, Data experienceData) {
+	public void updateExperience(Player player, GamemodeData experienceData) {
 		toggleExperience(player, experienceData);
 	}
 
-	public void updateHealthHunger(Player player, Data healthHungerData) {
+	public void updateHealthHunger(Player player, GamemodeData healthHungerData) {
 		toggleHealthHunger(player, healthHungerData);
 	}
 
-	public void updatePotionEffects(Player player, Data potionEffectData) {
+	public void updatePotionEffects(Player player, GamemodeData potionEffectData) {
 		togglePotionEffects(player, potionEffectData);
 	}
 
 
-	private void toggleInventory(Player player, Data inventoryData) {
+	private void toggleInventory(Player player, GamemodeData inventoryData) {
 		// Serialize the enderchest and inventory of the player
 		String inventory = InventorySerializer.serialize(player);
 
@@ -67,7 +67,7 @@ public class PlayerDataHandler {
 		ItemStack[] enderChestContents = playerInventoryData.get(1);
 
 		// Save the player inventory and enderchest
-		inventoryData.getOtherGamemodeData().setInventoryData(player.getUniqueId(), inventory);
+		inventoryData.getOtherData().setInventoryData(player.getUniqueId(), inventory);
 
 		// Clear the enderchest and inventory of the player
 		player.getInventory().clear();
@@ -78,7 +78,7 @@ public class PlayerDataHandler {
 		player.getEnderChest().setContents(enderChestContents);
 	}
 
-	private void toggleExperience(Player player, Data experienceData) {
+	private void toggleExperience(Player player, GamemodeData experienceData) {
 		// Serialize the experience of the player
 		String experience = ExperienceSerializer.serialize(player);
 
@@ -89,7 +89,7 @@ public class PlayerDataHandler {
 		List<? extends Number> playerExperienceData = ExperienceSerializer.deserialize(playerData);
 
 		// Save the player's experience
-		experienceData.getOtherGamemodeData().setExperienceData(player.getUniqueId(), experience);
+		experienceData.getOtherData().setExperienceData(player.getUniqueId(), experience);
 
 		// Reset the player's experience
 		player.setLevel(0);
@@ -100,7 +100,7 @@ public class PlayerDataHandler {
 		player.setExp((float) playerExperienceData.get(1));
 	}
 
-	private void toggleHealthHunger(Player player, Data healthHungerData) {
+	private void toggleHealthHunger(Player player, GamemodeData healthHungerData) {
 		// Serialize the health and hunger of the player
 		String healthHunger = HealthHungerSerializer.serialize(player);
 
@@ -111,7 +111,7 @@ public class PlayerDataHandler {
 		List<? extends Number> healthHungerList = HealthHungerSerializer.deserialize(playerData);
 
 		// Save the player's health and hunger
-		healthHungerData.getOtherGamemodeData().setHealthHungerData(player.getUniqueId(), healthHunger);
+		healthHungerData.getOtherData().setHealthHungerData(player.getUniqueId(), healthHunger);
 
 		// Reset the player's health and hunger
 		player.setHealth(20.0);
@@ -124,7 +124,7 @@ public class PlayerDataHandler {
 		player.setSaturation((float) healthHungerList.get(2));
 	}
 
-	private void togglePotionEffects(Player player, Data potionEffectData) {
+	private void togglePotionEffects(Player player, GamemodeData potionEffectData) {
 		// Serialize the potion effects of the player
 		String potionEffect = EffectSerializer.serialize(player);
 
@@ -135,7 +135,7 @@ public class PlayerDataHandler {
 		List<PotionEffect> potionEffectList = EffectSerializer.deserialize(playerData);
 
 		// Save the player's potion effects
-		potionEffectData.getOtherGamemodeData().setPotionEffectData(player.getUniqueId(), potionEffect);
+		potionEffectData.getOtherData().setPotionEffectData(player.getUniqueId(), potionEffect);
 
 		// Reset the player's potion effects
 		player.clearActivePotionEffects();
