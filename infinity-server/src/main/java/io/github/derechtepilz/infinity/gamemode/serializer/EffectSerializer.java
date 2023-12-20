@@ -103,8 +103,9 @@ public class EffectSerializer extends Serializer {
 
 	public static String createBackup(Player player) {
 		String currentGamemodeData = serialize(player);
-		String savedGamemodeData = Infinity.getInstance().getPotionEffectData().getOrDefault(player.getUniqueId(), null);
-		return getInstance().buildBackupString(currentGamemodeData, savedGamemodeData);
+		String minecraftData = Infinity.getInstance().getMinecraftData().getPotionEffectData().getOrDefault(player.getUniqueId(), null);
+		String infinityData = Infinity.getInstance().getInfinityData().getPotionEffectData().getOrDefault(player.getUniqueId(), null);
+		return getInstance().buildBackupString(currentGamemodeData, minecraftData, infinityData);
 	}
 
 	public static EffectSerializer getInstance() {

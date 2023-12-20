@@ -18,18 +18,15 @@
 
 package io.github.derechtepilz.infinity;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import io.github.derechtepilz.InfinityAPI;
-import io.github.derechtepilz.InfinityAPIServer;
 import io.github.derechtepilz.events.WorldCreateLoadEvent;
 import io.github.derechtepilz.infinity.backup.PlayerDataHandler;
 import io.github.derechtepilz.infinity.commands.DevUtilCommand;
 import io.github.derechtepilz.infinity.commands.InfinityCommand;
 import io.github.derechtepilz.infinity.commonevents.JoinEventListener;
 import io.github.derechtepilz.infinity.commonevents.QuitEventListener;
+import io.github.derechtepilz.infinity.data.InfinityData;
+import io.github.derechtepilz.infinity.data.MinecraftData;
+import io.github.derechtepilz.infinity.gamemode.Gamemode;
 import io.github.derechtepilz.infinity.gamemode.gameclass.SignListener;
 import io.github.derechtepilz.infinity.gamemode.modification.AdvancementDisableHandler;
 import io.github.derechtepilz.infinity.gamemode.modification.ChatHandler;
@@ -44,11 +41,9 @@ import io.github.derechtepilz.infinity.gamemode.worldmovement.EnderChestHandler;
 import io.github.derechtepilz.infinity.items.InfinityAxe;
 import io.github.derechtepilz.infinity.items.InfinityPickaxe;
 import io.github.derechtepilz.infinity.items.Rarity;
-import io.github.derechtepilz.infinity.util.JsonUtil;
 import io.github.derechtepilz.infinity.util.Keys;
 import io.github.derechtepilz.infinity.world.WorldCarver;
 import io.github.derechtepilz.infinity.world.WorldManager;
-import io.github.derechtepilz.separation.GamemodeSeparator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -60,20 +55,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Infinity extends JavaPlugin implements InfinityAPIServer {
+public class Infinity extends JavaPlugin {
 
 	public static final String NAME = "infinity";
 	private static Infinity instance;
@@ -106,10 +94,10 @@ public class Infinity extends JavaPlugin implements InfinityAPIServer {
 	private final List<UUID> infinityPlayerList = new ArrayList<>();
 	private final List<UUID> minecraftPlayerList = new ArrayList<>();
 
-	private final Map<UUID, String> inventoryData = new HashMap<>();
-	private final Map<UUID, String> experienceData = new HashMap<>();
-	private final Map<UUID, String> healthHungerData = new HashMap<>();
-	private final Map<UUID, String> potionEffectData = new HashMap<>();
+	private final Map<UUID, Gamemode> playerGamemode = new HashMap<>();
+
+	private final MinecraftData minecraftData = new MinecraftData();
+	private final InfinityData infinityData = new InfinityData();
 
 	private final PlayerDataHandler playerDataHandler = new PlayerDataHandler();
 
@@ -117,35 +105,13 @@ public class Infinity extends JavaPlugin implements InfinityAPIServer {
 	public void onLoad() {
 		if (!canLoad) return;
 
-		// Check server version, disable on 1.19.4 and lower
+		// TODO: Check server version, disable on 1.19.4 and lower
 
 		instance = this;
-		InfinityAPI.setServer(this);
 
 		// Load the plugin
-		try {
-			BufferedReader configReader = getConfigReader();
-			if (configReader != null) {
-				StringBuilder jsonBuilder = new StringBuilder();
-				String line;
-				while ((line = configReader.readLine()) != null) {
-					jsonBuilder.append(line);
-				}
-				JsonObject jsonObject = JsonParser.parseString(jsonBuilder.toString()).getAsJsonObject();
-
-				JsonArray inventoryDataArray = JsonUtil.getArray("inventoryData", jsonObject);
-				JsonArray experienceDataArray = JsonUtil.getArray("experienceData", jsonObject);
-				JsonArray healthHungerDataArray = JsonUtil.getArray("healthHungerData", jsonObject);
-				JsonArray potionEffectDataArray = JsonUtil.getArray("potionEffectData", jsonObject);
-
-				JsonUtil.loadMap(inventoryDataArray, UUID::fromString).saveTo(inventoryData);
-				JsonUtil.loadMap(experienceDataArray, UUID::fromString).saveTo(experienceData);
-				JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData);
-				JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData);
-			}
-		} catch (IOException e) {
-			getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
-		}
+		minecraftData.loadData();
+		infinityData.loadData();
 
 		InfinityCommand.register();
 		DevUtilCommand.register();
@@ -222,6 +188,8 @@ public class Infinity extends JavaPlugin implements InfinityAPIServer {
 		Bukkit.getPluginManager().registerEvents(new MobSpawnPreventionHandler(), this);
 		Bukkit.getPluginManager().registerEvents(new TablistHandler(), this);
 
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> getPlayerDataHandler().createBackup(), 0, 20 * 60 * 5);
+
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "minecraft:brand", (channel, player, message) -> {
 			String messageString = new String(message).substring(1);
 			String firstCharacter = messageString.substring(0, 1);
@@ -237,22 +205,8 @@ public class Infinity extends JavaPlugin implements InfinityAPIServer {
 			return;
 		}
 		// Save player data
-		try {
-			BufferedWriter configWriter = getConfigWriter();
-			assert configWriter != null;
-			JsonObject playerDataObject = new JsonObject();
-
-			JsonUtil.saveMap(playerDataObject, "inventoryData", inventoryData);
-			JsonUtil.saveMap(playerDataObject, "experienceData", experienceData);
-			JsonUtil.saveMap(playerDataObject, "healthHungerData", healthHungerData);
-			JsonUtil.saveMap(playerDataObject, "potionEffectData", potionEffectData);
-
-			String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject);
-			configWriter.write(jsonString);
-			configWriter.close();
-		} catch (IOException e) {
-			getLogger().severe("There was a problem while writing player data. It is possible that data has been lost when restarting. This is NOT a plugin issue! Please DO NOT report this!");
-		}
+		minecraftData.saveData();
+		infinityData.saveData();
 
 		// If PaperMC/Paper #9679 gets merged, this is redundant
 		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -286,60 +240,20 @@ public class Infinity extends JavaPlugin implements InfinityAPIServer {
 		return minecraftPlayerList;
 	}
 
-	public Map<UUID, String> getInventoryData() {
-		return inventoryData;
+	public Map<UUID, Gamemode> getPlayerGamemode() {
+		return playerGamemode;
 	}
 
-	public Map<UUID, String> getExperienceData() {
-		return experienceData;
+	public MinecraftData getMinecraftData() {
+		return minecraftData;
 	}
 
-	public Map<UUID, String> getHealthHungerData() {
-		return healthHungerData;
-	}
-
-	public Map<UUID, String> getPotionEffectData() {
-		return potionEffectData;
+	public InfinityData getInfinityData() {
+		return infinityData;
 	}
 
 	public PlayerDataHandler getPlayerDataHandler() {
 		return playerDataHandler;
 	}
 
-	private BufferedReader getConfigReader() {
-		try {
-			File configDirectory = new File("./infinity/config");
-			if (!configDirectory.exists()) {
-				return null;
-			}
-			File configFile = new File(configDirectory, "player-data-json");
-			if (!configFile.exists()) {
-				return null;
-			}
-			return new BufferedReader(new FileReader(configFile));
-		} catch (FileNotFoundException e) {
-			return null;
-		}
-	}
-
-	private BufferedWriter getConfigWriter() {
-		try {
-			File configDirectory = new File("./infinity/config");
-			if (!configDirectory.exists()) {
-				configDirectory.mkdirs();
-			}
-			File configFile = new File(configDirectory, "player-data-json");
-			if (!configFile.exists()) {
-				configFile.createNewFile();
-			}
-			return new BufferedWriter(new FileWriter(configFile));
-		} catch (IOException e) {
-			return null;
-		}
-	}
-
-	@Override
-	public GamemodeSeparator getGamemodeSeparator() {
-		return playerDataHandler;
-	}
 }
