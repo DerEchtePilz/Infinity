@@ -22,7 +22,6 @@ public class JoinEventListener implements Listener {
 		SignListener.getInstance().setupSignStates(event.getPlayer());
 		DeathHandler.getInstance().loadPlayerSpawnPoints(event.getPlayer());
 		TablistHandler.getInstance().addToTablist(event.getPlayer());
-		Infinity.getInstance().getPlayerDataHandler().removeFromOfflinePlayers(event.getPlayer());
 
 		Infinity.getInstance().getPlayerGamemode().put(event.getPlayer().getUniqueId(), PlayerUtil.getGamemode(event.getPlayer()));
 
