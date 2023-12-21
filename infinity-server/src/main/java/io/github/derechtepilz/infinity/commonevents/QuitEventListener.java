@@ -17,7 +17,6 @@ public class QuitEventListener implements Listener {
 		DeathHandler.getInstance().saveSpawnPointsFor(event.getPlayer());
 		TablistHandler.getInstance().removeFromTablist(event.getPlayer());
 		PlayerQuitInStoryHandler.resetIntroduction(event.getPlayer());
-		Infinity.getInstance().getPlayerDataHandler().backupActivePlayerData(event.getPlayer());
 	}
 
 }
