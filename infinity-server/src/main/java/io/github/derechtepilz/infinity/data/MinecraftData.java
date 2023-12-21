@@ -57,12 +57,20 @@ public class MinecraftData extends Data implements GamemodeData {
 
 	@Override
 	public BufferedWriter getWriter() {
-		return super.getWriter("minecraft-data");
+		return super.getWriter("data", "minecraft-data");
 	}
 
 	@Override
 	public BufferedReader getReader() {
-		return super.getReader("minecraft-data");
+		return super.getReader("data", "minecraft-data");
+	}
+
+	public BufferedWriter getWriter(String directorySuffix) {
+		return super.getWriter(directorySuffix, "minecraft-data");
+	}
+
+	public BufferedReader getReader(String directorySuffix) {
+		return super.getReader(directorySuffix, "minecraft-data");
 	}
 
 }

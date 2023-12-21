@@ -16,7 +16,7 @@ import java.util.UUID;
 public class PlayerData extends Data {
 
 	@Override
-	public void saveData() {
+	public void saveData(BufferedWriter writer) {
 		try {
 			JsonObject playerGamemode = new JsonObject();
 
@@ -26,22 +26,22 @@ public class PlayerData extends Data {
 
 			String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(playerGamemode);
 
-			getWriter().write(jsonString);
-			getWriter().close();
+			writer.write(jsonString);
+			writer.close();
 		} catch (IOException e) {
 			// TODO: Add an error message
 		}
 	}
 
 	@Override
-	public void loadData() {
+	public void loadData(BufferedReader reader) {
 		try {
-			if (getReader() == null) {
+			if (reader == null) {
 				return;
 			}
 			StringBuilder jsonBuilder = new StringBuilder();
 			String line;
-			while ((line = getReader().readLine()) != null) {
+			while ((line = reader.readLine()) != null) {
 				jsonBuilder.append(line);
 			}
 			JsonObject jsonObject = JsonParser.parseString(jsonBuilder.toString()).getAsJsonObject();
@@ -49,7 +49,7 @@ public class PlayerData extends Data {
 			for (String key : jsonObject.keySet()) {
 				Infinity.getInstance().getPlayerGamemode().put(UUID.fromString(key), Gamemode.valueOf(jsonObject.get(key).getAsString().toUpperCase()));
 			}
-			getReader().close();
+			reader.close();
 		} catch (IOException e) {
 			// TODO: Add an error message
 		}
@@ -57,12 +57,20 @@ public class PlayerData extends Data {
 
 	@Override
 	public BufferedWriter getWriter() {
-		return super.getWriter("player-data");
+		return super.getWriter("data", "player-data");
 	}
 
 	@Override
 	public BufferedReader getReader() {
-		return super.getReader("player-data");
+		return super.getReader("data", "player-data");
+	}
+
+	public BufferedWriter getWriter(String directorySuffix) {
+		return super.getWriter(directorySuffix, "player-data");
+	}
+
+	public BufferedReader getReader(String directorySuffix) {
+		return super.getReader(directorySuffix, "player-data");
 	}
 
 }
