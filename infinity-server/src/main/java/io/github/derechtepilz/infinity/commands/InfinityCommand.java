@@ -36,6 +36,7 @@ import io.github.derechtepilz.infinity.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.commands.CommandSourceStack;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -52,6 +53,7 @@ public class InfinityCommand {
 	private static final String[] itemIds = Registry.Item.getItemIds();
 	private static final Predicate<CommandSourceStack> requirePlayer = (stack) -> stack.source.getBukkitSender(stack) instanceof Player;
 	private static final Predicate<CommandSourceStack> requirePlayerOperator = requirePlayer.and((stack) -> stack.source.getBukkitSender(stack).isOp());
+	private static final Predicate<CommandSourceStack> requirePlayerOperatorOrConsole = requirePlayerOperator.and((stack) -> stack.getBukkitSender() instanceof ConsoleCommandSender);
 
 	public static void register() {
 		Reflection.getDedicatedServer().getCommands().getDispatcher().register(LiteralArgumentBuilder.<CommandSourceStack>literal("infinity")
@@ -160,14 +162,24 @@ public class InfinityCommand {
 				})
 			)
 			.then(LiteralArgumentBuilder.<CommandSourceStack>literal("backup")
-				.requires(requirePlayerOperator)
-				.executes((ctx) -> {
-					Player player = getSenderAsPlayer(ctx);
-					player.sendMessage(Component.text().content("Creating backup manually. This does not impact the regular backup interval!").color(NamedTextColor.GRAY));
-					Infinity.getInstance().getPlayerDataHandler().createBackup();
-					player.sendMessage(Component.text().content("Backup finished!").color(NamedTextColor.GRAY));
-					return 1;
-				})
+				.requires(requirePlayerOperatorOrConsole)
+				.then(LiteralArgumentBuilder.<CommandSourceStack>literal("create")
+					.executes((ctx) -> {
+						Player player = getSenderAsPlayer(ctx);
+						player.sendMessage(Component.text().content("Creating backup manually. This does not impact the regular backup interval!").color(NamedTextColor.GRAY));
+						Infinity.getInstance().getPlayerDataHandler().createBackup();
+						player.sendMessage(Component.text().content("Backup finished!").color(NamedTextColor.GRAY));
+						return 1;
+					})
+				)
+				.then(LiteralArgumentBuilder.<CommandSourceStack>literal("load")
+					.executes((ctx) -> {
+						Player player = getSenderAsPlayer(ctx);
+						Infinity.getInstance().getPlayerDataHandler().loadBackup();
+						player.sendMessage(Component.text().content("Backup loaded successfully!").color(NamedTextColor.GREEN));
+						return 1;
+					})
+				)
 			)
 		);
 

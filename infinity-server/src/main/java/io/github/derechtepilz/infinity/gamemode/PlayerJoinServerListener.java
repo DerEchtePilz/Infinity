@@ -82,6 +82,14 @@ public class PlayerJoinServerListener {
 		infinityData.setPotionEffectData(player.getUniqueId(), potionEffectData);
 	}
 
+	public static void updatePlayerGamemode(Player player) {
+		player.sendMessage(Component.text().content("An Infinity backup has been loaded. Because of that, your world, inventories and some stats might have changed.")
+			.color(NamedTextColor.RED)
+			.build()
+		);
+		GamemodeState.valueOf(Infinity.getInstance().getPlayerGamemode().get(player.getUniqueId()).name()).loadFor(player);
+	}
+
 	private static void sendInfinitySuggestion(Player player) {
 		player.sendMessage(Component.text("Want to play ")
 			.color(NamedTextColor.YELLOW)

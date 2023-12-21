@@ -19,6 +19,7 @@ public class JoinEventListener implements Listener {
 	public void onJoin(PlayerJoinEvent event) {
 		PlayerJoinServerListener.sendJoinMessage(event.getPlayer());
 		PlayerJoinServerListener.setupPlayerData(event.getPlayer());
+		PlayerJoinServerListener.updatePlayerGamemode(event.getPlayer());
 		SignListener.getInstance().setupSignStates(event.getPlayer());
 		DeathHandler.getInstance().loadPlayerSpawnPoints(event.getPlayer());
 		TablistHandler.getInstance().addToTablist(event.getPlayer());
