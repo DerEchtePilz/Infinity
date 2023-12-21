@@ -57,12 +57,20 @@ public class InfinityData extends Data implements GamemodeData {
 
 	@Override
 	public BufferedWriter getWriter() {
-		return super.getWriter("infinity-data");
+		return super.getWriter("data", "infinity-data");
 	}
 
 	@Override
 	public BufferedReader getReader() {
-		return super.getReader("infinity-data");
+		return super.getReader("data", "infinity-data");
+	}
+
+	public BufferedWriter getWriter(String directorySuffix) {
+		return super.getWriter(directorySuffix, "infinity-data");
+	}
+
+	public BufferedReader getReader(String directorySuffix) {
+		return super.getReader(directorySuffix, "infinity-data");
 	}
 
 }

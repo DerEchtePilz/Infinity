@@ -101,7 +101,7 @@ public class Infinity extends JavaPlugin {
 	private final InfinityData infinityData = new InfinityData();
 	private final PlayerData playerData = new PlayerData();
 
-	private final PlayerDataHandler playerDataHandler = new PlayerDataHandler();
+	private PlayerDataHandler playerDataHandler;
 
 	@Override
 	public void onLoad() {
@@ -111,10 +111,13 @@ public class Infinity extends JavaPlugin {
 
 		instance = this;
 
-		// Load the plugin
-		minecraftData.loadData();
-		infinityData.loadData();
-		playerData.loadData();
+		// Load player data
+		minecraftData.loadData(minecraftData.getReader());
+		infinityData.loadData(infinityData.getReader());
+		playerData.loadData(playerData.getReader());
+
+		// Initialise the data handler
+		playerDataHandler = new PlayerDataHandler();
 
 		InfinityCommand.register();
 		DevUtilCommand.register();
@@ -204,9 +207,9 @@ public class Infinity extends JavaPlugin {
 			return;
 		}
 		// Save player data
-		minecraftData.saveData();
-		infinityData.saveData();
-		playerData.saveData();
+		minecraftData.saveData(minecraftData.getWriter());
+		infinityData.saveData(infinityData.getWriter());
+		playerData.saveData(playerData.getWriter());
 
 		// If PaperMC/Paper #9679 gets merged, this is redundant
 		for (Player player : Bukkit.getOnlinePlayers()) {

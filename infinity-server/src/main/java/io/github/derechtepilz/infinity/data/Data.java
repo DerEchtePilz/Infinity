@@ -31,7 +31,7 @@ public abstract class Data {
 		this.potionEffectData = new HashMap<>();
 	}
 
-	public void saveData() {
+	public void saveData(BufferedWriter writer) {
 		try {
 			JsonObject playerDataObject = new JsonObject();
 
@@ -42,21 +42,21 @@ public abstract class Data {
 
 			String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(playerDataObject);
 
-			getWriter().write(jsonString);
-			getWriter().close();
+			writer.write(jsonString);
+			writer.close();
 		} catch (IOException e) {
 			Infinity.getInstance().getLogger().severe("There was a problem while writing player data. It is possible that data has been lost when restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
 	}
 
-	public void loadData() {
+	public void loadData(BufferedReader reader) {
 		try {
-			if (getReader() == null) {
+			if (reader == null) {
 				return;
 			}
 			StringBuilder jsonBuilder = new StringBuilder();
 			String line;
-			while ((line = getReader().readLine()) != null) {
+			while ((line = reader.readLine()) != null) {
 				jsonBuilder.append(line);
 			}
 			JsonObject jsonObject = JsonParser.parseString(jsonBuilder.toString()).getAsJsonObject();
@@ -71,15 +71,15 @@ public abstract class Data {
 			JsonUtil.loadMap(healthHungerDataArray, UUID::fromString).saveTo(healthHungerData);
 			JsonUtil.loadMap(potionEffectDataArray, UUID::fromString).saveTo(potionEffectData);
 
-			getReader().close();
+			reader.close();
 		} catch (IOException e) {
 			Infinity.getInstance().getLogger().severe("There was a problem while reading player data. It is possible that data has been lost upon restarting. This is NOT a plugin issue! Please DO NOT report this!");
 		}
 	}
 
-	BufferedWriter getWriter(String dataFileName) {
+	public BufferedWriter getWriter(String directorySuffix, String dataFileName) {
 		try {
-			File dataDirectory = new File("./infinity/data");
+			File dataDirectory = new File("./infinity/" + directorySuffix);
 			if (!dataDirectory.exists()) {
 				dataDirectory.mkdirs();
 			}
@@ -93,9 +93,9 @@ public abstract class Data {
 		}
 	}
 
-	BufferedReader getReader(String dataFileName) {
+	public BufferedReader getReader(String directorySuffix, String dataFileName) {
 		try {
-			File dataDirectory = new File("./infinity/data");
+			File dataDirectory = new File("./infinity/" + directorySuffix);
 			if (!dataDirectory.exists()) {
 				return null;
 			}
