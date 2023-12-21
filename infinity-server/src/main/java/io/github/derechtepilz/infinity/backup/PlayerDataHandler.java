@@ -9,6 +9,9 @@ import io.github.derechtepilz.infinity.gamemode.serializer.EffectSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.ExperienceSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.HealthHungerSerializer;
 import io.github.derechtepilz.infinity.gamemode.serializer.InventorySerializer;
+import io.github.derechtepilz.infinity.gamemode.states.GamemodeState;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -142,6 +145,23 @@ public class PlayerDataHandler {
 		backupMinecraftData.saveData(backupMinecraftData.getWriter("backup"));
 		backupInfinityData.saveData(backupInfinityData.getWriter("backup"));
 		backupPlayerData.saveData(backupPlayerData.getWriter("backup"));
+	}
+
+	public void loadBackup() {
+		backupMinecraftData.loadData(backupMinecraftData.getReader("backup"));
+		backupInfinityData.loadData(backupInfinityData.getReader("backup"));
+		backupPlayerData.loadData(backupPlayerData.getReader("backup"));
+
+		copyData(backupMinecraftData, Infinity.getInstance().getMinecraftData());
+		copyData(backupInfinityData, Infinity.getInstance().getInfinityData());
+
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			player.sendMessage(Component.text().content("An Infinity backup has been loaded. Because of that, your world, inventories and some stats might have changed.")
+				.color(NamedTextColor.RED)
+				.build()
+			);
+			GamemodeState.valueOf(Infinity.getInstance().getPlayerGamemode().get(player.getUniqueId()).name()).loadFor(player);
+		}
 	}
 
 	private void updateGamemodeData(List<UUID> playerList, GamemodeData backupData) {
